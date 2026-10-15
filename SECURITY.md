@@ -1,34 +1,24 @@
-# Security model
+# Security
 
-`hpc-devsecops` is a preventive local gate, not a sandbox. Since 2026-09-25 its
-checks are RecastEngine's `audit` recipe and the scripts here are wrappers over
-it; the engine's `SECURITY.md` and `docs/cyber-gate.md` are the gate's security
-model, this file is Val-Track's own. Target repositories and their run config
-(`.recast-audit.json`, `.gitleaks.toml`, `.vex/openvex.json`) are trusted local
-inputs. The LLM audit's key is read by recast-cesm's provider: `ANTHROPIC_API_KEY`
-in the environment, else `~/.config/recast/agent.env` only when its mode is `0600`.
+Val-Track holds acceptance records, not security tooling. The Cyber gate that
+produces each record's `security` block is RecastEngine's `audit` recipe (and
+recast-cesm's `audit-cesm`, which adds the LLM audit and sanitizer planes); its
+security model, trust boundaries and fail-closed contract are the engine's
+`SECURITY.md` and `docs/cyber-gate.md`. The scripts that used to live here were
+deleted in step 9e of `docs/CORRECTNESS-ORGANIZATION.md`.
 
-## Gate contract
+## What this repository holds
 
-Blocking mode fails closed. A configured or required scanner must produce
-parseable output and an explicit successful status. Missing tools, malformed
-SARIF/JSON, unavailable credentials, and scanner execution failures return 2;
-security findings return 1; only completed clean checks return 0.
+A record's `security` block carries the gate's states and counts for one
+commit, never a finding. Findings stay in the engine's store
+(`RECAST_FINDINGS_HOME`) and reach Sec-Track only after adjudication and a
+human's disclosure decision; none of that passes through here. Do not add a
+finding, a scanner report, or anything that identifies an undisclosed
+vulnerability to an acceptance record, a benchmark, or a pull request.
 
-The AI audit runs when the recipe is `audit-cesm`: chosen by the wrappers for a
-target repository that contains `.github/scripts/ai_audit.py` (hpc-devsecops's
-opt-in, still honoured), or named by `RECAST_AUDIT_RECIPE`. A repository that
-opted in but whose environment lacks that recipe is INCOMPLETE, not quietly
-gated without it. Users may explicitly opt out with `--no-ai`.
+## Disclosure
 
-## Trust and disclosure
-
-Reports can contain source diffs, findings, filenames, and vulnerability data.
-The gate summary is written beneath `~/audits/recast` (or
-`HPC_DEVSECOPS_AUDIT_ROOT` / `RECAST_AUDIT_ROOT`) and carries states and counts
-only; the findings are in the engine's store (`RECAST_FINDINGS_HOME`) and must be
-protected according to the target repository's disclosure policy. Scanner databases and external AI providers
-have their own data-handling requirements.
-
-Report defects in this gate privately to the repository owner. Do not include
-live credentials or undisclosed exploit material in an issue.
+Report a defect in this repository's tools (`correctness/`, `schemas/`, the
+workflows under `.github/`) privately to the repository owner. Report a defect
+in the gate itself the same way, to the engine's owner. Do not include live
+credentials or undisclosed exploit material in an issue.

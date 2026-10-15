@@ -31,7 +31,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install the Correctness half's dependencies
-        run: python -m pip install --quiet numpy jsonschema referencing pyyaml pytest
+        run: python -m pip install --quiet jsonschema referencing pyyaml pytest
 
       - name: Schema self-test
         run: python schemas/test_schemas.py

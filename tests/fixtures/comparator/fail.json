@@ -1,0 +1,43 @@
+{
+  "dump_format": "%+.17g",
+  "dump_tool": "numpy",
+  "field_detail": [
+    {
+      "equal": false,
+      "key": "h0.0001-01.npz",
+      "max_abs": 7.0,
+      "max_rel": 3.5,
+      "note": null,
+      "shape": [
+        2
+      ],
+      "variable": "T"
+    }
+  ],
+  "file_set": {
+    "candidate_only": [],
+    "equal": true,
+    "reference_only": []
+  },
+  "files": [
+    {
+      "char_count": 0,
+      "char_diff_count": 0,
+      "char_diff_vars": [],
+      "key": "h0.0001-01.npz",
+      "numeric_count": 1,
+      "numeric_equal": false,
+      "numeric_md5_candidate": "6321ecc1984b0c4168baa0400f971757",
+      "numeric_md5_reference": "e9ce2440919bc4c51a1c304e80f76624"
+    }
+  ],
+  "notes": [],
+  "status": "FAIL",
+  "timing": {
+    "physpkg_st1": {
+      "candidate": 10.5,
+      "delta_pct": 5.000000000000004,
+      "reference": 10.0
+    }
+  }
+}

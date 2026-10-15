@@ -150,25 +150,19 @@ Val-Track/
 │       └── example-bitwise.manifest.json
 │
 ├── correctness/                    # the Correctness half (steps 2-3 DONE)
-│   ├── compare_runpair.py          # migrated from PyCAM5, plus --json
-│   ├── compare_stats.py            # Pipeline 2 statistical comparator (new)
 │   ├── make_manifest.py            # comparator output + environment probe -> manifest
 │   ├── verify_evidence.py          # schema + self-consistency check; the CI entry point
-│   └── dataio.py                   # shared input adapters; not a command-line tool
+│   ├── index_evidence.py           # evidence/INDEX.md + index.json
+│   ├── check_validation.py         # a product's VALIDATION.md, rendered and checked
+│   └── dataio.py                   # benchmark loading, output listing, rule_key
+│   (compare_runpair.py and compare_stats.py moved to recast-cesm scripts/compare/,
+│    CORRECTNESS-ORGANIZATION.md step 5)
 │
 ├── tests/
-│   ├── run.sh                      # Cyber half, integration
 │   └── test_correctness.py         # Correctness half, synthetic inputs, no NetCDF needed
 │
-├── tools/  hpc/  hooks/            # Cyber half — see §11
-│   ├── devsecops-local.sh          #   per-scan state + summary.json (updated)
-│   ├── install-config.sh           #   installs the templates below (new)
-│   └── test-ai-audit.py            #   self-test for the auditor (new)
-│
-├── templates/                      # NEW — the config each product repo needs
-│   ├── .gitleaks.toml
-│   ├── .vex/openvex.json
-│   └── .github/scripts/ai_audit.py
+│   (tools/ hpc/ hooks/ templates/ and tests/run.sh, the Cyber half, were deleted in
+│    step 9e of CORRECTNESS-ORGANIZATION.md; the gate is RecastEngine's — see §11)
 │
 ├── benchmarks/                     # case definitions and acceptance baselines
 │   ├── pycam5/
@@ -199,9 +193,8 @@ Two notes on the layout:
 
 - The sketch places workflows at a top-level `workflows/`. GitHub only resolves reusable
   workflows under `.github/workflows/`, so the callable workflow lives there. HPC-side job
-  templates (PBS scripts that produce evidence) stay in the existing `hpc/` directory.
-- `correctness/` sits beside `tools/` (Cyber) at the same level, so both C's of "CC" are
-  visible in the directory tree, not only in the name.
+  templates (PBS scripts that produce evidence) stay with the case or the engine; Val-Track's
+  `hpc/` went with the rest of the Cyber tooling in step 9e.
 - `evidence/` is append-only: once a version's manifest lands it is immutable; a re-run
   produces a new version directory.
 
@@ -444,3 +437,9 @@ sanitizer plane, `tools/asan.sh` + `hpc/asan-cam.pbs`, as recast-cesm's `dynamic
 count a `not_configured` plane against it, the schema's `PASS` means every plane ran, so a
 gate `PASS` with an unrun plane is recorded as `INCOMPLETE` with a warning. Findings never
 enter Val-Track.
+
+**Moved (2026-10-15, step 9e).** The wrappers, `hooks/`, `hpc/`, `templates/`,
+`tools/test-ai-audit.py`, `tests/run.sh` and the shell-only `ci.yml` are deleted, and
+`make_manifest.py` reads only the engine's schema-1 gate summary. Everything this section
+describes as Val-Track's tooling now lives in RecastEngine (`docs/cyber-gate.md` there) and
+recast-cesm; what stays here is the manifest's `security` block.
