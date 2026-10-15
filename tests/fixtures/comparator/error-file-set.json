@@ -1,0 +1,17 @@
+{
+  "dump_format": "%+.17g",
+  "dump_tool": null,
+  "error": "file set mismatch, nothing was compared (missing from candidate: ['h0.0001-02.npz']; missing from reference: -)",
+  "field_detail": [],
+  "file_set": {
+    "candidate_only": [],
+    "equal": false,
+    "reference_only": [
+      "h0.0001-02.npz"
+    ]
+  },
+  "files": [],
+  "notes": [],
+  "status": "ERROR",
+  "timing": {}
+}

@@ -120,8 +120,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import dataio
-from compare_stats import rule_key
-from dataio import DataError
+from dataio import DataError, rule_key
 
 SCHEMA_VERSION = "1.0"
 REPO_ROOT = Path(__file__).resolve().parent.parent

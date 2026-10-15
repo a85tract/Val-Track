@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Tests for the Correctness half.
 
-Synthetic inputs only: `.npz` and text tables, never NetCDF, so the suite runs
-in a bare checkout with no NCO, no netCDF4 and no xarray. That is deliberate —
-the tools have to be exercisable where they are reviewed, not only where they
-are run.
+Synthetic inputs only, and no model output at all: comparator results are the
+committed JSON under `tests/fixtures/comparator/`, written by recast-cesm's
+`scripts/compare/compare_runpair.py` (where the comparators and their own tests
+now live, CORRECTNESS-ORGANIZATION.md step 5). The suite runs in a bare checkout.
 
-Every tool is covered for all three outcomes it can report: a clean pass, a
+Every tool is covered for all three outcomes a record can carry: a clean pass, a
 finding, and a comparison that could not be carried out. The last one is the
 point of the suite: the failure mode this repository's schema exists to prevent
 is an absent comparison filed as a passing one, so each tool is tested for
@@ -22,7 +22,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 # verify_evidence validates against the schemas with jsonschema, the one
@@ -34,8 +33,6 @@ pytest.importorskip("jsonschema", reason="the Correctness half needs jsonschema 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "correctness"))
 
-import compare_runpair  # noqa: E402
-import compare_stats  # noqa: E402
 import dataio  # noqa: E402
 import make_manifest  # noqa: E402
 import verify_evidence  # noqa: E402
@@ -45,24 +42,14 @@ import verify_evidence  # noqa: E402
 # synthetic inputs
 
 
-def write_run(directory: Path, files: dict, timers: dict = None) -> Path:
-    """A run directory of `case.cam.<key>.npz` outputs plus GPTL timing."""
-    directory.mkdir(parents=True, exist_ok=True)
-    for key, variables in files.items():
-        np.savez(directory / ("case.cam.%s.npz" % key), **variables)
-    if timers:
-        timing = directory / "timing"
-        timing.mkdir(exist_ok=True)
-        lines = ["name on processes threads count walltotal wallmax wallmin"]
-        for name, value in timers.items():
-            # extract_timer reads field 6, as the PyCAM5 script did.
-            lines.append('  "%s" 128 1 4 0.0 0.0 %r 0.0' % (name, value))
-        (timing / "cesm_timing_stats").write_text("\n".join(lines) + "\n")
-    return directory
+FIXTURES = ROOT / "tests" / "fixtures"
 
 
-def field(values, dtype=float):
-    return np.array(values, dtype=dtype)
+def comparator(name: str) -> Path:
+    """A committed compare_runpair.py --json result: pass, fail, pass-no-timers
+    or error-file-set (a reference/candidate pair of one `h0.0001-01` output with
+    variable T, physpkg_st1 timed except where the name says not)."""
+    return FIXTURES / "comparator" / (name + ".json")
 
 
 BITWISE_RULES = [
@@ -142,192 +129,7 @@ def make_benchmark(workspace, case_id: str, rules=None, suffix: str = ".json") -
 
 
 # --------------------------------------------------------------------------
-# compare_runpair
-
-
-def test_identical_runs_pass(tmp_path):
-    variables = {"T": field([1.0, 2.0, 3.0]), "case_name": np.array(["pi"])}
-    write_run(tmp_path / "ref", {"h0.0001-01": variables}, {"physpkg_st1": 10.0})
-    write_run(tmp_path / "cand", {"h0.0001-01": variables}, {"physpkg_st1": 11.0})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"),
-        "--timer", "physpkg_st1", "--json", str(out)])
-
-    assert code == 0
-    result = json.loads(out.read_text())
-    assert result["status"] == "PASS"
-    assert result["file_set"]["equal"] is True
-    assert result["dump_tool"] == "numpy"
-    assert result["dump_format"] == "%+.17g"
-    entry, = result["files"]
-    assert entry["key"] == "h0.0001-01.npz"
-    assert entry["numeric_equal"] is True
-    assert entry["numeric_count"] == 1 and entry["char_count"] == 1
-    assert entry["numeric_md5_reference"] == entry["numeric_md5_candidate"]
-    assert len(entry["numeric_md5_reference"]) == 32
-    detail, = result["field_detail"]
-    assert detail["variable"] == "T" and detail["equal"] is True
-    assert detail["max_abs"] == 0.0 and detail["max_rel"] == 0.0
-    assert result["timing"]["physpkg_st1"]["delta_pct"] == pytest.approx(10.0)
-
-
-def test_differing_values_fail_with_field_detail(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0, 2.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0, 2.5])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 1
-    result = json.loads(out.read_text())
-    assert result["status"] == "FAIL"
-    assert result["files"][0]["numeric_equal"] is False
-    detail, = result["field_detail"]
-    assert detail["equal"] is False
-    assert detail["max_abs"] == pytest.approx(0.5)
-    assert detail["max_rel"] == pytest.approx(0.25)
-
-
-def test_char_difference_is_reported_but_does_not_gate(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0]),
-                                                "date_written": np.array(["2026-06-16"])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0]),
-                                                 "date_written": np.array(["2026-09-03"])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 0, "character differences must not affect the exit code"
-    result = json.loads(out.read_text())
-    assert result["status"] == "PASS"
-    assert result["files"][0]["char_diff_count"] == 1
-    assert result["files"][0]["char_diff_vars"] == ["date_written"]
-
-
-def test_file_set_mismatch_is_error_not_fail(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0])},
-                                 "h0.0001-02": {"T": field([1.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 2
-    result = json.loads(out.read_text())
-    assert result["status"] == "ERROR"
-    assert result["file_set"]["equal"] is False
-    assert result["file_set"]["reference_only"] == ["h0.0001-02.npz"]
-    assert "file set mismatch" in result["error"]
-    assert result["files"] == []
-
-
-def test_no_files_in_scope_is_error(tmp_path):
-    (tmp_path / "ref").mkdir()
-    (tmp_path / "cand").mkdir()
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 2
-    assert "no output files in scope" in json.loads(out.read_text())["error"]
-
-
-def test_differing_variable_sets_are_error(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0]), "Q": field([2.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 2
-    result = json.loads(out.read_text())
-    assert result["status"] == "ERROR"
-    assert "different variables" in result["error"]
-
-
-def test_shape_change_is_a_difference_not_an_absent_comparison(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0, 1.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0, 1.0, 1.0])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 1
-    result = json.loads(out.read_text())
-    assert result["status"] == "FAIL"
-    assert result["field_detail"][0]["max_abs"] is None
-    assert "shape differs" in result["field_detail"][0]["note"]
-
-
-def test_missing_timer_is_a_note_not_a_failure(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0])}})
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(out)])
-
-    assert code == 0
-    result = json.loads(out.read_text())
-    assert result["timing"] == {}
-    assert any("not compared" in note for note in result["notes"])
-
-
-def test_hidden_native_codon_aliases_still_work(tmp_path):
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0])}})
-
-    assert compare_runpair.main([
-        "--native-run-dir", str(tmp_path / "ref"),
-        "--codon-run-dir", str(tmp_path / "cand")]) == 0
-
-
-def test_unreadable_netcdf_is_error(tmp_path):
-    for name in ("ref", "cand"):
-        directory = tmp_path / name
-        directory.mkdir()
-        (directory / "case.cam.h0.0001-01.nc").write_bytes(b"not really netcdf")
-    out = tmp_path / "result.json"
-
-    code = compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"),
-        "--dump-tool", "numpy", "--json", str(out)])
-
-    assert code == 2
-    assert json.loads(out.read_text())["status"] == "ERROR"
-
-
-def test_text_table_inputs_compare(tmp_path):
-    for name, second in (("ref", "2.0"), ("cand", "2.0")):
-        directory = tmp_path / name
-        directory.mkdir()
-        (directory / "case.cam.h0.0001-01.txt").write_text(
-            "# a table\nT Q label\n1.0 %s alpha\n3.0 4.0 beta\n" % second)
-
-    assert compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand")]) == 0
-
-
-# --------------------------------------------------------------------------
-# compare_stats
+# statistical acceptance blocks, for the verifier's provisional check
 
 
 def statistical(rules) -> dict:
@@ -336,148 +138,10 @@ def statistical(rules) -> dict:
 
 REL_RULE = {"check": "relative_diff_max", "variables": ["T"], "norm": "l2",
             "tolerance": 1.24e-6, "gating": True}
-SPREAD_RULE = {"check": "within_ensemble_spread", "variables": ["T"], "members": 3,
-               "spread_metric": "stddev", "spread_multiplier": 2.0, "gating": True}
-
-
-def write_source(path: Path, **variables) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    np.savez(path, **variables)
-    return path
-
-
-def test_relative_diff_within_tolerance_passes(tmp_path):
-    reference = write_source(tmp_path / "ref.npz", T=field([1.0, 2.0, 3.0]))
-    candidate = write_source(tmp_path / "cand.npz", T=field([1.0, 2.0, 3.0 + 1e-9]))
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([REL_RULE])))
-    out = tmp_path / "stats.json"
-
-    code = compare_stats.main([
-        "--reference", str(reference), "--candidate", str(candidate),
-        "--acceptance", str(acceptance), "--json", str(out)])
-
-    assert code == 0
-    result = json.loads(out.read_text())
-    assert result["status"] == "PASS"
-    rule, = result["rules"]
-    assert rule["passed"] is True
-    assert rule["variables"]["T"]["relative"] < 1.24e-6
-    assert any("provisional" in note for note in result["notes"])
-
-
-def test_relative_diff_beyond_tolerance_fails(tmp_path):
-    reference = write_source(tmp_path / "ref.npz", T=field([1.0, 1.0, 1.0, 1.0]))
-    candidate = write_source(tmp_path / "cand.npz", T=field([1.001, 1.001, 1.001, 1.001]))
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([REL_RULE])))
-    out = tmp_path / "stats.json"
-
-    code = compare_stats.main([
-        "--reference", str(reference), "--candidate", str(candidate),
-        "--acceptance", str(acceptance), "--json", str(out)])
-
-    assert code == 1
-    result = json.loads(out.read_text())
-    assert result["status"] == "FAIL"
-    # normwise ratio, the D4 reading recorded in the module docstring
-    assert result["rules"][0]["variables"]["T"]["relative"] == pytest.approx(1e-3, rel=1e-6)
-
-
-def test_absent_variable_is_error_not_a_skipped_pass(tmp_path):
-    reference = write_source(tmp_path / "ref.npz", T=field([1.0]))
-    candidate = write_source(tmp_path / "cand.npz", Q=field([1.0]))
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([REL_RULE])))
-    out = tmp_path / "stats.json"
-
-    code = compare_stats.main([
-        "--reference", str(reference), "--candidate", str(candidate),
-        "--acceptance", str(acceptance), "--json", str(out)])
-
-    assert code == 2
-    result = json.loads(out.read_text())
-    assert result["status"] == "ERROR"
-    assert "absent from the candidate" in result["error"]
-
-
-def test_ensemble_spread_pass_and_fail(tmp_path):
-    members = [write_source(tmp_path / ("m%d.npz" % i), T=field([value]))
-               for i, value in enumerate((1.0, 2.0, 3.0))]
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([SPREAD_RULE])))
-
-    inside = write_source(tmp_path / "inside.npz", T=field([2.5]))
-    argv = ["--acceptance", str(acceptance), "--candidate", str(inside)]
-    for member in members:
-        argv += ["--reference", str(member)]
-    assert compare_stats.main(argv) == 0
-
-    outside = write_source(tmp_path / "outside.npz", T=field([99.0]))
-    argv = ["--acceptance", str(acceptance), "--candidate", str(outside)]
-    for member in members:
-        argv += ["--reference", str(member)]
-    out = tmp_path / "stats.json"
-    assert compare_stats.main(argv + ["--json", str(out)]) == 1
-    assert json.loads(out.read_text())["rules"][0]["variables"]["T"]["outside"] == 1
-
-
-def test_too_few_ensemble_members_is_error(tmp_path):
-    members = [write_source(tmp_path / ("m%d.npz" % i), T=field([value]))
-               for i, value in enumerate((1.0, 2.0))]
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([SPREAD_RULE])))
-    candidate = write_source(tmp_path / "cand.npz", T=field([1.5]))
-    argv = ["--acceptance", str(acceptance), "--candidate", str(candidate)]
-    for member in members:
-        argv += ["--reference", str(member)]
-    out = tmp_path / "stats.json"
-
-    assert compare_stats.main(argv + ["--json", str(out)]) == 2
-    assert "ensemble needs 3 members" in json.loads(out.read_text())["error"]
-
-
-def test_bitwise_acceptance_is_refused_by_compare_stats(tmp_path):
-    reference = write_source(tmp_path / "ref.npz", T=field([1.0]))
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps({"kind": "bitwise", "rules": BITWISE_RULES}))
-
-    assert compare_stats.main([
-        "--reference", str(reference), "--candidate", str(reference),
-        "--acceptance", str(acceptance)]) == 2
-
-
-def test_zero_reference_norm_demands_exact_equality(tmp_path):
-    reference = write_source(tmp_path / "ref.npz", T=field([0.0, 0.0]))
-    acceptance = tmp_path / "acceptance.json"
-    acceptance.write_text(json.dumps(statistical([REL_RULE])))
-
-    same = write_source(tmp_path / "same.npz", T=field([0.0, 0.0]))
-    assert compare_stats.main([
-        "--reference", str(reference), "--candidate", str(same),
-        "--acceptance", str(acceptance)]) == 0
-
-    tiny = write_source(tmp_path / "tiny.npz", T=field([0.0, 1e-30]))
-    assert compare_stats.main([
-        "--reference", str(reference), "--candidate", str(tiny),
-        "--acceptance", str(acceptance)]) == 1
 
 
 # --------------------------------------------------------------------------
 # make_manifest and the round trip through verify_evidence
-
-
-def run_pair(tmp_path, reference_values, candidate_values, timers=True) -> Path:
-    timing = {"physpkg_st1": 10.0} if timers else None
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field(reference_values)}}, timing)
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field(candidate_values)}},
-              {"physpkg_st1": 10.5} if timers else None)
-    out = tmp_path / "case.json"
-    compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"),
-        "--timer", "physpkg_st1", "--json", str(out)])
-    return out
 
 
 def manifest_argv(workspace, case_json: Path, extra=None) -> list:
@@ -495,7 +159,7 @@ def manifest_argv(workspace, case_json: Path, extra=None) -> list:
 
 def test_round_trip_pass(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0, 2.0], [1.0, 2.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 0
 
@@ -529,7 +193,7 @@ def test_round_trip_pass(workspace, tmp_path, capsys):
 
 def test_round_trip_fail(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0, 2.0], [1.0, 9.0])
+    case_json = comparator("fail")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 1
 
@@ -549,13 +213,7 @@ def test_round_trip_fail(workspace, tmp_path, capsys):
 
 def test_round_trip_error(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    write_run(tmp_path / "ref", {"h0.0001-01": {"T": field([1.0])},
-                                 "h0.0001-02": {"T": field([1.0])}})
-    write_run(tmp_path / "cand", {"h0.0001-01": {"T": field([1.0])}})
-    case_json = tmp_path / "case.json"
-    assert compare_runpair.main([
-        "--reference-run-dir", str(tmp_path / "ref"),
-        "--candidate-run-dir", str(tmp_path / "cand"), "--json", str(case_json)]) == 2
+    case_json = comparator("error-file-set")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 2
 
@@ -582,7 +240,7 @@ def test_gating_rule_with_no_measurement_is_error(workspace, tmp_path):
         {"check": "timing_delta_pct", "timers": ["physpkg_st1"], "max_abs_pct": 5.0,
          "gating": True}]
     make_benchmark(workspace, "pi-6month", rules)
-    case_json = run_pair(tmp_path, [1.0], [1.0], timers=False)
+    case_json = comparator("pass-no-timers")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 2
 
@@ -601,7 +259,7 @@ def test_scope_matching_no_files_is_error(workspace, tmp_path):
          "dump_format": "%+.17g", "gating": True},
     ]
     make_benchmark(workspace, "pi-6month", rules)
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 2
     manifest = json.loads((workspace["cc_test"] / "evidence" / "pycam5"
@@ -611,7 +269,7 @@ def test_scope_matching_no_files_is_error(workspace, tmp_path):
 
 def test_complete_evidence_class_refuses_to_invent_provenance(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(
         manifest_argv(workspace, case_json, ["--evidence-class", "complete"])) == 2
@@ -621,7 +279,7 @@ def test_complete_evidence_class_refuses_to_invent_provenance(workspace, tmp_pat
 
 def test_complete_evidence_class_when_provenance_is_present(workspace, tmp_path):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json, [
         "--reference-commit", "abc1234",
@@ -637,7 +295,10 @@ def test_complete_evidence_class_when_provenance_is_present(workspace, tmp_path)
 
 def test_outputs_are_fingerprinted_when_the_data_is_still_there(workspace, tmp_path):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
+    (tmp_path / "cand").mkdir()
+    (tmp_path / "cand" / "case.cam.h0.0001-01.npz").write_bytes(b"candidate output")
+    (tmp_path / "cand" / "rpointer.atm").write_text("not an output\n")
 
     assert make_manifest.main(manifest_argv(workspace, case_json, [
         "--case-outputs", "pi-6month=%s" % (tmp_path / "cand")])) == 0
@@ -651,7 +312,7 @@ def test_outputs_are_fingerprinted_when_the_data_is_still_there(workspace, tmp_p
 
 def test_purged_outputs_warn_rather_than_fail(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json, [
         "--case-outputs", "pi-6month=%s" % (tmp_path / "gone")])) == 0
@@ -661,7 +322,7 @@ def test_purged_outputs_warn_rather_than_fail(workspace, tmp_path, capsys):
 def test_security_summary_is_translated_and_a_commit_mismatch_is_caught(
         workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     summary = tmp_path / "summary.json"
     summary.write_text(json.dumps({
         "schema": 1, "tool": "recast audit", "status": "INCOMPLETE",
@@ -696,7 +357,7 @@ def test_the_engine_gate_summary_is_read(workspace, tmp_path):
     not on PATH is `unavailable` there and `not_installed` here; the gate's name is
     whatever the producer wrote."""
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     summary = tmp_path / "summary.json"
     summary.write_text(json.dumps({
         "schema": 1, "tool": "recast audit", "status": "INCOMPLETE",
@@ -729,7 +390,7 @@ def test_a_gate_pass_with_an_unconfigured_plane_is_recorded_as_incomplete(worksp
     configured. The schema's PASS means every plane ran. make_manifest translates, and
     says so, rather than filing a PASS the verifier would reject."""
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     summary = tmp_path / "summary.json"
     summary.write_text(json.dumps({
         "schema": 1, "tool": "recast audit", "status": "PASS",
@@ -756,7 +417,7 @@ def test_a_gate_summary_without_schema_1_is_refused(workspace, tmp_path, capsys)
     """hpc-devsecops's own summary.json carried no `schema`; its reader went with the
     wrappers (step 9e), so such a file is refused rather than read by guesswork."""
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     summary = tmp_path / "summary.json"
     summary.write_text(json.dumps({
         "tool": "hpc-devsecops", "status": "PASS", "commit": workspace["artifact_commit"],
@@ -771,7 +432,7 @@ def test_a_gate_summary_without_schema_1_is_refused(workspace, tmp_path, capsys)
 
 def test_missing_benchmark_writes_nothing(workspace, tmp_path, capsys):
     (workspace["cc_test"] / "benchmarks" / "pycam5").mkdir(parents=True)
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 2
     assert "no benchmark for case" in capsys.readouterr().err
@@ -793,7 +454,7 @@ def test_yaml_benchmark_is_read_when_pyyaml_is_installed(workspace, tmp_path):
     directory = workspace["cc_test"] / "benchmarks" / "pycam5"
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "pi-6month.yaml").write_text(yaml.safe_dump(benchmark_document("pi-6month")))
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
 
     assert make_manifest.main(manifest_argv(workspace, case_json)) == 0
     manifest = json.loads((workspace["cc_test"] / "evidence" / "pycam5"
@@ -803,7 +464,7 @@ def test_yaml_benchmark_is_read_when_pyyaml_is_installed(workspace, tmp_path):
 
 def test_summary_markdown_is_written_on_request(workspace, tmp_path):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     summary = workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"] / "summary.md"
 
     assert make_manifest.main(manifest_argv(workspace, case_json,
@@ -825,7 +486,7 @@ def test_no_manifests_is_incomplete_not_clean(workspace, capsys):
 
 def test_strict_promotes_warnings(workspace, tmp_path):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -836,7 +497,7 @@ def test_strict_promotes_warnings(workspace, tmp_path):
 
 def test_tampered_result_is_caught(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0, 9.0])
+    case_json = comparator("fail")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -853,7 +514,7 @@ def test_tampered_result_is_caught(workspace, tmp_path, capsys):
 
 def test_gating_flag_must_match_the_benchmark_rule(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -869,7 +530,7 @@ def test_gating_flag_must_match_the_benchmark_rule(workspace, tmp_path, capsys):
 
 def test_version_directory_must_match(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     original = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"])
     moved = original.parent / "v9.9.9"
@@ -882,7 +543,7 @@ def test_version_directory_must_match(workspace, tmp_path, capsys):
 
 def test_provisional_statistical_acceptance_is_rejected(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -901,7 +562,7 @@ def test_provisional_statistical_acceptance_is_rejected(workspace, tmp_path, cap
 
 def test_append_only_catches_a_modified_manifest(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -924,7 +585,7 @@ def test_append_only_catches_a_modified_manifest(workspace, tmp_path, capsys):
 def test_append_only_covers_records_not_the_index_or_readme(workspace, tmp_path, capsys):
     """INDEX.md is regenerated by every filing; only a record's own files are immutable."""
     make_benchmark(workspace, "pi-6month")
-    make_manifest.main(manifest_argv(workspace, run_pair(tmp_path, [1.0], [1.0]),
+    make_manifest.main(manifest_argv(workspace, comparator("pass"),
                                      ["--summary", str(workspace["cc_test"] / "evidence" / "pycam5"
                                                        / workspace["version"] / "summary.md")]))
     evidence = workspace["cc_test"] / "evidence"
@@ -947,7 +608,7 @@ def test_append_only_covers_records_not_the_index_or_readme(workspace, tmp_path,
 
 def test_append_only_is_skipped_not_passed_without_a_base_ref(workspace, tmp_path, capsys):
     make_benchmark(workspace, "pi-6month")
-    case_json = run_pair(tmp_path, [1.0], [1.0])
+    case_json = comparator("pass")
     make_manifest.main(manifest_argv(workspace, case_json))
     path = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
             / "manifest.json")
@@ -978,7 +639,7 @@ def test_the_shipped_format_example_is_not_accepted_as_evidence(capsys):
 
 
 # --------------------------------------------------------------------------
-# dataio and scope matching
+# scope matching and output keys
 
 
 def test_brace_expansion_and_scope_matching():
@@ -994,26 +655,10 @@ def test_cam_key_strips_the_case_name():
     assert dataio.cam_key(Path("rpointer.atm")) is None
 
 
-def test_reading_a_file_with_no_variables_raises(tmp_path):
-    path = tmp_path / "empty.txt"
-    path.write_text("")
-    with pytest.raises(dataio.DataError):
-        dataio.read_variables(path)
-
-
-def test_dump_is_stable_and_format_sensitive(tmp_path):
-    path = write_source(tmp_path / "a.npz", T=field([1.0 / 3.0, 2.0 / 7.0]))
-    default = dataio.ArrayReader(path).numeric_digest(["T"])
-    coarse = dataio.ArrayReader(path, "%+.3g").numeric_digest(["T"])
-    assert default == dataio.ArrayReader(path).numeric_digest(["T"])
-    assert default != coarse, "a digest must depend on the dump format it records"
-
-
 # --------------------------------------------------------------------------
 # unit-differential cases: a RecastEngine summary as the comparator
 
 
-FIXTURES = ROOT / "tests" / "fixtures"
 UNIT_RULES = [
     {"check": "unit_set_equal", "units": ["fortran:toy_physics"], "gating": True},
     {"check": "confidence_at_least", "verifier": "static.rwset", "level": "sampled",
@@ -1290,7 +935,7 @@ def test_index_is_generated_from_the_manifests_and_check_detects_staleness(works
     import index_evidence
     monkeypatch.setattr(index_evidence, "EVIDENCE_DIR", workspace["cc_test"] / "evidence")
     make_benchmark(workspace, "pi-6month")
-    make_manifest.main(manifest_argv(workspace, run_pair(tmp_path, [1.0], [1.0])))
+    make_manifest.main(manifest_argv(workspace, comparator("pass")))
 
     assert index_evidence.main([]) == 0
     index = (workspace["cc_test"] / "evidence" / "INDEX.md").read_text()
@@ -1362,7 +1007,7 @@ def _validation_setup(workspace, tmp_path, monkeypatch):
     """A filed record and the product's VALIDATION.md rendered from it."""
     import check_validation
     make_benchmark(workspace, "pi-6month")
-    make_manifest.main(manifest_argv(workspace, run_pair(tmp_path, [1.0], [1.0])))
+    make_manifest.main(manifest_argv(workspace, comparator("pass")))
     manifest = (workspace["cc_test"] / "evidence" / "pycam5" / workspace["version"]
                 / "manifest.json")
     validation = workspace["product"] / "VALIDATION.md"

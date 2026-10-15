@@ -150,11 +150,13 @@ Val-Track/
 │       └── example-bitwise.manifest.json
 │
 ├── correctness/                    # the Correctness half (steps 2-3 DONE)
-│   ├── compare_runpair.py          # migrated from PyCAM5, plus --json
-│   ├── compare_stats.py            # Pipeline 2 statistical comparator (new)
 │   ├── make_manifest.py            # comparator output + environment probe -> manifest
 │   ├── verify_evidence.py          # schema + self-consistency check; the CI entry point
-│   └── dataio.py                   # shared input adapters; not a command-line tool
+│   ├── index_evidence.py           # evidence/INDEX.md + index.json
+│   ├── check_validation.py         # a product's VALIDATION.md, rendered and checked
+│   └── dataio.py                   # benchmark loading, output listing, rule_key
+│   (compare_runpair.py and compare_stats.py moved to recast-cesm scripts/compare/,
+│    CORRECTNESS-ORGANIZATION.md step 5)
 │
 ├── tests/
 │   └── test_correctness.py         # Correctness half, synthetic inputs, no NetCDF needed

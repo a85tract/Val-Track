@@ -9,9 +9,12 @@ taking it on trust. It answers two questions about each version:
 - **Correctness** — does the port compute the same answer as the code it replaces?
 - **Cyber** — has the code been scanned for secrets, known vulnerabilities, and defects?
 
-The two halves are independent tools that meet in one record. A reviewer should
-be able to open a single acceptance record and see both verdicts for the same
-commit, rather than trusting two separate green checkmarks.
+Val-Track is a results repository: it holds the records and the criteria they
+were judged by, and the small tools that assemble, verify and index them. It runs
+no comparison and no scanner. The comparisons run in RecastEngine and recast-cesm,
+the scans in the engine's Cyber gate; both verdicts meet in one record, so a
+reviewer opens a single acceptance record and sees both for the same commit,
+rather than trusting two separate green checkmarks.
 
 Nothing here is tied to one model. A product gets a directory under `benchmarks/`
 with its criteria, and its records land under `evidence/<product>/`; today those
@@ -21,14 +24,14 @@ machine-readable form, for the SciRecast site to read.
 
 | Half | What it does | Status |
 |---|---|---|
-| [Correctness](#correctness--does-the-port-compute-the-right-answer) | Compares a candidate run against a reference run and files the result as evidence | **Tools in place.** Schema, comparators, manifest builder and verifier all implemented; benchmarks written for clubb-jax (15) and clm-ml-jax (2); first acceptance record filed (clubb-jax, 15 cases, PASS, security NOT_RUN); `verify-evidence.yml` verifies every record and the index on each pull request and push to main |
+| [Correctness](#correctness--does-the-port-compute-the-right-answer) | Files a comparator's verdict on a candidate run against a reference as evidence | **Tools in place.** Schema, manifest builder, verifier and index implemented (the comparators moved to recast-cesm, step 5); benchmarks written for clubb-jax (15) and clm-ml-jax (2); first acceptance record filed (clubb-jax, 15 cases, PASS, security NOT_RUN); `verify-evidence.yml` verifies every record and the index on each pull request and push to main |
 | [Cyber](#cyber--the-security-block) | Records the Cyber gate's verdict (secret scan, SBOM + CVE + VEX, AI code audit, AddressSanitizer) in each acceptance record | **Recorded here, run elsewhere.** The gate is RecastEngine's `audit` recipe and recast-cesm's `audit-cesm`; Val-Track's own copies were deleted in step 9e (2026-10-15) |
 
 ## Repository layout
 
 ```
 schemas/       what an acceptance record is — JSON Schema + self-test
-correctness/   the four tools that produce and check one, plus their shared input adapter
+correctness/   the four tools that assemble, verify, index and render one
 benchmarks/    per-product case definitions and acceptance criteria — clubb-jax (15), clm-ml-jax (2)
 evidence/      acceptance records, one per validated version, append-only — one so far (clubb-jax)
 tests/         test_correctness.py (pytest)
@@ -52,7 +55,7 @@ reason the rest of the design looks the way it does:
 ```
 Layer 1 — produce evidence          (HPC, offline, PBS or by hand)
   Derecho: run reference + candidate
-        → correctness/compare_runpair.py --json
+        → recast-cesm scripts/compare/compare_runpair.py --json
         → make_manifest.py
         → evidence/<product>/<version>/manifest.json
         → pull request into this repository
@@ -98,7 +101,7 @@ against them until the tolerance, norm, variable set, and spread test are agreed
 
 ## Status and where to start
 
-The four tools under `correctness/` are implemented. What is still missing is
+The four tools under `correctness/` are implemented; the comparators that feed them are recast-cesm's `scripts/compare/`. What is still missing is
 data, not code: benchmarks exist for clubb-jax (15) and clm-ml-jax (2), and the
 first acceptance record is filed as `evidence/clubb-jax/unreleased-99c8b22f/` (15 cases,
 all PASS, security `NOT_RUN` because the Cyber gate has not run against that commit).
@@ -111,11 +114,9 @@ renders and checks the file).
 
 | Module | Step | State |
 |---|---|---|
-| `compare_runpair.py` | 2 | done — the PyCAM5 comparator with `--json`, neutral run-directory options, and the three-valued exit code |
 | `make_manifest.py` | 3 | done — comparator JSON + benchmark + environment probe + the Cyber gate's `summary.json` → a manifest |
 | `verify_evidence.py` | 3 | done — schema plus all 11 error invariants and 6 warnings from `schemas/README.md` |
 | `index_evidence.py` | 4 | done — regenerates `evidence/INDEX.md` and `evidence/index.json` from the manifests; `--check` exits 1 if either is stale or missing |
-| `compare_stats.py` | 8 | written, and decision **D4 is still open**. It evaluates both rule kinds under the readings recorded in `docs/VALIDATION-ARCHITECTURE.md` §8.1; the schema keeps its `provisional` marker and the verifier still rejects statistical evidence |
 | benchmarks, first acceptance record | 5, 4 | **both done for clubb-jax.** clubb-jax has 15 benchmarks, all PASS in the acceptance record filed 2026-09-24 (`verify_evidence.py`: 0 errors, 1 warning for `NOT_RUN`); clm-ml-jax has 2, blocked until the case commits the engine's schema-1 summary (`benchmarks/clm-ml-jax/README.md`). `verify-evidence.yml` verifies the record on every pull request and push to main (step 6) |
 
 Each tool exits `0` PASS, `1` FAIL, `2` ERROR, and `2` genuinely means *nothing
@@ -126,13 +127,13 @@ comparison as a clean one, would let a caller file a *passing* acceptance record
 for a comparison that never ran, which is the failure mode the explicit gating
 flags and `ERROR` status exist to prevent.
 
-Read `correctness/README.md` for how the five compose, what they depend on, and
+Read `correctness/README.md` for how the four compose, what they depend on, and
 the conventions they share, then `docs/VALIDATION-ARCHITECTURE.md` for the
-migration order, the open decisions, and who owns what. Both test suites are
-runnable, and neither needs a NetCDF stack:
+migration order, the open decisions, and who owns what. Both test suites run
+in a bare checkout; neither reads model output:
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install numpy jsonschema pyyaml pytest
+python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
 .venv/bin/python schemas/test_schemas.py          # schema self-test
 .venv/bin/python -m pytest tests/test_correctness.py
 ```
@@ -175,7 +176,7 @@ where you want the LLM audit (the old wrapper chose it for repositories carrying
 | Area | Owner |
 |---|---|
 | Correctness framework — schema, structure, contracts | lewisychen |
-| Correctness implementation — comparators, manifest builder, verifier, benchmarks | Qinrun |
+| Correctness implementation — manifest builder, verifier, benchmarks (the comparators, now in recast-cesm) | Qinrun |
 | Cyber gate — RecastEngine's `audit` recipe, recast-cesm's `audit-cesm`, the product-repo config | Chien-Wei |
 
 `docs/VALIDATION-ARCHITECTURE.md` §8 tracks the open decisions. One still needs a
@@ -183,7 +184,7 @@ person, not more code:
 
 - **D4** — the Pipeline 2 acceptance vocabulary. The ULP family is settled
   (2026-09-24) as the `unit-differential` kind, read from a RecastEngine
-  summary. The ensemble-spread family is not: `compare_stats.py` is written, but
+  summary. The ensemble-spread family is not: recast-cesm's `compare_stats.py` is written, but
   it did not settle it: it states the reading it takes for each
   undecided point (`docs/VALIDATION-ARCHITECTURE.md` §8.1) and those readings
   need confirming or overturning by a person. Until then the schema keeps its
@@ -197,6 +198,7 @@ record is never silently missing the Cyber half rather than honestly marking it
 absent. See `docs/VALIDATION-ARCHITECTURE.md` §11.
 
 **D7** and **D8** — where the whole-model comparator lives, and what Val-Track is —
-were settled on 2026-09-24: the comparators move to the engine as `fullmodel.bitwise`,
-and Val-Track narrows to its acceptance records and the criteria. `correctness/` is
-transitional until migration step 5 of `docs/CORRECTNESS-ORGANIZATION.md` lands.
+were settled on 2026-09-24: the whole-model comparison is the engine's `fullmodel.bitwise`,
+and Val-Track narrows to its acceptance records and the criteria. Both moves are done:
+the comparators went to recast-cesm's `scripts/compare/` (step 5, 2026-10-15), the Cyber
+tooling to the engine (step 9e).
