@@ -1100,3 +1100,25 @@ def test_the_filed_clubb_jax_record_renders_a_validation_md(capsys):
     assert "| Validated commit | `99c8b22fab697d5fb5fb14b4bfaa6a2963fed78d` |" in text
     assert "unit-differential — 15 benchmarks under `benchmarks/clubb-jax/`" in text
     assert "| Record           | `evidence/clubb-jax/unreleased-99c8b22f/` |" in text
+
+
+# The key make_manifest.py binds a benchmark rule to a measurement by. Val-Track's
+# dataio.rule_key and recast-cesm's compare_stats.rule_key are two copies of one
+# function; each repository pins this same literal, so neither can drift alone.
+RULE_KEY_CONTRACT = (
+    {
+        "scope": "*.cam.{h0,r,rh0,rs}.*",
+        "check": "numeric_md5_equal",
+        "dump_tool": "numpy",
+        "dump_format": "%+.17g",
+        "gating": True,
+        "note": "ignored",
+    },
+    '{"check": "numeric_md5_equal", "dump_format": "%+.17g", '
+    '"dump_tool": "numpy", "scope": "*.cam.{h0,r,rh0,rs}.*"}',
+)
+
+
+def test_rule_key_matches_the_other_repository():
+    rule, key = RULE_KEY_CONTRACT
+    assert dataio.rule_key(rule) == key
