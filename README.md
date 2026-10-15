@@ -1,23 +1,30 @@
 # Val-Track — Validation Track
 
-The validation hub for the CESM/CAM modernization effort. It answers two
-questions about a modernized model component, and keeps the answers as evidence
-somebody else can check:
+A ledger of acceptance records for modernized scientific code. When a component
+is ported to a new language or framework — a CAM physics package to Python, a
+CLUBB or CLM kernel to JAX — this repository holds what it was checked against
+and what the check found, so somebody else can verify the claim instead of
+taking it on trust. It answers two questions about each version:
 
-- **Correctness** — does the port compute the same answer as the Fortran it replaces?
+- **Correctness** — does the port compute the same answer as the code it replaces?
 - **Cyber** — has the code been scanned for secrets, known vulnerabilities, and defects?
 
 The two halves are independent tools that meet in one record. A reviewer should
 be able to open a single acceptance record and see both verdicts for the same
 commit, rather than trusting two separate green checkmarks.
 
+Nothing here is tied to one model. A product gets a directory under `benchmarks/`
+with its criteria, and its records land under `evidence/<product>/`; today those
+are CESM components (PyCAM5, freeCAM, clubb-jax, clm-ml-jax), and the format does
+not assume they will stay that way. `evidence/index.json` lists every record in
+machine-readable form, for the SciRecast site to read.
+
 | Half | What it does | Status |
 |---|---|---|
 | [Correctness](#correctness--does-the-port-compute-the-right-answer) | Compares a candidate run against a reference run and files the result as evidence | **Tools in place.** Schema, comparators, manifest builder and verifier all implemented; benchmarks written for clubb-jax (15) and clm-ml-jax (2); first acceptance record filed (clubb-jax, 15 cases, PASS, security NOT_RUN); `verify-evidence.yml` verifies every record and the index on each pull request and push to main |
 | [Cyber](#cyber--the-hpc-devsecops-gate) | Secret scan, SBOM + CVE + VEX, AI code audit, AddressSanitizer | **In use.** Verified on Derecho. Since 2026-09-25 the checks are RecastEngine's `audit` recipe and the scripts here are wrappers over it (step 9d); the sanitizer plane and the AI audit's own script follow once recast-cesm's scanners are merged |
 
-The Cyber half is also usable standalone against any git repository — it does
-not depend on anything CESM-specific.
+The Cyber half is also usable standalone against any git repository.
 
 ## Repository layout
 
@@ -46,9 +53,10 @@ SECURITY.md    the gate's security model, trust boundaries, and disclosure polic
 
 ## The constraint that shapes everything
 
-A real validation run is a CESM build plus a multi-year integration on Derecho:
-the ifx toolchain, input data, hours of compute, and `/glade` storage. **A GitHub
-runner cannot do any of that.** So the work splits in two, and the split is the
+A real validation run usually needs the machine the model lives on. For a CESM
+component it is a CESM build plus a multi-year integration on Derecho: the ifx
+toolchain, input data, hours of compute, and `/glade` storage. **A GitHub runner
+cannot do any of that.** So the work splits in two, and the split is the
 reason the rest of the design looks the way it does:
 
 ```
