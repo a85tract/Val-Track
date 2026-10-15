@@ -116,5 +116,5 @@
   },
   "result": "PASS",
   "timestamp": "2026-09-24T00:00:00Z",
-  "notes": "ILLUSTRATIVE FORMAT EXAMPLE - NOT EVIDENCE. Assembled by make_manifest.py from tests/fixtures/recast-summary.toy_physics.json (a real RecastEngine summary of the engine's own corpus module, engine commit 430d9038) against schemas/examples/example-unit-differential.benchmark.yaml. The engine's summary deliberately omits the compiler, so it is not captured here and evidence_class is 'reconstructed'. The benchmark path names a file that does not exist under benchmarks/, which is why verify_evidence.py refuses it. The Cyber gate was not run. Do not copy this file into evidence/."
+  "notes": "ILLUSTRATIVE FORMAT EXAMPLE - NOT EVIDENCE. Assembled by make_manifest.py from tools/fixtures/recast-summary.toy_physics.json (a real RecastEngine summary of the engine's own corpus module, engine commit 430d9038) against schemas/examples/example-unit-differential.benchmark.yaml. The engine's summary deliberately omits the compiler, so it is not captured here and evidence_class is 'reconstructed'. The benchmark path names a file that does not exist under benchmarks/, which is why verify_evidence.py refuses it. The Cyber gate was not run. Do not copy this file into evidence/."
 }

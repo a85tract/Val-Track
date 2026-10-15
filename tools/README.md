@@ -45,7 +45,7 @@ filed as `../clubb-jax/evidence/unreleased-99c8b22f/` (15 cases, PASS, security 
 `verify_evidence.py` reports 0 errors and 1 warning). Its `cc_test.commit` (`86a46e8c`) is the
 commit that holds the tooling and benchmarks that produced it; see `../README.md`.
 `.github/workflows/verify-evidence.yml` checks it: on every pull request and push to `main` it runs
-`../schemas/test_schemas.py`, `pytest tests/test_tools.py`, `verify_evidence.py` (with
+`../schemas/test_schemas.py`, `pytest tools/test_tools.py`, `verify_evidence.py` (with
 `--base-ref origin/<base>` on a pull request, so the append-only check runs) and
 `index_evidence.py --check`.
 The format examples under `schemas/examples/` name
@@ -121,12 +121,12 @@ Standard library, plus:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
-.venv/bin/python -m pytest tests/test_tools.py
+.venv/bin/python -m pytest tools/test_tools.py
 .venv/bin/python schemas/test_schemas.py
 ```
 
-`tests/test_tools.py` reads committed comparator results under
-`../tests/fixtures/comparator/` and never touches model output, so the suite runs in a bare
+`test_tools.py` reads committed comparator results under
+`fixtures/comparator/` and never touches model output, so the suite runs in a bare
 checkout.
 
 ## Conventions these tools share
@@ -135,7 +135,7 @@ checkout.
 - **The comparator JSON matches the schema's shape directly.** `compare_runpair.py --json`
   emits `files[]` and `timing` that drop into `cases[].result` with no transformation, so
   `make_manifest.py` never has to reshape anything. That shape is the contract between
-  recast-cesm and this repository; the fixtures under `../tests/fixtures/comparator/` pin it.
+  recast-cesm and this repository; the fixtures under `fixtures/comparator/` pin it.
 - **Exit codes are three-valued, matching the schema's `status`:** `0` PASS, `1` FAIL,
   `2` ERROR (the comparison could not be carried out — a missing file, a mismatched file
   set, an unreadable format, no overlapping variables). A failed comparison and an absent

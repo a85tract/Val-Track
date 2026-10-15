@@ -39,7 +39,7 @@ jobs:
       - name: Tool tests
         # Includes: every committed benchmark validates against the acceptance
         # schema, and the filed records verify clean with a current index.
-        run: python -m pytest -q tests/test_tools.py
+        run: python -m pytest -q tools/test_tools.py
 
       - name: Verify every acceptance record
         run: |

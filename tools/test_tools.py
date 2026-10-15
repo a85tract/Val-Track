@@ -2,7 +2,7 @@
 """Tests for the Correctness half.
 
 Synthetic inputs only, and no model output at all: comparator results are the
-committed JSON under `tests/fixtures/comparator/`, written by recast-cesm's
+committed JSON under `tools/fixtures/comparator/`, written by recast-cesm's
 `scripts/compare/compare_runpair.py` (where the comparators and their own tests
 now live, CORRECTNESS-ORGANIZATION.md step 5). The suite runs in a bare checkout.
 
@@ -12,7 +12,7 @@ point of the suite: the failure mode this repository's schema exists to prevent
 is an absent comparison filed as a passing one, so each tool is tested for
 saying ERROR / exit 2 rather than PASS when it had nothing to compare.
 
-    python -m pytest tests/test_tools.py
+    python -m pytest tools/test_tools.py
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ import verify_evidence  # noqa: E402
 # synthetic inputs
 
 
-FIXTURES = ROOT / "tests" / "fixtures"
+FIXTURES = ROOT / "tools" / "fixtures"
 
 
 def comparator(name: str) -> Path:
