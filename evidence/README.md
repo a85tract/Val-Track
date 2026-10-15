@@ -12,7 +12,7 @@ machine-readable part of each record is `manifest.json`, and its schema is
 `evidence-manifest.v1.json`. "Manifest" in these docs always means that file.
 RecastEngine's one-file-per-verdict output (`recast.evidence.v1`, which the engine's own
 docs call evidence manifests) is a different document and is not an acceptance record;
-CC-Test never files or reads it.
+Val-Track never files or reads it.
 
 ```
 manifest.json    the machine-readable record — validates against ../schemas/evidence-manifest.v1.json
@@ -38,7 +38,7 @@ request, so the append-only check (invariant 8) runs in CI against the base bran
 The one acceptance record so far is `clubb-jax/unreleased-99c8b22f/`: clubb-jax `99c8b22f` against
 CLUBB_core `8ab3902`, 15 cases judged by RecastEngine `e3c6717` from the summaries the case
 commits, all PASS, `evidence_class: complete`, `security.status: NOT_RUN`. Its
-`cc_test.commit` (`86a46e8c`) is the CC-Test commit that holds the benchmarks and the
+`cc_test.commit` (`86a46e8c`) is the Val-Track commit that holds the benchmarks and the
 tooling that produced it; the record was assembled at that commit and committed after it.
 File every record the same way: commit criteria and tooling first, assemble, then commit
 the record, so that `cc_test.commit` names the code that made it.

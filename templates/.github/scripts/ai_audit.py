@@ -305,7 +305,7 @@ def to_sarif(findings: list[dict], ok: bool, notes: list[str]) -> dict:
                 "tool": {
                     "driver": {
                         "name": "ai_audit",
-                        "informationUri": "https://github.com/a85tract/CESM-CC-Test",
+                        "informationUri": "https://github.com/a85tract/Val-Track",
                         "rules": list(rules.values()),
                     }
                 },

@@ -866,7 +866,7 @@ def write_summary(manifest: dict, path: Path) -> None:
         "| Reference | %s%s |" % (manifest["reference"]["model"],
                                   ", " + manifest["reference"]["commit_or_tag"]
                                   if manifest["reference"].get("commit_or_tag") else ""),
-        "| CC-Test | %s (`%s`) |" % (manifest["cc_test"]["version"],
+        "| Val-Track | %s (`%s`) |" % (manifest["cc_test"]["version"],
                                      manifest["cc_test"]["commit"][:8]),
         "| Machine | %s |" % manifest["environment"]["machine"],
         "| Compiler | %s |" % manifest["environment"].get("compiler", "_not captured_"),

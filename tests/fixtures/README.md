@@ -7,4 +7,4 @@
 The summary is the input a `unit-differential` case hands to `make_manifest.py`.
 It is copied rather than referenced so the suite runs in a bare checkout; when
 the engine changes the summary's shape, re-copy it and record the new commit
-here — a diff in this file is a change in what CC-Test has to read.
+here — a diff in this file is a change in what Val-Track has to read.

@@ -108,13 +108,13 @@ def init_repo(path: Path, remote: str = None) -> str:
 
 @pytest.fixture
 def workspace(tmp_path, monkeypatch):
-    """A throwaway CC-Test checkout and a throwaway product checkout.
+    """A throwaway Val-Track checkout and a throwaway product checkout.
 
     The tools resolve benchmarks, evidence and cc_test.commit against the
     repository root, so the tests give them a real one rather than reaching
     into the developer's own working tree.
     """
-    cc_test = tmp_path / "cc-test"
+    cc_test = tmp_path / "val-track"
     cc_commit = init_repo(cc_test)
     product = tmp_path / "PyCAM5"
     artifact_commit = init_repo(product, "git@github.com:a85tract/PyCAM5.git")
@@ -1374,7 +1374,7 @@ def test_validation_md_is_rendered_from_the_record(workspace, tmp_path, monkeypa
     assert "| Result           | PASS |" in text
     assert "| Tests            | 1 case — 1 passed, 0 failed, 0 error |" in text
     assert "bitwise — 1 benchmark under `benchmarks/pycam5/`" in text
-    assert "https://github.com/a85tract/CESM-CC-Test/tree/main/evidence/pycam5/" in text
+    assert "https://github.com/a85tract/Val-Track/tree/main/evidence/pycam5/" in text
     assert text.rstrip().endswith("> Current HEAD is the validated commit.")
 
 

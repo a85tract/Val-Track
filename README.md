@@ -1,4 +1,4 @@
-# CC-Test — Correctness and Cyber Test
+# Val-Track — Validation Track
 
 The validation hub for the CESM/CAM modernization effort. It answers two
 questions about a modernized model component, and keeps the answers as evidence
@@ -275,7 +275,7 @@ CAM with inputs) and ~2–3× slower, so it lives here, not in `git push`.
 ```bash
 # Clone into ~/hpc-devsecops so all the default paths (venv,
 # ~/.config/hpc-devsecops.env, ~/audits/hpc-devsecops) resolve with no extra config.
-git clone git@github.com:a85tract/CESM-CC-Test.git ~/hpc-devsecops
+git clone git@github.com:a85tract/Val-Track.git ~/hpc-devsecops
 # Cloned somewhere else? point the toolkit at it:
 #   export HPC_DEVSECOPS_HOME=/path/to/your/checkout
 # The engine: see Requirements (RECAST_BIN, RECAST_HOME).
@@ -380,7 +380,7 @@ block; when the gate has not run for that commit its `status` is `NOT_RUN`, so a
 record is never silently missing the Cyber half rather than honestly marking it
 absent. See `docs/VALIDATION-ARCHITECTURE.md` §11.
 
-**D7** and **D8** — where the whole-model comparator lives, and what CC-Test is —
+**D7** and **D8** — where the whole-model comparator lives, and what Val-Track is —
 were settled on 2026-09-24: the comparators move to the engine as `fullmodel.bitwise`,
-and CC-Test narrows to its acceptance records and the criteria. `correctness/` is
+and Val-Track narrows to its acceptance records and the criteria. `correctness/` is
 transitional until migration step 5 of `docs/CORRECTNESS-ORGANIZATION.md` lands.

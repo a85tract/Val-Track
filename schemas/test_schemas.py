@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Self-test for the CC-Test schemas.
+"""Self-test for the Val-Track schemas.
 
 The format example must validate, and every deliberate mutation below must be
 rejected. Run from the repository root:

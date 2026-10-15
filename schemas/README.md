@@ -1,4 +1,4 @@
-# CC-Test schemas
+# Val-Track schemas
 
 Machine-readable definition of what an acceptance record is. See
 `../docs/VALIDATION-ARCHITECTURE.md` for the architecture these schemas serve.
@@ -58,7 +58,7 @@ enforces: dominant elements within `ulp_gate`, every element within `rel_gate`, 
 `waivers` written in the benchmark with a reason), and `nan_mask_equal`. `make_manifest.py`
 requires the gate the verifier recorded to equal the benchmark's, so a run and a
 benchmark that describe different criteria cannot yield a PASS. The engine's own
-per-verdict files are `recast.evidence.v1` records, a different document; CC-Test never
+per-verdict files are `recast.evidence.v1` records, a different document; Val-Track never
 reads those.
 
 **Statistical acceptance is provisional and blocked.** `acceptance.v1.json` defines
