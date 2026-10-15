@@ -163,7 +163,7 @@
 
     "security": {
       "type": "object",
-      "description": "The Cyber half's verdict on the artifact commit that this evidence package validates. Mirrors the summary.json written by tools/devsecops-local.sh. Every scan reports a state alongside its counts: a finding count of zero from a scan that never ran is not a clean result, and recording the count without the state would file that false assurance permanently.",
+      "description": "The Cyber half's verdict on the artifact commit that this evidence package validates. Mirrors the gate summary written by `recast run audit --gate-summary` (originally hpc-devsecops's summary.json, same shape). Every scan reports a state alongside its counts: a finding count of zero from a scan that never ran is not a clean result, and recording the count without the state would file that false assurance permanently.",
       "properties": {
         "gate": {
           "type": "string",

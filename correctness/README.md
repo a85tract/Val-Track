@@ -69,7 +69,7 @@ correctness/make_manifest.py \
     --outputs-location /glade/derecho/scratch/$USER/pi-codon/run \
     --outputs-retention "scratch, purged ~2026-12-01" \
     --case-outputs pi-6month-allcodon=/glade/derecho/scratch/$USER/pi-codon/run \
-    --security-summary ~/audits/hpc-devsecops/PyCAM5/<ts>/summary.json \
+    --security-summary ~/audits/recast/PyCAM5/<ts>/summary.json \
     --summary  evidence/pycam5/unreleased-e8d68996/summary.md \
     --out      evidence/pycam5/unreleased-e8d68996/manifest.json
 
@@ -83,10 +83,9 @@ correctness/check_validation.py check --validation VALIDATION.md --product-repo 
     --evidence-dir <val-track>/evidence [--strict] [--refresh]     # from the product checkout
 ```
 
-`--security-summary` takes the Cyber gate's `summary.json` from either producer:
-`tools/devsecops-local.sh`, or `recast run audit <root> --gate-summary PATH`, which writes the
-same shape plus `"schema": 1`. Both call the gate `PASS` when nothing blocking was found among
-the planes that ran; the schema's `PASS` means every plane ran, so a `PASS` with a plane in
+`--security-summary` takes the Cyber gate's summary, written by `recast run audit <root>
+--gate-summary PATH` (or `audit-cesm` for the LLM audit plane); a file without `"schema": 1`
+is refused. The gate says `PASS` when nothing blocking was found among the planes that ran; the schema's `PASS` means every plane ran, so a `PASS` with a plane in
 `not_configured`, `skipped` or `unavailable` is recorded as `INCOMPLETE` and a warning says so.
 
 For a `unit-differential` case the comparator is RecastEngine, and the "comparator JSON" is the

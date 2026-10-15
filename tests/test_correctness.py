@@ -509,7 +509,7 @@ def test_round_trip_pass(workspace, tmp_path, capsys):
     assert manifest["artifact"]["version"] == workspace["version"]
     assert manifest["cc_test"]["commit"] == workspace["cc_commit"]
     assert manifest["evidence_class"] == "reconstructed"  # no compiler was captured
-    assert manifest["security"] == {"gate": "hpc-devsecops", "status": "NOT_RUN"}
+    assert manifest["security"] == {"gate": "recast audit", "status": "NOT_RUN"}
 
     case, = manifest["cases"]
     assert case["benchmark"] == "benchmarks/pycam5/pi-6month.json"
@@ -664,8 +664,8 @@ def test_security_summary_is_translated_and_a_commit_mismatch_is_caught(
     case_json = run_pair(tmp_path, [1.0], [1.0])
     summary = tmp_path / "summary.json"
     summary.write_text(json.dumps({
-        "tool": "hpc-devsecops", "status": "INCOMPLETE",
-        "commit": "0" * 40, "timestamp": "20260903T000000Z-1",
+        "schema": 1, "tool": "recast audit", "status": "INCOMPLETE",
+        "commit": "0" * 40, "timestamp": "2026-09-03T00:00:00+00:00",
         "scans": {
             "secrets": {"state": "passed", "findings": 0},
             "cve": {"state": "unavailable", "critical": 0, "high": 0},
@@ -691,11 +691,10 @@ def test_security_summary_is_translated_and_a_commit_mismatch_is_caught(
     assert "is not artifact.commit" in capsys.readouterr().out
 
 
-def test_the_engine_gate_summary_is_read_like_the_scripts(workspace, tmp_path):
-    """`recast run audit --gate-summary` writes hpc-devsecops's summary.json shape plus
-    `schema: 1`; make_manifest reads it unchanged. A tool that was not on PATH is
-    `unavailable` there and `not_installed` here; the gate's name is whatever the
-    producer wrote."""
+def test_the_engine_gate_summary_is_read(workspace, tmp_path):
+    """make_manifest reads `recast run audit --gate-summary` unchanged. A tool that was
+    not on PATH is `unavailable` there and `not_installed` here; the gate's name is
+    whatever the producer wrote."""
     make_benchmark(workspace, "pi-6month")
     case_json = run_pair(tmp_path, [1.0], [1.0])
     summary = tmp_path / "summary.json"
@@ -726,7 +725,7 @@ def test_the_engine_gate_summary_is_read_like_the_scripts(workspace, tmp_path):
     assert verify_evidence.main([str(path)]) == 0  # INCOMPLETE is a warning, not an error
 
 def test_a_gate_pass_with_an_unconfigured_plane_is_recorded_as_incomplete(workspace, tmp_path, capsys):
-    """hpc-devsecops, and the engine after it, say PASS when the AI audit is simply not
+    """The engine's gate says PASS when the AI audit is simply not
     configured. The schema's PASS means every plane ran. make_manifest translates, and
     says so, rather than filing a PASS the verifier would reject."""
     make_benchmark(workspace, "pi-6month")
@@ -752,6 +751,23 @@ def test_a_gate_pass_with_an_unconfigured_plane_is_recorded_as_incomplete(worksp
     capsys.readouterr()
     assert verify_evidence.main([str(path)]) == 0
     assert "INCOMPLETE" in capsys.readouterr().out  # a warning, not an error
+
+def test_a_gate_summary_without_schema_1_is_refused(workspace, tmp_path, capsys):
+    """hpc-devsecops's own summary.json carried no `schema`; its reader went with the
+    wrappers (step 9e), so such a file is refused rather than read by guesswork."""
+    make_benchmark(workspace, "pi-6month")
+    case_json = run_pair(tmp_path, [1.0], [1.0])
+    summary = tmp_path / "summary.json"
+    summary.write_text(json.dumps({
+        "tool": "hpc-devsecops", "status": "PASS", "commit": workspace["artifact_commit"],
+        "scans": {"secrets": {"state": "passed"}, "cve": {"state": "passed"},
+                  "ai_audit": {"state": "reviewed"}}}))
+
+    assert make_manifest.main(manifest_argv(workspace, case_json, [
+        "--security-summary", str(summary)])) == 2
+    assert "gate-summary schema None" in capsys.readouterr().err
+    assert not (workspace["cc_test"] / "evidence" / "pycam5").exists()
+
 
 def test_missing_benchmark_writes_nothing(workspace, tmp_path, capsys):
     (workspace["cc_test"] / "benchmarks" / "pycam5").mkdir(parents=True)

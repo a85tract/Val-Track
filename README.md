@@ -22,9 +22,7 @@ machine-readable form, for the SciRecast site to read.
 | Half | What it does | Status |
 |---|---|---|
 | [Correctness](#correctness--does-the-port-compute-the-right-answer) | Compares a candidate run against a reference run and files the result as evidence | **Tools in place.** Schema, comparators, manifest builder and verifier all implemented; benchmarks written for clubb-jax (15) and clm-ml-jax (2); first acceptance record filed (clubb-jax, 15 cases, PASS, security NOT_RUN); `verify-evidence.yml` verifies every record and the index on each pull request and push to main |
-| [Cyber](#cyber--the-hpc-devsecops-gate) | Secret scan, SBOM + CVE + VEX, AI code audit, AddressSanitizer | **In use.** Verified on Derecho. Since 2026-09-25 the checks are RecastEngine's `audit` recipe and the scripts here are wrappers over it (step 9d); the sanitizer plane and the AI audit's own script follow once recast-cesm's scanners are merged |
-
-The Cyber half is also usable standalone against any git repository.
+| [Cyber](#cyber--the-security-block) | Records the Cyber gate's verdict (secret scan, SBOM + CVE + VEX, AI code audit, AddressSanitizer) in each acceptance record | **Recorded here, run elsewhere.** The gate is RecastEngine's `audit` recipe and recast-cesm's `audit-cesm`; Val-Track's own copies were deleted in step 9e (2026-10-15) |
 
 ## Repository layout
 
@@ -33,18 +31,10 @@ schemas/       what an acceptance record is — JSON Schema + self-test
 correctness/   the four tools that produce and check one, plus their shared input adapter
 benchmarks/    per-product case definitions and acceptance criteria — clubb-jax (15), clm-ml-jax (2)
 evidence/      acceptance records, one per validated version, append-only — one so far (clubb-jax)
-tests/         run.sh (Cyber, integration) and test_correctness.py (Correctness, pytest)
+tests/         test_correctness.py (pytest)
 docs/          VALIDATION-ARCHITECTURE.md — the plan, ownership, open decisions
                CORRECTNESS-ORGANIZATION.md — which repository owns which part (D7, D8)
-
-tools/         the Cyber gate's entry points: devsecops-local.sh, install-config.sh (wrappers
-               over RecastEngine's audit recipe and installer; engine.sh finds the engine),
-               install-hooks.sh, asan.sh (not wrapped yet)
-templates/     hpc-devsecops's starter .gitleaks.toml / .vex/openvex.json / ai_audit.py;
-               install-config.sh installs the engine's templates now, these go with step 9e
-hooks/         pre-push: chooses the recipe, then runs the engine's hook
-hpc/           asan-cam.pbs
-SECURITY.md    the gate's security model, trust boundaries, and disclosure policy
+SECURITY.md    what this repository holds of the Cyber half, and its disclosure policy
 ```
 
 ---
@@ -149,216 +139,34 @@ python3 -m venv .venv && .venv/bin/pip install numpy jsonschema pyyaml pytest
 
 ---
 
-# Cyber — the hpc-devsecops gate
+# Cyber — the security block
 
-A reusable **local** DevSecOps gate for HPC. It runs the same checks as your
-cloud CI pipeline — secret scan, SBOM + CVE + VEX, and an LLM code audit — on
-your own machine, **before you push**. Catch problems (especially leaked
-secrets) while they are still on your login node, not after they reach GitHub.
-
-Built for scientific codebases on HPC (rootless install, no Docker, works
-offline), but it is generic — point it at any git repo.
-
-Since 2026-09-25 (step 9d of `docs/CORRECTNESS-ORGANIZATION.md`) the checks
-themselves are [RecastEngine](https://github.com/a85tract/RecastEngine)'s `audit`
-recipe — the same gitleaks and syft/grype/VEX stages, gating the same way — run
-as `recast run audit <repo> --range <range> --gate-summary <out>/summary.json`.
-`tools/devsecops-local.sh`, `tools/install-config.sh` and `hooks/pre-push` are
-wrappers over the engine's scripts (`tools/engine.sh` finds it), keeping the
-flags, the report location and the exit contract below; a user of the pre-push
-hook sees no change. What the wrappers add is the choice of recipe: `audit-cesm`,
-which carries recast-cesm's LLM audit plane, for a repository that opted into the
-AI audit. The engine's `docs/cyber-gate.md` is the handoff: what moved, what was
-kept, what was changed on purpose.
-
-## Status
-
-Verified on Derecho (NCAR) as the local + sanitizer half of a three-plane
-DevSecOps setup for CAM (the cloud plane — secret + SBOM/CVE + AI audit on every
-PR — lives in the target repo's `.github/`):
-
-- **Local gate** — gitleaks, `syft → grype → VEX`, and the Claude AI audit all
-  run locally against a repo's own config; a `pre-push` hook blocks pushes on
-  findings. Reuses the target repo's `.gitleaks.toml` / `.vex/openvex.json` /
-  `.recast-audit.json`, so local and cloud results never drift.
-- **Sanitizer plane** — `tools/asan.sh` compiles and runs a Fortran/C reproducer
-  under `ifx -fsanitize=address`; confirmed it catches a Fortran
-  heap-buffer-overflow with exact `file:line`. `hpc/asan-cam.pbs` scaffolds the
-  full-model run.
-
-## Why run it locally first?
-
-- 🔒 **Secrets never leave your machine.** Once a key is pushed it is compromised
-  even if you delete it. A local gate stops it before the first `git push`.
-- ⚡ **Seconds, not CI minutes.** Fast feedback; no waiting on a runner, no noisy
-  red PRs, no burned Actions minutes.
-- 🕵️ **Private.** Findings stay on your box — useful for pre-disclosure security
-  work.
-- 🔧 **Does what the cloud can't.** Run native sanitizers (`ifx -fsanitize=address`)
-  that need the real HPC toolchain — see the sanitizer plane below.
-
-## What it checks
-
-It is **config-agnostic**: you point it at a target repo and it reuses *that
-repo's own* configuration, so local and cloud never drift.
-
-| Check | Tool | Config it reuses from the target repo |
-|---|---|---|
-| 🔑 Secret scan | `gitleaks` | `.gitleaks.toml` |
-| 📦 SBOM + CVE + VEX | `syft` → `grype` | `.vex/openvex.json` |
-| 🤖 AI code audit | recast-cesm's `llm-audit` scanner (Claude), a stage of the `audit-cesm` recipe | opted in by `.github/scripts/ai_audit.py` being present, or `RECAST_AUDIT_RECIPE=audit-cesm` |
-
-Install the configs into a target repo with `tools/install-config.sh <repo>`: the
-engine's `.gitleaks.toml`, `.vex/openvex.json` and `.recast-audit.json` (the run
-config the hook hands to `recast`). Commit them in the target repo so CI reads the
-same config the local gate does. `ai_audit.py` is no longer installed — the audit
-is a scanner now — but a repository that still carries it is treated as opted in.
-
-The gate **fails closed**: if a configured or required check does not actually run
-(missing tool, unavailable key, malformed output), it reports **INCOMPLETE**, never
-`clean` — a finding count of zero from a scan that never happened is not a clean
-result. Under `--block` an incomplete gate blocks the push (exit 2); pass
-`--require-complete` to block on incompleteness even without `--block`.
-
-## Requirements
-
-Single static binaries in `~/bin` (no root needed):
+Val-Track runs no scanner. Each acceptance record carries a `security` block: the
+Cyber gate's verdict for the same commit the correctness verdict covers, so a
+reviewer reads one record and sees both. The gate is
+[RecastEngine](https://github.com/a85tract/RecastEngine)'s `audit` recipe (secret
+scan, SBOM + CVE + VEX), or recast-cesm's `audit-cesm`, which adds the LLM code audit
+and the AddressSanitizer plane. Run it against the validated commit and hand its
+summary to `make_manifest.py`:
 
 ```bash
-# gitleaks, syft, grype — grab the linux_x64 release tarballs into ~/bin
-gitleaks version && syft version && grype version
+recast run audit <product-checkout> --gate-summary summary.json
+correctness/make_manifest.py ... --security-summary summary.json
 ```
 
-And the engine: a RecastEngine checkout with `recast` installed into an
-environment that is active when you push (an editable install, `uv pip install -e`,
-is what the wrappers expect). `RECAST_BIN` names the executable if it is not on
-PATH; `RECAST_HOME` names the checkout if the wrappers cannot derive it from the
-executable. A missing engine blocks the push (exit 2), as a missing scanner did.
+`make_manifest.py` reads only that file (`"schema": 1`); with no summary the record says
+`NOT_RUN`. The gate calls itself `PASS` when nothing blocking was found among the planes
+that ran; the schema's `PASS` means every plane ran, so a gate `PASS` with an unrun plane
+is recorded as `INCOMPLETE`, with a warning. Findings never enter Val-Track.
 
-For the AI audit, install recast-cesm into the same environment (its `llm-audit`
-scanner and the `audit-cesm` recipe), and put the key where its provider reads it:
-`ANTHROPIC_API_KEY` in the environment, else `~/.config/recast/agent.env` with mode
-0600. The login node has outbound network for the API; compute nodes usually do not.
-
-One-time, so `grype` can run offline afterwards:
-
-```bash
-grype db update
-export GRYPE_DB_AUTO_UPDATE=false
-```
-
-## Sanitizer plane — ifx + AddressSanitizer (heap OOB / UAF)
-
-Runtime memory-safety analysis with the **native** Intel compiler. This is the
-heavy, on-demand/nightly counterpart to the fast pre-push gate (which uses the
-AI audit for Fortran). Verified on Derecho: `ifx 2025.2.1 -fsanitize=address`
-catches a Fortran heap-buffer-overflow with exact `file:line`.
-
-Confirm a reproducer / PoC:
-
-```bash
-module load intel-oneapi
-~/hpc-devsecops/tools/asan.sh mybug.F90            # or several sources, [-- args]
-# 🔴 ASan detected a problem:  heap-buffer-overflow ... mybug.F90:7
-```
-
-Run the whole model under ASan (heavy — build + run with instrumentation):
-
-```bash
-qsub ~/hpc-devsecops/hpc/asan-cam.pbs             # fill the TODOs for your case
-```
-
-`hpc/asan-cam.pbs` injects `-fsanitize=address` into FFLAGS/CFLAGS/**LDFLAGS**,
-builds a tiny CAM case, and runs it with MPI-aware `ASAN_OPTIONS`
-(`detect_leaks=0:halt_on_error=0`) — the CIME `create_newcase` bits are TODOs for
-your CAM version. Why not the fast gate? ASan is **dynamic** (must build + run
-CAM with inputs) and ~2–3× slower, so it lives here, not in `git push`.
-
-> `-fanalyzer` (GCC static analyzer) was evaluated and dropped: it is GCC-only
-> (ifx has no equivalent) and needs a non-native gfortran build with resolved
-> `.mod` files. `ifx + ASan` is the native, higher-signal choice for heap OOB.
-
-## Install
-
-```bash
-# Clone into ~/hpc-devsecops so all the default paths (venv,
-# ~/.config/hpc-devsecops.env, ~/audits/hpc-devsecops) resolve with no extra config.
-git clone git@github.com:a85tract/Val-Track.git ~/hpc-devsecops
-# Cloned somewhere else? point the toolkit at it:
-#   export HPC_DEVSECOPS_HOME=/path/to/your/checkout
-# The engine: see Requirements (RECAST_BIN, RECAST_HOME).
-```
-
-## Usage
-
-```bash
-# report-only run against a repo
-~/hpc-devsecops/tools/devsecops-local.sh ~/cam_cesm2_1_rel
-
-# audit only what you're about to push, and BLOCK on issues
-~/hpc-devsecops/tools/devsecops-local.sh --vs-remote --block ~/cam_cesm2_1_rel
-
-# audit an explicit range (what the pre-push hook does)
-~/hpc-devsecops/tools/devsecops-local.sh --range origin/main..HEAD --block
-```
-
-### Options
-
-| Flag | Meaning |
-|---|---|
-| `--vs-remote` | audit commits not yet pushed (the default; needs an upstream or `--base`) |
-| `--base REF` | base ref for `--vs-remote` (default: the branch upstream) |
-| `--range RANGE` | audit an explicit revision range (what the pre-push hook passes) |
-| `--block` | fail on findings (exit 1) and fail closed on an incomplete scan (exit 2) |
-| `--require-complete` | block on an incomplete gate even without `--block` |
-| `--no-ai` | run the `audit` recipe, without the LLM audit plane |
-| `--staged`, `--worktree` | **not available**: the engine's secret scan reads history, not a patch; the wrapper refuses them (exit 2) rather than scan something wider than asked |
-
-## Automatic pre-push gate
-
-```bash
-~/hpc-devsecops/tools/install-hooks.sh ~/cam_cesm2_1_rel
-```
-
-Installs a symlinked `pre-push` hook so `git push` from that repo runs the
-engine's audit recipe first and **blocks** the push on findings or an incomplete
-scan. The hook here chooses the recipe (`audit`, or `audit-cesm` for a repository
-that opted into the AI audit; `RECAST_AUDIT_RECIPE` overrides) and runs the
-engine's `tools/pre-push`, which reads Git's actual local/remote SHA pairs,
-including new branches and multi-ref pushes, and audits exactly the range each
-push would publish. A repository that opted in but whose environment has no
-`audit-cesm` is blocked (exit 2), as an unavailable AI audit blocked before, rather
-than gated more quietly than it asked for. Emergency bypass: `git push --no-verify`.
-Uninstall: `rm <repo>/.git/hooks/pre-push`.
-
-## Output
-
-The gate summary is written under `~/audits/recast/<repo>/<timestamp>-<pid>/`
-(`HPC_DEVSECOPS_AUDIT_ROOT` or `RECAST_AUDIT_ROOT`, if set; the hook adds a
-`<branch>/` level):
-
-```
-summary.json
-```
-
-That is the file `correctness/make_manifest.py --security-summary` reads into an
-acceptance record: a state and counts per scan and a status `PASS` / `FINDINGS` /
-`INCOMPLETE`, never a finding. The findings themselves are records in the engine's
-store (`RECAST_FINDINGS_HOME`, default `~/.recast/findings`), where they are
-adjudicated before anyone decides on disclosure; the per-scanner raw output
-(`gitleaks.sarif`, `grype.json`, the SBOM) is no longer kept beside the summary.
-Nothing is written under `/glade/work`. Exit codes:
-`0` clean or report-only; `1` findings under `--block`; `2` an incomplete gate
-under `--block` / `--require-complete`, or a usage/environment error.
-
-## Notes
-
-- An AI state other than `reviewed` (e.g. `unavailable`, `error`,
-  `not_configured`) means the audit did not actually run — **not** the same as
-  reviewed-clean, and it makes the gate `INCOMPLETE`.
-- Run the AI step on the login node (egress); compute nodes have none.
-- The same three static binaries (gitleaks, syft, grype) run in CI and on HPC;
-  the only HPC-specific step is pre-staging the grype DB for offline use.
+The local pre-push gate, the config templates and the sanitizer job that used to live
+here (`tools/`, `hooks/`, `hpc/`, `templates/`, under the name `hpc-devsecops`) were
+deleted in step 9e of `docs/CORRECTNESS-ORGANIZATION.md`. The engine's
+`docs/cyber-gate.md` maps every old command to its replacement. If you installed the old
+pre-push hook, its symlink now points at nothing and Git skips it silently: reinstall
+with the engine's `tools/install-hooks.sh <repo>`, and set `RECAST_AUDIT_RECIPE=audit-cesm`
+where you want the LLM audit (the old wrapper chose it for repositories carrying
+`.github/scripts/ai_audit.py`; the engine's hook defaults to `audit`).
 
 ---
 
@@ -368,7 +176,7 @@ under `--block` / `--require-complete`, or a usage/environment error.
 |---|---|
 | Correctness framework — schema, structure, contracts | lewisychen |
 | Correctness implementation — comparators, manifest builder, verifier, benchmarks | Qinrun |
-| Cyber half — `tools/`, `hooks/`, `hpc/`, and the product-repo config | Chien-Wei |
+| Cyber gate — RecastEngine's `audit` recipe, recast-cesm's `audit-cesm`, the product-repo config | Chien-Wei |
 
 `docs/VALIDATION-ARCHITECTURE.md` §8 tracks the open decisions. One still needs a
 person, not more code:
