@@ -66,9 +66,16 @@ jobs:
           python-version: "3.11"
 
       - name: VALIDATION.md against the record it names
+        # Inputs reach the shell through the environment, never through ${{ }}
+        # in the script body: the calling repository controls those strings.
+        env:
+          VALIDATION_FILE: ${{ inputs.validation_file }}
+          STRICT: ${{ inputs.strict }}
         run: |
+          strict=()
+          [ "$STRICT" = true ] && strict=(--strict)
           python .val-track/correctness/check_validation.py check \
-            --validation "${{ inputs.validation_file }}" \
+            --validation "$VALIDATION_FILE" \
             --product-repo . \
             --evidence-dir .val-track/evidence \
-            ${{ inputs.strict && '--strict' || '' }}
+            "${strict[@]}"
