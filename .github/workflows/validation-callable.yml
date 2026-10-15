@@ -18,7 +18,7 @@
 #
 # Drift (HEAD ahead of the validated commit) is a warning by default and a failure with
 # strict: true. To refresh the file's last line, run in the product repository:
-#   python <val-track>/correctness/check_validation.py check --val-track <val-track> --refresh
+#   python <val-track>/tools/check_validation.py check --val-track <val-track> --refresh
 name: Validation status
 
 on:
@@ -74,7 +74,7 @@ jobs:
         run: |
           strict=()
           [ "$STRICT" = true ] && strict=(--strict)
-          python .val-track/correctness/check_validation.py check \
+          python .val-track/tools/check_validation.py check \
             --validation "$VALIDATION_FILE" \
             --product-repo . \
             --val-track .val-track \

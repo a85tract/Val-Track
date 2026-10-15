@@ -1,4 +1,4 @@
-# Correctness half
+# Record tools
 
 These tools turn a comparator's result into an acceptance record that
 `schemas/evidence-manifest.v1.json` accepts, check the records filed, and index them.
@@ -45,7 +45,7 @@ filed as `../clubb-jax/evidence/unreleased-99c8b22f/` (15 cases, PASS, security 
 `verify_evidence.py` reports 0 errors and 1 warning). Its `cc_test.commit` (`86a46e8c`) is the
 commit that holds the tooling and benchmarks that produced it; see `../README.md`.
 `.github/workflows/verify-evidence.yml` checks it: on every pull request and push to `main` it runs
-`../schemas/test_schemas.py`, `pytest tests/test_correctness.py`, `verify_evidence.py` (with
+`../schemas/test_schemas.py`, `pytest tests/test_tools.py`, `verify_evidence.py` (with
 `--base-ref origin/<base>` on a pull request, so the append-only check runs) and
 `index_evidence.py --check`.
 The format examples under `schemas/examples/` name
@@ -63,7 +63,7 @@ scripts/compare/compare_runpair.py \
     --json pi.json 2> report.txt
 
 # Then, from this checkout:
-correctness/make_manifest.py \
+tools/make_manifest.py \
     --case pi-6month-allcodon=pi.json \
     --benchmark-dir pycam5/benchmarks \
     --artifact-repo ~/PyCAM5 \
@@ -76,12 +76,12 @@ correctness/make_manifest.py \
     --out      pycam5/evidence/unreleased-e8d68996/manifest.json
 
 # Layer 2, in CI or before opening the pull request.
-correctness/verify_evidence.py                       # every manifest under <product>/evidence/
-correctness/verify_evidence.py --base-ref origin/main --strict
+tools/verify_evidence.py                       # every manifest under <product>/evidence/
+tools/verify_evidence.py --base-ref origin/main --strict
 
 # The product's VALIDATION.md: render it here after filing a record, check it over there.
-correctness/check_validation.py render --manifest clubb-jax/evidence/unreleased-99c8b22f/manifest.json > <clubb-jax>/VALIDATION.md
-correctness/check_validation.py check --validation VALIDATION.md --product-repo . \
+tools/check_validation.py render --manifest clubb-jax/evidence/unreleased-99c8b22f/manifest.json > <clubb-jax>/VALIDATION.md
+tools/check_validation.py check --validation VALIDATION.md --product-repo . \
     --val-track <val-track> [--strict] [--refresh]     # from the product checkout
 ```
 
@@ -95,7 +95,7 @@ summary the case repository commits. `make_manifest.py` reads its verdicts, deci
 by the benchmark, and fingerprints the summary file into `outputs.files`:
 
 ```bash
-correctness/make_manifest.py \
+tools/make_manifest.py \
     --case tier0-translate=~/agent/cesm/clubb-jax/summaries/tier0.json \
     --benchmark-dir clubb-jax/benchmarks \
     --artifact-repo ~/agent/cesm/clubb-jax \
@@ -121,11 +121,11 @@ Standard library, plus:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
-.venv/bin/python -m pytest tests/test_correctness.py
+.venv/bin/python -m pytest tests/test_tools.py
 .venv/bin/python schemas/test_schemas.py
 ```
 
-`tests/test_correctness.py` reads committed comparator results under
+`tests/test_tools.py` reads committed comparator results under
 `../tests/fixtures/comparator/` and never touches model output, so the suite runs in a bare
 checkout.
 

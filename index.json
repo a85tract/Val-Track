@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "source": "<product>/evidence/<version>/manifest.json, via correctness/index_evidence.py",
+  "source": "<product>/evidence/<version>/manifest.json, via tools/index_evidence.py",
   "records": [
     {
       "product": "clubb-jax",

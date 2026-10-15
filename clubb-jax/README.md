@@ -84,11 +84,11 @@ with no waiver.
 ## Re-evaluating
 
 The summaries live in the case repository, not here. Extract the one to evaluate, then
-build a manifest (the invocation is described in `../correctness/README.md`):
+build a manifest (the invocation is described in `../tools/README.md`):
 
 ```bash
 git -C ~/agent/cesm/clubb-jax show 99c8b22f:summaries/tier0.json > /tmp/tier0.json
-correctness/make_manifest.py \
+tools/make_manifest.py \
     --case tier0=/tmp/tier0.json \
     --benchmark-dir clubb-jax/benchmarks \
     --artifact-repo ~/agent/cesm/clubb-jax \

@@ -30,24 +30,24 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install the Correctness half's dependencies
+      - name: Install the record tools' dependencies
         run: python -m pip install --quiet jsonschema referencing pyyaml pytest
 
       - name: Schema self-test
         run: python schemas/test_schemas.py
 
-      - name: Correctness suite
+      - name: Tool tests
         # Includes: every committed benchmark validates against the acceptance
         # schema, and the filed records verify clean with a current index.
-        run: python -m pytest -q tests/test_correctness.py
+        run: python -m pytest -q tests/test_tools.py
 
       - name: Verify every acceptance record
         run: |
           if [ -n "${{ github.base_ref }}" ]; then
-            python correctness/verify_evidence.py --base-ref "origin/${{ github.base_ref }}"
+            python tools/verify_evidence.py --base-ref "origin/${{ github.base_ref }}"
           else
-            python correctness/verify_evidence.py
+            python tools/verify_evidence.py
           fi
 
       - name: The index is generated from the records
-        run: python correctness/index_evidence.py --check
+        run: python tools/index_evidence.py --check

@@ -99,7 +99,7 @@ def render(manifest: dict, record_path: str) -> str:
     width = max(len(k) for k, _ in rows)
     lines = ["# Validation Status", "",
              "Validated against the acceptance record named below; that record is the",
-             "authority, this file is the pointer. `correctness/check_validation.py` in Val-Track",
+             "authority, this file is the pointer. `tools/check_validation.py` in Val-Track",
              "checks the two agree and refreshes the last line.", "",
              "| | |", "|---|---|"]
     lines += ["| %-*s | %s |" % (width, k, v) for k, v in rows]

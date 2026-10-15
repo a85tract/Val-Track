@@ -70,7 +70,7 @@ decision is visible, not so evidence can be filed against them.
 
 ## Invariants JSON Schema cannot express
 
-`correctness/verify_evidence.py` enforces these; they are listed here so the schema and the
+`tools/verify_evidence.py` enforces these; they are listed here so the schema and the
 verifier stay in agreement. Three of them need something the verifier is not always given —
 the product checkout (4), a manifest that actually lives at `<product>/evidence/<version>/` (5), and the base
 branch (8). Each is then reported as `SKIP` with the reason rather than counted as passing;

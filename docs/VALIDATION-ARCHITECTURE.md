@@ -1,5 +1,7 @@
 # Val-Track Validation Architecture
 
+> **2026-10-15**: each product is now a top-level directory (`<product>/benchmarks/`, `<product>/evidence/`; see `PRODUCTS.md`) and `correctness/` is `tools/`. Paths below describe the layout at the time they were written.
+
 **Status**: proposal, pending review. Nothing implemented; no existing file modified.
 **Date**: 2026-08-10
 **Scope**: this repository (`Val-Track`) plus a two-file addition to each product repository.

@@ -845,7 +845,7 @@ def validate(manifest: dict) -> List[str]:
         from referencing import Registry, Resource
     except ImportError:
         return ["jsonschema is not installed, so the manifest was written "
-                "unvalidated; run correctness/verify_evidence.py where it is"]
+                "unvalidated; run tools/verify_evidence.py where it is"]
     schema = json.loads((SCHEMA_DIR / "evidence-manifest.v1.json").read_text())
     acceptance = json.loads((SCHEMA_DIR / "acceptance.v1.json").read_text())
     registry = Registry().with_resources([

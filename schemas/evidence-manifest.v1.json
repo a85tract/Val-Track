@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/a85tract/Val-Track/main/schemas/evidence-manifest.v1.json",
   "title": "Val-Track evidence manifest, version 1",
-  "description": "One evidence package: what was validated, against what reference, on which machine, under which acceptance criteria, and with what result. The manifest is the durable record. Raw model output lives on HPC storage and is expected to be purged; the manifest keeps its fingerprint, so a later re-run can still be compared against it. Cross-field invariants that JSON Schema cannot express are listed in schemas/README.md and enforced by correctness/verify_evidence.py.",
+  "description": "One evidence package: what was validated, against what reference, on which machine, under which acceptance criteria, and with what result. The manifest is the durable record. Raw model output lives on HPC storage and is expected to be purged; the manifest keeps its fingerprint, so a later re-run can still be compared against it. Cross-field invariants that JSON Schema cannot express are listed in schemas/README.md and enforced by tools/verify_evidence.py.",
   "type": "object",
 
   "properties": {

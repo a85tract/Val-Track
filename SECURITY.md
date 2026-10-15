@@ -18,7 +18,7 @@ vulnerability to an acceptance record, a benchmark, or a pull request.
 
 ## Disclosure
 
-Report a defect in this repository's tools (`correctness/`, `schemas/`, the
+Report a defect in this repository's tools (`tools/`, `schemas/`, the
 workflows under `.github/`) privately to the repository owner. Report a defect
 in the gate itself the same way, to the engine's owner. Do not include live
 credentials or undisclosed exploit material in an issue.

@@ -12,7 +12,7 @@ point of the suite: the failure mode this repository's schema exists to prevent
 is an absent comparison filed as a passing one, so each tool is tested for
 saying ERROR / exit 2 rather than PASS when it had nothing to compare.
 
-    python -m pytest tests/test_correctness.py
+    python -m pytest tests/test_tools.py
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ import pytest
 pytest.importorskip("jsonschema", reason="the Correctness half needs jsonschema installed")
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "correctness"))
+sys.path.insert(0, str(ROOT / "tools"))
 
 import dataio  # noqa: E402
 import make_manifest  # noqa: E402
