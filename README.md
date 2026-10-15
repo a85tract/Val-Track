@@ -101,3 +101,6 @@ decisions, the migration that made Val-Track results-only, and what moved where 
 `docs/VALIDATION-ARCHITECTURE.md` and `docs/CORRECTNESS-ORGANIZATION.md`. Former
 `hpc-devsecops` users: the engine's `docs/cyber-gate.md` maps every old command to its
 replacement.
+
+Licensed under the [Apache License, Version 2.0](LICENSE). Copyright 2026 Yueqi Chen
+<yueqi.chen@colorado.edu>; see `NOTICE`.
