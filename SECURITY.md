@@ -3,7 +3,7 @@
 `hpc-devsecops` is a preventive local gate, not a sandbox. Since 2026-09-25 its
 checks are RecastEngine's `audit` recipe and the scripts here are wrappers over
 it; the engine's `SECURITY.md` and `docs/cyber-gate.md` are the gate's security
-model, this file is CC-Test's own. Target repositories and their run config
+model, this file is Val-Track's own. Target repositories and their run config
 (`.recast-audit.json`, `.gitleaks.toml`, `.vex/openvex.json`) are trusted local
 inputs. The LLM audit's key is read by recast-cesm's provider: `ANTHROPIC_API_KEY`
 in the environment, else `~/.config/recast/agent.env` only when its mode is `0600`.

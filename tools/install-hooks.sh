@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Install CC-Test's pre-push hook into a target repo.
+# Install Val-Track's pre-push hook into a target repo.
 #
 # Usage: install-hooks.sh [--force] [TARGET_REPO]
 #

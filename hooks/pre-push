@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CC-Test's pre-push hook is the engine's (RecastEngine tools/pre-push): the
+# Val-Track's pre-push hook is the engine's (RecastEngine tools/pre-push): the
 # range-per-ref logic that was here moved there with the gate, step 9d of
 # docs/CORRECTNESS-ORGANIZATION.md. What stays here is the choice of recipe --
 # audit-cesm, with the LLM audit plane, for a repository that opted into the

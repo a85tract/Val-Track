@@ -80,7 +80,7 @@ correctness/verify_evidence.py --base-ref origin/main --strict
 # The product's VALIDATION.md: render it here after filing a record, check it over there.
 correctness/check_validation.py render --manifest evidence/clubb-jax/unreleased-99c8b22f/manifest.json > <clubb-jax>/VALIDATION.md
 correctness/check_validation.py check --validation VALIDATION.md --product-repo . \
-    --evidence-dir <cc-test>/evidence [--strict] [--refresh]     # from the product checkout
+    --evidence-dir <val-track>/evidence [--strict] [--refresh]     # from the product checkout
 ```
 
 `--security-summary` takes the Cyber gate's `summary.json` from either producer:

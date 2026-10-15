@@ -12,7 +12,7 @@ file still reads as current). This tool does both halves.
         record and commit the output in the product repository.
 
     check_validation.py check --validation VALIDATION.md --product-repo . \
-                              --evidence-dir <cc-test checkout>/evidence [--strict] [--refresh]
+                              --evidence-dir <val-track checkout>/evidence [--strict] [--refresh]
         Run in the product repository (CI does, through
         .github/workflows/validation-callable.yml). Exit 0 when the file agrees with the
         record and the drift line is current, 1 on a finding, 2 when nothing could be
@@ -35,7 +35,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 EXIT_PASS, EXIT_FINDINGS, EXIT_INCOMPLETE = 0, 1, 2
-CC_TEST_URL = "https://github.com/a85tract/CESM-CC-Test"
+CC_TEST_URL = "https://github.com/a85tract/Val-Track"
 
 ROW = re.compile(r"^\|\s*(?P<key>[^|]+?)\s*\|\s*(?P<value>.*?)\s*\|\s*$")
 DRIFT = re.compile(r"^> Current HEAD is (?:the validated commit|(?P<n>\d+) commits? ahead of the validated commit)\.?\s*$")
@@ -76,7 +76,7 @@ def render(manifest: dict, record_path: str) -> str:
     width = max(len(k) for k, _ in rows)
     lines = ["# Validation Status", "",
              "Validated against the acceptance record named below; that record is the",
-             "authority, this file is the pointer. `correctness/check_validation.py` in CC-Test",
+             "authority, this file is the pointer. `correctness/check_validation.py` in Val-Track",
              "checks the two agree and refreshes the last line.", "",
              "| | |", "|---|---|"]
     lines += ["| %-*s | %s |" % (width, k, v) for k, v in rows]
@@ -210,7 +210,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     c.add_argument("--validation", type=Path, default=Path("VALIDATION.md"))
     c.add_argument("--product-repo", type=Path, default=Path("."))
     c.add_argument("--evidence-dir", type=Path, required=True,
-                   help="the evidence/ directory of a CC-Test checkout")
+                   help="the evidence/ directory of a Val-Track checkout")
     c.add_argument("--strict", action="store_true",
                    help="a missing or stale drift line is a finding, not a warning")
     c.add_argument("--refresh", action="store_true",

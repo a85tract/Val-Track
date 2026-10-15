@@ -1,35 +1,35 @@
-# CC-Test Validation Architecture
+# Val-Track Validation Architecture
 
 **Status**: proposal, pending review. Nothing implemented; no existing file modified.
 **Date**: 2026-08-10
-**Scope**: this repository (`CESM-CC-Test`) plus a two-file addition to each product repository.
+**Scope**: this repository (`Val-Track`) plus a two-file addition to each product repository.
 **Supersedes**: `docs/CORRECTNESS-REFACTOR.md` (earlier draft, same architecture).
-**Narrowed by**: `docs/CORRECTNESS-ORGANIZATION.md` (2026-09-24) — decisions D7 and D8 move the comparators to the engine and reduce CC-Test to its acceptance records and the criteria; §5's `correctness/` directory is transitional.
+**Narrowed by**: `docs/CORRECTNESS-ORGANIZATION.md` (2026-09-24) — decisions D7 and D8 move the comparators to the engine and reduce Val-Track to its acceptance records and the criteria; §5's `correctness/` directory is transitional.
 
 ---
 
 ## 1. The model
 
-CC-Test = **C**orrectness and **C**yber Test. The Cyber half exists today (gitleaks,
+Val-Track (CC-Test until 2026-10-15: **C**orrectness and **C**yber Test). The Cyber half exists today (gitleaks,
 syft→grype, AI audit, AddressSanitizer). The Correctness half is empty. This document
-builds it as a **hybrid**: CC-Test is the central validation infrastructure and the
+builds it as a **hybrid**: Val-Track is the central validation infrastructure and the
 evidence index; every product repository shows its own validation status locally.
 
 No separate results repository is created.
 
 | Content | Location |
 |---|---|
-| Validation workflow, shared schema, comparison tools | CC-Test |
-| Benchmarks, reference output, acceptance criteria | CC-Test, one directory per product |
-| CI configuration that calls CC-Test | Each product repository |
+| Validation workflow, shared schema, comparison tools | Val-Track |
+| Benchmarks, reference output, acceptance criteria | Val-Track, one directory per product |
+| CI configuration that calls Val-Track | Each product repository |
 | Short validation summary for the current version | `VALIDATION.md` in each product repository |
-| Full acceptance record per release | CC-Test `evidence/` index; product release links to it |
+| Full acceptance record per release | Val-Track `evidence/` index; product release links to it |
 | Large outputs, logs, data | Release assets or long-term storage — never committed to Git |
 
 This satisfies two audiences at once:
 
 - A user landing on `PyCAM5` or `freeCAM` immediately sees whether that product is validated.
-- A PESOSE reviewer landing on CC-Test sees one cross-product, reproducible assurance
+- A PESOSE reviewer landing on Val-Track sees one cross-product, reproducible assurance
   system with provenance.
 
 ---
@@ -38,14 +38,14 @@ This satisfies two audiences at once:
 
 | Observation | Consequence |
 |---|---|
-| CC-Test contains only `tools/ hpc/ hooks/` — no schema, benchmark, or evidence | The Correctness half is genuinely at zero |
-| CC-Test `README.md` calls itself `hpc-devsecops` (install path `~/hpc-devsecops`), while the overview calls it CC-Test | Identity conflict — resolved in §8, D1 |
+| Val-Track contains only `tools/ hpc/ hooks/` — no schema, benchmark, or evidence | The Correctness half is genuinely at zero |
+| Val-Track `README.md` calls itself `hpc-devsecops` (install path `~/hpc-devsecops`), while the overview calls it Val-Track | Identity conflict — resolved in §8, D1 |
 | No product repository has `.gitleaks.toml`, `.vex/openvex.json`, or `.github/scripts/ai_audit.py` | The Cyber half's "reuse the target repo's own config" contract is currently unfulfilled everywhere; checks skip silently |
 | Only PyCCPP has `.github/workflows/`, inherited from ESCOMP/CAM and guarded by `github.repository == 'ESCOMP/CAM'` | Effectively no product repository has working CI |
 | `PyCAM5/scripts/validation/compare_cesm_runpair.py` (~250 lines) is the only correctness comparator | It is the seed of the Correctness half, but prints text only — no machine-readable output |
 | Same file: `return 0 if overall_numeric_ok` — char differences and timing are computed but do not affect the exit code | Acceptance criteria are implicit — see §4, adjustment C |
 | `PyCAM5/test/system/archive_baseline.sh` targets goldbach / yellowstone | CAM upstream legacy; those machines are retired, script unusable |
-| `cc-test`, `PyCAM5`, `PyCCPP` have **zero** Git tags | The sketch's `evidence/pycam5/v0.2.0/` layout assumes tags that do not exist — see §8, D2 |
+| `Val-Track`, `PyCAM5`, `PyCCPP` have **zero** Git tags | The sketch's `evidence/pycam5/v0.2.0/` layout assumes tags that do not exist — see §8, D2 |
 | Pipeline 1 criteria are bitwise; Pipeline 2 criteria are "1.24e-6 rel diff" / "within ensemble spread" | Two criteria families; the schema must express both |
 | Validation actually happens on Derecho: PBS jobs, CESM builds, multi-year integrations, `/glade` scratch output | A GitHub-hosted runner cannot execute validation — see §4, adjustment A |
 
@@ -73,7 +73,7 @@ The architecture is right. Three points need to change on contact with the machi
 
 ### Adjustment A — CI verifies evidence; it does not produce evidence
 
-`<product>/.github/workflows/validation.yml` cannot call CC-Test to *run* validation. One
+`<product>/.github/workflows/validation.yml` cannot call Val-Track to *run* validation. One
 6-month all-Codon PI/MCO validation needs Derecho's ifx toolchain, CESM input data, hours
 of compute, and `/glade` storage. A GitHub-hosted runner has none of these.
 
@@ -82,12 +82,12 @@ So the pipeline splits into two layers — **producing** evidence and **verifyin
 ```
 Layer 1 — produce evidence   (HPC, PBS / manual, offline)
   Derecho: run reference + candidate
-        -> CC-Test comparator --json
+        -> Val-Track comparator --json
         -> evidence/<product>/<version>/manifest.json
-        -> pull request into CC-Test
+        -> pull request into Val-Track
 
 Layer 2 — verify evidence    (GitHub Actions, every PR, seconds)
-  In CC-Test:      manifest validates against schema; artifact_commit exists in the
+  In Val-Track:      manifest validates against schema; artifact_commit exists in the
                    product repo; acceptance rules and result are self-consistent;
                    no duplicate version directory
   In the product:  the commit declared in VALIDATION.md is HEAD, or the drift is
@@ -107,8 +107,8 @@ into Git. Correct, with one bound made explicit: a GitHub release asset is cappe
 
 | Tier | Content | Location | Scale |
 |---|---|---|---|
-| 0 | `manifest.json`, `summary.md`, `report.txt` | Committed to CC-Test `evidence/` | KB |
-| 1 | Comparison plots, per-variable diff tables, run logs, PBS logs, timing dumps | GitHub Release assets on the CC-Test release for that acceptance record | MB — under 2 GiB per file |
+| 0 | `manifest.json`, `summary.md`, `report.txt` | Committed to Val-Track `evidence/` | KB |
+| 1 | Comparison plots, per-variable diff tables, run logs, PBS logs, timing dumps | GitHub Release assets on the Val-Track release for that acceptance record | MB — under 2 GiB per file |
 | 2 | NetCDF history/restart files, ensemble member output | HPC storage (`/glade` scratch or campaign); never uploaded | GB — TB |
 
 Tier 2 data is recorded in the manifest by `location`, `retention` (including the expected
@@ -136,7 +136,7 @@ Otherwise the PASS an acceptance record claims has no defined meaning.
 ## 5. Target layout
 
 ```
-CESM-CC-Test/
+Val-Track/
 ├── README.md                       # rewritten: Correctness + Cyber, two halves
 ├── docs/
 │   └── VALIDATION-ARCHITECTURE.md  # this file
@@ -266,7 +266,7 @@ Each product repository gains exactly two files:
 <product>/
 ├── VALIDATION.md
 └── .github/workflows/validation.yml
-      # uses: a85tract/CESM-CC-Test/.github/workflows/validation-callable.yml@<ref>
+      # uses: a85tract/Val-Track/.github/workflows/validation-callable.yml@<ref>
 ```
 
 `VALIDATION.md` stays minimal — the manifest it links to is the only authority. It is
@@ -277,7 +277,7 @@ it, and this is what it prints (the clubb-jax record's shape; PyCAM5's will read
 # Validation Status
 
 Validated against the acceptance record named below; that record is the
-authority, this file is the pointer. `correctness/check_validation.py` in CC-Test
+authority, this file is the pointer. `correctness/check_validation.py` in Val-Track
 checks the two agree and refreshes the last line.
 
 | | |
@@ -292,7 +292,7 @@ checks the two agree and refreshes the last line.
 | Security gate    | PASS |
 | Evidence class   | complete |
 | Record           | `evidence/pycam5/v0.2.0/` |
-| Evidence         | https://github.com/a85tract/CESM-CC-Test/tree/main/evidence/pycam5/v0.2.0/ |
+| Evidence         | https://github.com/a85tract/Val-Track/tree/main/evidence/pycam5/v0.2.0/ |
 
 > Current HEAD is N commits ahead of the validated commit.
 ```
@@ -311,14 +311,14 @@ The sketch settles three of the five decisions carried over from the earlier dra
 
 | # | Decision | Status |
 |---|---|---|
-| D1 | Repository identity: CC-Test (CAM validation hub) vs `hpc-devsecops` (generic tool) | **Settled by the sketch** — CC-Test is the central validation infrastructure. `README.md` is rewritten around two halves; the Cyber half is annotated "generic, usable standalone", keeping the current install instructions valid. **Superseded** by D8 (2026-09-24: CC-Test is its acceptance records and criteria; it runs no comparison) and D9 (2026-09-25: the Cyber tooling moves to the engine and recast-cesm). |
+| D1 | Repository identity: Val-Track (CAM validation hub) vs `hpc-devsecops` (generic tool) | **Settled by the sketch** — Val-Track is the central validation infrastructure. `README.md` is rewritten around two halves; the Cyber half is annotated "generic, usable standalone", keeping the current install instructions valid. **Superseded** by D8 (2026-09-24: Val-Track is its acceptance records and criteria; it runs no comparison) and D9 (2026-09-25: the Cyber tooling moves to the engine and recast-cesm). |
 | D2 | Version source for `evidence/<product>/<version>/` — all three repos have zero tags | **Settled in principle** — the sketch's `v0.2.0` layout means version directories are release tags, so products start tagging. Proposed bridge until a product cuts its first tag: `unreleased-<commit[:8]>`, with `artifact.commit` always authoritative. |
-| D3 | How evidence reaches CC-Test from the HPC side | **Settled** — manual pull request. Derecho compute nodes generally have no outbound network, so automated push is not available. |
+| D3 | How evidence reaches Val-Track from the HPC side | **Settled** — manual pull request. Derecho compute nodes generally have no outbound network, so automated push is not available. |
 | D4 | Pipeline 2 statistical criteria | **Settled for the ULP family on 2026-09-24** as the `unit-differential` acceptance kind (`CORRECTNESS-ORGANIZATION.md` §3.3), transcribed from what `recast.verify.tolerance` enforces. **The ensemble-spread family is still open.** "1.24e-6 rel diff" and "within ensemble spread" must become executable: tolerance value and norm, the compared variable set, ensemble member count, and the spread test. `compare_stats.py` now exists and evaluates the two rule kinds the schema names, but it did **not** settle D4: it states the reading it uses for each undecided point (§8.1), the schema keeps its `provisional` marker, and `verify_evidence.py` still rejects any manifest that files evidence against it. |
-| D5 | Cyber-half config gap: no product repo had `.gitleaks.toml`, `.vex/openvex.json`, or `ai_audit.py`, so those checks skipped silently | **Settled — in scope, and the CC-Test side is done.** `ai_audit.py` did not exist anywhere, so it was written rather than merely installed. Templates for all three now live in `templates/`, `tools/install-config.sh` installs them into a target repo, and every acceptance record's manifest records the Cyber verdict (§6). Installing into the six product repos is step 10. |
+| D5 | Cyber-half config gap: no product repo had `.gitleaks.toml`, `.vex/openvex.json`, or `ai_audit.py`, so those checks skipped silently | **Settled — in scope, and the Val-Track side is done.** `ai_audit.py` did not exist anywhere, so it was written rather than merely installed. Templates for all three now live in `templates/`, `tools/install-config.sh` installs them into a target repo, and every acceptance record's manifest records the Cyber verdict (§6). Installing into the six product repos is step 10. |
 | D7 | Where the whole-model comparator lives | **Settled 2026-09-24** — the engine, as the `fullmodel.bitwise` verifier its `refactor-todo` recipe already names; the CAM NetCDF reader is injected from `recast-cesm`. See `CORRECTNESS-ORGANIZATION.md` §3.1. |
-| D8 | What CC-Test is | **Settled 2026-09-24** — its acceptance records and the criteria, nothing else; it runs no comparison, and the Cyber tooling's ownership moves to the engine's `recast.scan`. Supersedes D1's reading. See `CORRECTNESS-ORGANIZATION.md` §3.1. |
-| D9 | Results source for the site; timing of the Cyber move | **Settled 2026-09-25** — the SciRecast website reads CC-Test's `evidence/index.json`; the Cyber move is split into steps 9a-9e and runs before step 6; the engine's `audit` recipe writes CC-Test's existing `summary.json`, and the LLM audit lands in recast-cesm. See `CORRECTNESS-ORGANIZATION.md` §3.1. |
+| D8 | What Val-Track is | **Settled 2026-09-24** — its acceptance records and the criteria, nothing else; it runs no comparison, and the Cyber tooling's ownership moves to the engine's `recast.scan`. Supersedes D1's reading. See `CORRECTNESS-ORGANIZATION.md` §3.1. |
+| D9 | Results source for the site; timing of the Cyber move | **Settled 2026-09-25** — the SciRecast website reads Val-Track's `evidence/index.json`; the Cyber move is split into steps 9a-9e and runs before step 6; the engine's `audit` recipe writes Val-Track's existing `summary.json`, and the LLM audit lands in recast-cesm. See `CORRECTNESS-ORGANIZATION.md` §3.1. |
 
 ### 8.1 D4 readings decided by implementation on 2026-09-03, revisit if wrong
 
@@ -352,17 +352,17 @@ Ordered so each step is independently reviewable.
 
 | # | Step | Lands in | Depends on |
 |---|---|---|---|
-| 1 | **DONE** — `evidence-manifest.v1.json` and `acceptance.v1.json`, bitwise vocabulary complete, statistical present but provisional and rejected by the verifier. Plus `schemas/README.md`, a format example, and `schemas/test_schemas.py` (3 positive + 12 negative assertions, all passing) | CC-Test `schemas/` | D2 |
-| 2 | **DONE** — `correctness/compare_runpair.py` carries the PyCAM5 comparator with `--json`, neutral `--reference-run-dir` / `--candidate-run-dir` (old names kept as hidden aliases), and the three-valued exit code. Removing the copy from PyCAM5 is still to do | CC-Test | 1 |
-| 3 | **DONE** — `make_manifest.py` (comparator JSON + benchmark + environment probe + the Cyber gate's `summary.json` → manifest) and `verify_evidence.py` (schema + all 11 error invariants and 6 warnings from `schemas/README.md`). `tests/test_correctness.py` covers pass / findings / incomplete for each tool and the make_manifest → verify_evidence round trip | CC-Test | 1, 2 |
-| 4 | Backfill the 2026-06-16 PI/MCO results from `PyCAM5/doc/internal_validation.md` as an acceptance record. Still to do. It is no longer the first: that was clubb-jax, filed 2026-09-24 as `evidence/clubb-jax/unreleased-99c8b22f/` (`CORRECTNESS-ORGANIZATION.md` step 4) | CC-Test `evidence/pycam5/` | 3 |
-| 5 | Write `benchmarks/pycam5/{pi,mco}-6month-allcodon.yaml`, extracting case definitions from `env_allcodon_675.sh` | CC-Test | 4 |
-| 6 | **`verify-evidence.yml` DONE 2026-09-25** — on every pull request and push to `main` it runs `schemas/test_schemas.py`, `pytest tests/test_correctness.py`, `correctness/verify_evidence.py` and `correctness/index_evidence.py --check`; on a pull request the verifier gets `--base-ref origin/<base>`, so invariant 8 (`evidence/` is append-only) is enforced rather than skipped. `ci.yml` (shell syntax, ShellCheck, `tests/run.sh`) is unchanged. `validation-callable.yml`, the reusable workflow product repositories call for their `VALIDATION.md` drift check, **DONE 2026-09-25** with `correctness/check_validation.py` behind it (`CORRECTNESS-ORGANIZATION.md` step 8) | CC-Test `.github/` | 3 |
+| 1 | **DONE** — `evidence-manifest.v1.json` and `acceptance.v1.json`, bitwise vocabulary complete, statistical present but provisional and rejected by the verifier. Plus `schemas/README.md`, a format example, and `schemas/test_schemas.py` (3 positive + 12 negative assertions, all passing) | Val-Track `schemas/` | D2 |
+| 2 | **DONE** — `correctness/compare_runpair.py` carries the PyCAM5 comparator with `--json`, neutral `--reference-run-dir` / `--candidate-run-dir` (old names kept as hidden aliases), and the three-valued exit code. Removing the copy from PyCAM5 is still to do | Val-Track | 1 |
+| 3 | **DONE** — `make_manifest.py` (comparator JSON + benchmark + environment probe + the Cyber gate's `summary.json` → manifest) and `verify_evidence.py` (schema + all 11 error invariants and 6 warnings from `schemas/README.md`). `tests/test_correctness.py` covers pass / findings / incomplete for each tool and the make_manifest → verify_evidence round trip | Val-Track | 1, 2 |
+| 4 | Backfill the 2026-06-16 PI/MCO results from `PyCAM5/doc/internal_validation.md` as an acceptance record. Still to do. It is no longer the first: that was clubb-jax, filed 2026-09-24 as `evidence/clubb-jax/unreleased-99c8b22f/` (`CORRECTNESS-ORGANIZATION.md` step 4) | Val-Track `evidence/pycam5/` | 3 |
+| 5 | Write `benchmarks/pycam5/{pi,mco}-6month-allcodon.yaml`, extracting case definitions from `env_allcodon_675.sh` | Val-Track | 4 |
+| 6 | **`verify-evidence.yml` DONE 2026-09-25** — on every pull request and push to `main` it runs `schemas/test_schemas.py`, `pytest tests/test_correctness.py`, `correctness/verify_evidence.py` and `correctness/index_evidence.py --check`; on a pull request the verifier gets `--base-ref origin/<base>`, so invariant 8 (`evidence/` is append-only) is enforced rather than skipped. `ci.yml` (shell syntax, ShellCheck, `tests/run.sh`) is unchanged. `validation-callable.yml`, the reusable workflow product repositories call for their `VALIDATION.md` drift check, **DONE 2026-09-25** with `correctness/check_validation.py` behind it (`CORRECTNESS-ORGANIZATION.md` step 8) | Val-Track `.github/` | 3 |
 | 7 | Add `VALIDATION.md` + `validation.yml` to PyCAM5 | PyCAM5 | 6 |
-| 8 | **Half done** — `compare_stats.py` is written and evaluates both rule kinds, under the readings recorded in §8.1. Still needed: agreement on D4 (which turns those readings from a written default into the criterion), removing the schema's `provisional` marker, and extending to `jax-kernels` / `numba-kernels` / `pyphys-bridge` | CC-Test + product repos | 7, D4 |
-| 9 | Extend to `freeCAM` (bitwise; the CAM-SIMA oracle gate becomes a benchmark case) | CC-Test + freeCAM | 7 |
-| 10 | **CC-Test side DONE** — `ai_audit.py` written, all three templates in `templates/`, `tools/install-config.sh` installs them, runner reports per-scan state. Remaining: run the installer against the six product repos and commit the result. Since 2026-09-25 this is done as part of `CORRECTNESS-ORGANIZATION.md` step 9d, where the installer becomes a wrapper that installs the engine's templates; not the same step as that document's step 10 | Product repos | D5 |
-| 11 | Rewrite CC-Test `README.md` around the two halves; update the overview's "Correctness later" line | CC-Test + overview | 8, 9 |
+| 8 | **Half done** — `compare_stats.py` is written and evaluates both rule kinds, under the readings recorded in §8.1. Still needed: agreement on D4 (which turns those readings from a written default into the criterion), removing the schema's `provisional` marker, and extending to `jax-kernels` / `numba-kernels` / `pyphys-bridge` | Val-Track + product repos | 7, D4 |
+| 9 | Extend to `freeCAM` (bitwise; the CAM-SIMA oracle gate becomes a benchmark case) | Val-Track + freeCAM | 7 |
+| 10 | **Val-Track side DONE** — `ai_audit.py` written, all three templates in `templates/`, `tools/install-config.sh` installs them, runner reports per-scan state. Remaining: run the installer against the six product repos and commit the result. Since 2026-09-25 this is done as part of `CORRECTNESS-ORGANIZATION.md` step 9d, where the installer becomes a wrapper that installs the engine's templates; not the same step as that document's step 10 | Product repos | D5 |
+| 11 | Rewrite Val-Track `README.md` around the two halves; update the overview's "Correctness later" line | Val-Track + overview | 8, 9 |
 
 Step 2 should **move** rather than copy: PyCAM5 keeps a thin wrapper or simply a pointer in
 its docs. Two comparators that can drift apart is precisely the problem the Cyber half's
@@ -421,7 +421,7 @@ a repository opts in.
 **The manifest records the Cyber verdict.** `security` is a required block in every
 manifest, with a required state beside every count and an explicit `NOT_RUN`
 status. An acceptance record therefore always states whether the validated code was
-scanned; silence is not an available answer. This is what makes CC-Test one assurance
+scanned; silence is not an available answer. This is what makes Val-Track one assurance
 system rather than two tools sharing a repository — a reviewer reads a single manifest and
 sees both that the code computes the right answer and that it was scanned for
 vulnerabilities, at the same commit.
@@ -443,4 +443,4 @@ sanitizer plane, `tools/asan.sh` + `hpc/asan-cam.pbs`, as recast-cesm's `dynamic
 `scripts/pbs/asan_cam.sh`, step 9c, the same day). One translation happens in `make_manifest.py`: the gate's `PASS` does not
 count a `not_configured` plane against it, the schema's `PASS` means every plane ran, so a
 gate `PASS` with an unrun plane is recorded as `INCOMPLETE` with a warning. Findings never
-enter CC-Test.
+enter Val-Track.

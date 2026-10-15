@@ -14,7 +14,7 @@
 recast_bin() {
   local bin="${RECAST_BIN:-recast}"
   command -v "$bin" >/dev/null 2>&1 || {
-    echo "cc-test: '$bin' not found; activate the environment that has recast, or set RECAST_BIN" >&2
+    echo "val-track: '$bin' not found; activate the environment that has recast, or set RECAST_BIN" >&2
     return 2
   }
   command -v "$bin"
@@ -29,7 +29,7 @@ recast_home() {
     home="$("$py" -c 'import pathlib, recast; print(pathlib.Path(recast.__file__).resolve().parents[2])' 2>/dev/null)"
   fi
   if [ ! -x "$home/tools/pre-push" ]; then
-    echo "cc-test: RecastEngine checkout not found${home:+ at $home} (no tools/pre-push there); set RECAST_HOME" >&2
+    echo "val-track: RecastEngine checkout not found${home:+ at $home} (no tools/pre-push there); set RECAST_HOME" >&2
     return 2
   fi
   printf '%s\n' "$home"
@@ -51,7 +51,7 @@ audit_recipe() {
       echo audit-cesm
       return 0
     fi
-    echo "cc-test: $repo opted into the AI audit (.github/scripts/ai_audit.py) but the 'audit-cesm' recipe is not installed here; install recast-cesm, or set RECAST_AUDIT_RECIPE=audit to run without it" >&2
+    echo "val-track: $repo opted into the AI audit (.github/scripts/ai_audit.py) but the 'audit-cesm' recipe is not installed here; install recast-cesm, or set RECAST_AUDIT_RECIPE=audit to run without it" >&2
     return 2
   fi
   echo audit
