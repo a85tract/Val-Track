@@ -278,7 +278,7 @@ NEGATIVE = [
     ("outputs without retention", mutate(lambda d: d["cases"][0]["outputs"].pop("retention"))),
     ("commit that is not hex", mutate(lambda d: d["artifact"].__setitem__("commit", "zzzzzzz"))),
     (
-        "benchmark path outside benchmarks/",
+        "benchmark path outside <product>/benchmarks/",
         mutate(lambda d: d["cases"][0].__setitem__("benchmark", "cases/pi.yaml")),
     ),
 ]

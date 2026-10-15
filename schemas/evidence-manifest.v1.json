@@ -268,8 +268,8 @@
         },
         "benchmark": {
           "type": "string",
-          "pattern": "^benchmarks/",
-          "description": "Repository-relative path to the benchmark definition that specifies this case."
+          "pattern": "^([a-z0-9][a-z0-9-]*/benchmarks/|benchmarks/)",
+          "description": "Repository-relative path to the benchmark definition that specifies this case: <product>/benchmarks/<case>. Records filed before the per-product layout say benchmarks/<product>/<case>, which verify_evidence.py reads as the same file."
         },
         "compset": { "type": "string" },
         "resolution": { "type": "string" },

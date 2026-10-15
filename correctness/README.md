@@ -7,11 +7,11 @@ are understood.
 
 ```
 recast-cesm  scripts/compare/compare_runpair.py --json  (bitwise, Pipeline 1)  ─┐
-recast-cesm  scripts/compare/compare_stats.py --json    (statistical, Pipeline 2) ├─► make_manifest.py ─► evidence/<product>/<version>/
+recast-cesm  scripts/compare/compare_stats.py --json    (statistical, Pipeline 2) ├─► make_manifest.py ─► <product>/evidence/<version>/
 RecastEngine recast run ... --summary                   (unit-differential)    ─┘                       manifest.json, summary.md
                                                                                           │
                                                                                           ├─► verify_evidence.py  (CI)
-                                                                                          ├─► index_evidence.py ─► evidence/INDEX.md, index.json
+                                                                                          ├─► index_evidence.py ─► INDEX.md, index.json
                                                                                           └─► check_validation.py render ─► <product>/VALIDATION.md
                                                                                               check_validation.py check   (product CI, via
                                                                                                 .github/workflows/validation-callable.yml)
@@ -31,19 +31,19 @@ outputs to fingerprint, and `rule_key`, which must match what recast-cesm's
 |---|---|---|
 | `make_manifest.py` | 3 | **implemented** |
 | `verify_evidence.py` | 3 | **implemented** — all 11 error invariants and 6 warnings from `../schemas/README.md` |
-| `index_evidence.py` | 4 | **implemented** — regenerates `../evidence/INDEX.md` and `index.json` from the manifests; `--check` exits 1 if it is stale |
+| `index_evidence.py` | 4 | **implemented** — regenerates `../INDEX.md` and `index.json` from the manifests; `--check` exits 1 if it is stale |
 | `check_validation.py` | 8 | **implemented** — `render` prints a product's `VALIDATION.md` from a record; `check` (run in the product repository, by `../.github/workflows/validation-callable.yml`) verifies the file names a record that exists and says the same, and reports how far HEAD has moved on; `--strict` makes a stale drift line a finding, `--refresh` rewrites it |
 
 The comparators (`compare_runpair.py`, `compare_stats.py`, and the CAM readers in their
 `dataio.py`) moved to recast-cesm's `scripts/compare/` with their tests (step 5 of
 `../docs/CORRECTNESS-ORGANIZATION.md`).
 
-Benchmarks exist under `../benchmarks/clubb-jax/` (15, all evaluating PASS) and
-`../benchmarks/clm-ml-jax/` (2, not evaluable until the case commits the engine's schema-1
+Benchmarks exist under `../clubb-jax/benchmarks/` (15, all evaluating PASS) and
+`../clm-ml-jax/benchmarks/` (2, not evaluable until the case commits the engine's schema-1
 summary). The first acceptance record, step 4 of `../docs/CORRECTNESS-ORGANIZATION.md`, is
-filed as `../evidence/clubb-jax/unreleased-99c8b22f/` (15 cases, PASS, security `NOT_RUN`;
+filed as `../clubb-jax/evidence/unreleased-99c8b22f/` (15 cases, PASS, security `NOT_RUN`;
 `verify_evidence.py` reports 0 errors and 1 warning). Its `cc_test.commit` (`86a46e8c`) is the
-commit that holds the tooling and benchmarks that produced it; see `../evidence/README.md`.
+commit that holds the tooling and benchmarks that produced it; see `../README.md`.
 `.github/workflows/verify-evidence.yml` checks it: on every pull request and push to `main` it runs
 `../schemas/test_schemas.py`, `pytest tests/test_correctness.py`, `verify_evidence.py` (with
 `--base-ref origin/<base>` on a pull request, so the append-only check runs) and
@@ -65,24 +65,24 @@ scripts/compare/compare_runpair.py \
 # Then, from this checkout:
 correctness/make_manifest.py \
     --case pi-6month-allcodon=pi.json \
-    --benchmark-dir benchmarks/pycam5 \
+    --benchmark-dir pycam5/benchmarks \
     --artifact-repo ~/PyCAM5 \
     --reference-commit <baseline-sha> \
     --outputs-location /glade/derecho/scratch/$USER/pi-codon/run \
     --outputs-retention "scratch, purged ~2026-12-01" \
     --case-outputs pi-6month-allcodon=/glade/derecho/scratch/$USER/pi-codon/run \
     --security-summary ~/audits/recast/PyCAM5/<ts>/summary.json \
-    --summary  evidence/pycam5/unreleased-e8d68996/summary.md \
-    --out      evidence/pycam5/unreleased-e8d68996/manifest.json
+    --summary  pycam5/evidence/unreleased-e8d68996/summary.md \
+    --out      pycam5/evidence/unreleased-e8d68996/manifest.json
 
 # Layer 2, in CI or before opening the pull request.
-correctness/verify_evidence.py                       # every manifest under evidence/
+correctness/verify_evidence.py                       # every manifest under <product>/evidence/
 correctness/verify_evidence.py --base-ref origin/main --strict
 
 # The product's VALIDATION.md: render it here after filing a record, check it over there.
-correctness/check_validation.py render --manifest evidence/clubb-jax/unreleased-99c8b22f/manifest.json > <clubb-jax>/VALIDATION.md
+correctness/check_validation.py render --manifest clubb-jax/evidence/unreleased-99c8b22f/manifest.json > <clubb-jax>/VALIDATION.md
 correctness/check_validation.py check --validation VALIDATION.md --product-repo . \
-    --evidence-dir <val-track>/evidence [--strict] [--refresh]     # from the product checkout
+    --val-track <val-track> [--strict] [--refresh]     # from the product checkout
 ```
 
 `--security-summary` takes the Cyber gate's summary, written by `recast run audit <root>
@@ -97,12 +97,12 @@ by the benchmark, and fingerprints the summary file into `outputs.files`:
 ```bash
 correctness/make_manifest.py \
     --case tier0-translate=~/agent/cesm/clubb-jax/summaries/tier0.json \
-    --benchmark-dir benchmarks/clubb-jax \
+    --benchmark-dir clubb-jax/benchmarks \
     --artifact-repo ~/agent/cesm/clubb-jax \
     --outputs-location https://github.com/a85tract/clubb-jax/tree/main/summaries \
     --outputs-retention "committed; kept" \
     --machine laptop --env compiler="gfortran 16.1.0 (Homebrew)" \
-    --out evidence/clubb-jax/unreleased-<commit>/manifest.json
+    --out clubb-jax/evidence/unreleased-<commit>/manifest.json
 ```
 
 recast-cesm's `compare_stats.py` additionally needs the criteria, because a statistical
@@ -117,7 +117,7 @@ Standard library, plus:
 | Need | Used by | Absent means |
 |---|---|---|
 | `jsonschema` + `referencing` | `verify_evidence.py`, and `make_manifest.py` for its pre-write check | the verifier exits **2** and says so; `make_manifest.py` warns that it wrote unvalidated |
-| `PyYAML` | reading `benchmarks/*.yaml` | a clear error naming the alternative (`.json`), never a guessed criterion |
+| `PyYAML` | reading `<product>/benchmarks/*.yaml` | a clear error naming the alternative (`.json`), never a guessed criterion |
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
@@ -147,6 +147,6 @@ checkout.
   what distinguishes this from a comparison that ran and failed. If it does not gate, the
   check is `passed: null` with the reason, which is what null is for.
 - **The benchmark owns the criteria.** A comparator reports what it measured;
-  `benchmarks/<product>/<case>.yaml` decides which of those measurements gate, and
+  `<product>/benchmarks/<case>.yaml` decides which of those measurements gate, and
   `make_manifest.py` copies that block into the manifest verbatim. Changing a criterion
   means editing a benchmark, never editing an acceptance record.

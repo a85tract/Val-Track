@@ -12,7 +12,7 @@ writes a manifest that validates against ../schemas/evidence-manifest.v1.json.
 Inputs
 ------
   --case ID=PATH        comparator JSON for one case; repeatable
-  --benchmark-dir DIR   where benchmarks/<product>/<id>.yaml live
+  --benchmark-dir DIR   where <product>/benchmarks/<id>.yaml live
   --artifact-repo DIR   the product checkout, for name/repo/commit
   --reference-model     baseline identity; --reference-commit, --reference-provenance
   --outputs-location    absolute path on HPC storage
@@ -97,11 +97,11 @@ Usage
 -----
     make_manifest.py --case pi-6month-allcodon=pi.json \
                      --case mco-6month-allcodon=mco.json \
-                     --benchmark-dir benchmarks/pycam5 \
+                     --benchmark-dir pycam5/benchmarks \
                      --artifact-repo ~/PyCAM5 \
                      --outputs-location /glade/derecho/scratch/me/pi/run \
                      --outputs-retention "scratch, purged ~2026-12-01" \
-                     --out evidence/pycam5/unreleased-e8d68996/manifest.json
+                     --out pycam5/evidence/unreleased-e8d68996/manifest.json
 """
 
 from __future__ import annotations
@@ -634,7 +634,7 @@ def repo_relative(path: Path) -> str:
     except ValueError:
         raise BuildError(
             "%s is outside this repository; cases[].benchmark must be a path "
-            "under benchmarks/ here" % path) from None
+            "under <product>/benchmarks/ here" % path) from None
 
 
 def build_case(case_id: str, comparator_json: Path, args) -> Tuple[dict, dict, List[str]]:

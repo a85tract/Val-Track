@@ -5,7 +5,7 @@ Machine-readable definition of what an acceptance record is. See
 
 | File | Purpose |
 |---|---|
-| `evidence-manifest.v1.json` | The manifest of an acceptance record (`evidence/<product>/<version>/manifest.json`): artifact, reference, environment, cases, result |
+| `evidence-manifest.v1.json` | The manifest of an acceptance record (`<product>/evidence/<version>/manifest.json`): artifact, reference, environment, cases, result |
 | `acceptance.v1.json` | The acceptance criteria vocabulary, referenced from each case |
 | `examples/example-bitwise.manifest.json` | Format example. Not evidence — see the `notes` field |
 | `test_schemas.py` | Self-test: the example must validate, and twelve deliberate mutations must be rejected |
@@ -72,7 +72,7 @@ decision is visible, not so evidence can be filed against them.
 
 `correctness/verify_evidence.py` enforces these; they are listed here so the schema and the
 verifier stay in agreement. Three of them need something the verifier is not always given —
-the product checkout (4), a manifest that actually lives under `evidence/` (5), and the base
+the product checkout (4), a manifest that actually lives at `<product>/evidence/<version>/` (5), and the base
 branch (8). Each is then reported as `SKIP` with the reason rather than counted as passing;
 `--strict` turns a skipped check into a failure.
 
@@ -85,13 +85,15 @@ branch (8). Each is then reported as `SKIP` with the reason rather than counted 
 3. Top-level `result` is `ERROR` if any case errored, otherwise `FAIL` if any case failed,
    otherwise `PASS`.
 4. `artifact.commit` resolves in `artifact.repo`.
-5. `artifact.version` equals the directory name under `evidence/<product>/`.
+5. `artifact.version` equals the directory name under `<product>/evidence/`.
 6. `cases[].benchmark` names a file that exists in this repository, and `cases[].id`
    equals that file's stem.
 7. `cc_test.commit` resolves in this repository.
-8. `evidence/` is append-only: no file of an acceptance record already on the base branch
-   (`evidence/<product>/<version>/*`) may be modified, deleted or renamed by a pull request.
-   `INDEX.md`, `index.json` and `README.md` are not records and are exempt.
+8. Records are append-only: no file of an acceptance record already on the base branch
+   (`<product>/evidence/<version>/*`) may be modified, deleted or renamed by a pull
+   request. `INDEX.md`, `index.json` and READMEs are not records and are exempt. The one move
+   allowed is a record from the old `evidence/<product>/<version>/` layout to
+   `<product>/evidence/<version>/`, byte for byte.
 9. `acceptance.kind: statistical` is rejected while its `status` is `provisional`.
 10. `security.scanned_commit` equals `artifact.commit` — otherwise the Cyber verdict
     describes different code than the correctness verdict.

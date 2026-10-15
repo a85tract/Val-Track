@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "source": "evidence/<product>/<version>/manifest.json, via correctness/index_evidence.py",
+  "source": "<product>/evidence/<version>/manifest.json, via correctness/index_evidence.py",
   "records": [
     {
       "product": "clubb-jax",
       "version": "unreleased-99c8b22f",
-      "path": "clubb-jax/unreleased-99c8b22f/",
+      "path": "clubb-jax/evidence/unreleased-99c8b22f/",
       "artifact": {
         "name": "clubb-jax",
         "repo": "https://github.com/a85tract/clubb-jax",

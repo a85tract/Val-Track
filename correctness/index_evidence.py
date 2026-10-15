@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate evidence/INDEX.md and evidence/index.json from the manifests under evidence/.
+"""Regenerate INDEX.md and index.json at the top level from every product's records.
 
 One entry per acceptance record, newest validation first. Both files are derived from
 the manifests, so they cannot disagree with them; run this after filing a record.
@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-EVIDENCE_DIR = REPO_ROOT / "evidence"
+PRODUCTS_DIR = REPO_ROOT  # each product is a top-level directory
 
 INDEX_SCHEMA = 1
 
@@ -38,19 +38,19 @@ HEADER = [
 ]
 
 
-def entries(evidence_dir: Path) -> List[Dict[str, object]]:
+def entries(products_dir: Path) -> List[Dict[str, object]]:
     """One entry per manifest, newest validation first."""
     found: List[Tuple[str, Dict[str, object]]] = []
-    for path in sorted(evidence_dir.glob("*/*/manifest.json")):
+    for path in sorted(products_dir.glob("*/evidence/*/manifest.json")):
         manifest = json.loads(path.read_text())
-        product, version = path.parent.parent.name, path.parent.name
+        product, version = path.parent.parent.parent.name, path.parent.name
         cases = manifest.get("cases") or []
         artifact = manifest.get("artifact") or {}
         reference = manifest.get("reference") or {}
         entry: Dict[str, object] = {
             "product": product,
             "version": version,
-            "path": "%s/%s/" % (product, version),
+            "path": "%s/evidence/%s/" % (product, version),
             "artifact": {
                 "name": artifact.get("name"),
                 "repo": artifact.get("repo"),
@@ -77,9 +77,9 @@ def entries(evidence_dir: Path) -> List[Dict[str, object]]:
     return [entry for _, entry in found]
 
 
-def render_markdown(evidence_dir: Optional[Path] = None) -> str:
+def render_markdown(products_dir: Optional[Path] = None) -> str:
     rows = []
-    for e in entries(evidence_dir or EVIDENCE_DIR):
+    for e in entries(products_dir or PRODUCTS_DIR):
         cases = e["cases"]
         assert isinstance(cases, dict)
         rows.append("| [%s](%s) | `%s` | %d (%d passed) | **%s** | %s | %s | %s |" % (
@@ -88,11 +88,11 @@ def render_markdown(evidence_dir: Optional[Path] = None) -> str:
     return "\n".join(HEADER + (rows or ["| _(none yet)_ | | | | | | |"])) + "\n"
 
 
-def render_json(evidence_dir: Optional[Path] = None) -> str:
+def render_json(products_dir: Optional[Path] = None) -> str:
     document = {
         "schema": INDEX_SCHEMA,
-        "source": "evidence/<product>/<version>/manifest.json, via correctness/index_evidence.py",
-        "records": entries(evidence_dir or EVIDENCE_DIR),
+        "source": "<product>/evidence/<version>/manifest.json, via correctness/index_evidence.py",
+        "records": entries(products_dir or PRODUCTS_DIR),
     }
     return json.dumps(document, indent=2) + "\n"
 
@@ -103,13 +103,13 @@ render = render_markdown
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Regenerate evidence/INDEX.md and evidence/index.json.")
+        description="Regenerate INDEX.md and index.json.")
     parser.add_argument("--check", action="store_true",
                         help="do not write; exit 1 if either file differs from the manifests")
     args = parser.parse_args(argv)
     outputs = {
-        EVIDENCE_DIR / "INDEX.md": render_markdown(),
-        EVIDENCE_DIR / "index.json": render_json(),
+        PRODUCTS_DIR / "INDEX.md": render_markdown(),
+        PRODUCTS_DIR / "index.json": render_json(),
     }
     if args.check:
         stale = [path for path, text in outputs.items()

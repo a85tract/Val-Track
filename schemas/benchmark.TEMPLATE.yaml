@@ -1,4 +1,4 @@
-# Benchmark template — copy to benchmarks/<product>/<case-id>.yaml and fill the TODOs.
+# Benchmark template — copy to <product>/benchmarks/<case-id>.yaml and fill the TODOs.
 # The `acceptance` block must validate against ../schemas/acceptance.v1.json.
 
 id: TODO-case-id            # must equal this file's stem

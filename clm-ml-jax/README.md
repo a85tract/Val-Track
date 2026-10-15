@@ -13,7 +13,7 @@ The product is the fifteen canopy physics modules of CLM-ml v2 (gbonan/CLM-ml_v2
 
 Both list the same fifteen units in `unit_set_equal`. `port-day15` ungates
 `mlinitverticalmod`: InitVertical runs only at step 1, so the day-15 recording holds no
-call of it. Both files validate against `../../schemas/acceptance.v1.json`.
+call of it. Both files validate against `../schemas/acceptance.v1.json`.
 
 ## The blocker: the summary format
 

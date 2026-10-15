@@ -7,12 +7,12 @@ authority; the file is a pointer with a summary. Two things can rot: the pointer
 record it names is gone, or says something else) and the commit (HEAD moved on and the
 file still reads as current). This tool does both halves.
 
-    check_validation.py render --manifest evidence/<product>/<version>/manifest.json
+    check_validation.py render --manifest <product>/evidence/<version>/manifest.json
         Print VALIDATION.md for that record. Run it in this repository after filing a
         record and commit the output in the product repository.
 
     check_validation.py check --validation VALIDATION.md --product-repo . \
-                              --evidence-dir <val-track checkout>/evidence [--strict] [--refresh]
+                              --val-track <val-track checkout> [--strict] [--refresh]
         Run in the product repository (CI does, through
         .github/workflows/validation-callable.yml). Exit 0 when the file agrees with the
         record and the drift line is current, 1 on a finding, 2 when nothing could be
@@ -39,7 +39,30 @@ CC_TEST_URL = "https://github.com/a85tract/Val-Track"
 
 ROW = re.compile(r"^\|\s*(?P<key>[^|]+?)\s*\|\s*(?P<value>.*?)\s*\|\s*$")
 DRIFT = re.compile(r"^> Current HEAD is (?:the validated commit|(?P<n>\d+) commits? ahead of the validated commit)\.?\s*$")
-RECORD = re.compile(r"evidence/(?P<product>[a-z0-9][a-z0-9-]*)/(?P<version>[^/\s`)]+)/?")
+RECORD = re.compile(r"(?P<product>[a-z0-9][a-z0-9-]*)/evidence/(?P<version>[^/\s`]+)/?")
+# A VALIDATION.md rendered before the per-product layout names evidence/<product>/<version>/;
+# it still points at the same record, which moved without changing.
+LEGACY_RECORD = re.compile(r"evidence/(?P<product>[a-z0-9][a-z0-9-]*)/(?P<version>[^/\s`]+)/?")
+
+
+def record_of(value: str) -> Optional[Tuple[str, str]]:
+    """(product, version) from a `Record` path or an `Evidence` URL, in either layout."""
+    value = value.strip().strip("`").strip()
+    if "/tree/" in value:  # https://github.com/<owner>/Val-Track/tree/<ref>/<path>
+        value = value.split("/tree/", 1)[1].split("/", 1)[-1]
+    for pattern in (LEGACY_RECORD, RECORD):
+        match = pattern.fullmatch(value)
+        if match:
+            return match.group("product"), match.group("version")
+    return None
+
+
+def benchmark_dir(benchmark: str) -> str:
+    """The directory a case's benchmark is in now, for either layout."""
+    parts = benchmark.split("/")
+    if parts[0] == "benchmarks" and len(parts) >= 3:
+        return "%s/benchmarks" % parts[1]
+    return benchmark.rsplit("/", 1)[0]
 
 
 # --- render ---------------------------------------------------------------------
@@ -66,7 +89,7 @@ def render(manifest: dict, record_path: str) -> str:
             statuses.count("PASS"), statuses.count("FAIL"), statuses.count("ERROR"))),
         ("Criteria", "%s — %d benchmark%s under %s" % (
             ", ".join(kinds), len(cases), "" if len(cases) == 1 else "s",
-            ", ".join("`%s/`" % d for d in sorted({c["benchmark"].rsplit("/", 1)[0] for c in cases})))),
+            ", ".join("`%s/`" % d for d in sorted({benchmark_dir(c["benchmark"]) for c in cases})))),
         ("Result", manifest["result"]),
         ("Security gate", manifest["security"]["status"]),
         ("Evidence class", manifest["evidence_class"]),
@@ -125,11 +148,11 @@ def check(args) -> int:
     commit = rows.get("Validated commit", "").strip("` ")
     record = rows.get("Record", "")
     stated = rows.get("Result", "").strip()
-    match = RECORD.search(record) or RECORD.search(rows.get("Evidence", ""))
+    found = record_of(record) or record_of(rows.get("Evidence", ""))
     if not re.fullmatch(r"[0-9a-f]{7,40}", commit):
         findings.append("no usable `Validated commit` row (got %r)" % commit)
-    if not match:
-        findings.append("no `Record` row naming evidence/<product>/<version>/")
+    if not found:
+        findings.append("no `Record` row naming <product>/evidence/<version>/")
     if not stated:
         findings.append("no `Result` row")
     if findings:
@@ -137,12 +160,12 @@ def check(args) -> int:
             print("%s: ERROR: %s" % (path, f))
         return EXIT_FINDINGS
 
-    assert match is not None
-    product, version = match.group("product"), match.group("version")
-    manifest_path = Path(args.evidence_dir) / product / version / "manifest.json"
+    assert found is not None
+    product, version = found
+    manifest_path = Path(args.val_track) / product / "evidence" / version / "manifest.json"
     if not manifest_path.is_file():
-        print("%s: ERROR: the record it names, evidence/%s/%s/, is not in %s"
-              % (path, product, version, args.evidence_dir))
+        print("%s: ERROR: the record it names, %s/evidence/%s/, is not in %s"
+              % (path, product, version, args.val_track))
         return EXIT_FINDINGS
     manifest = json.loads(manifest_path.read_text())
 
@@ -192,7 +215,7 @@ def check(args) -> int:
         print("%s: ERROR: %s" % (path, f))
     for w in warnings:
         print("%s: WARNING: %s" % (path, w))
-    print("check_validation: %s -> evidence/%s/%s/ (%s): %d error(s), %d warning(s)"
+    print("check_validation: %s -> %s/evidence/%s/ (%s): %d error(s), %d warning(s)"
           % (path, product, version, manifest["result"], len(findings), len(warnings)))
     return EXIT_FINDINGS if findings else EXIT_PASS
 
@@ -205,12 +228,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     r = sub.add_parser("render", help="print VALIDATION.md for an acceptance record")
     r.add_argument("--manifest", type=Path, required=True,
-                   help="evidence/<product>/<version>/manifest.json in this repository")
+                   help="<product>/evidence/<version>/manifest.json in this repository")
     c = sub.add_parser("check", help="check a product's VALIDATION.md against the records")
     c.add_argument("--validation", type=Path, default=Path("VALIDATION.md"))
     c.add_argument("--product-repo", type=Path, default=Path("."))
-    c.add_argument("--evidence-dir", type=Path, required=True,
-                   help="the evidence/ directory of a Val-Track checkout")
+    c.add_argument("--val-track", type=Path, required=True,
+                   help="a Val-Track checkout, whose <product>/evidence/ holds the records")
     c.add_argument("--strict", action="store_true",
                    help="a missing or stale drift line is a finding, not a warning")
     c.add_argument("--refresh", action="store_true",
@@ -220,13 +243,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.command == "render":
         manifest_path = args.manifest.resolve()
         parts = manifest_path.parts
-        try:
-            at = len(parts) - 1 - parts[::-1].index("evidence")
-        except ValueError:
-            print("check_validation: %s is not under an evidence/ directory" % manifest_path,
-                  file=sys.stderr)
+        if len(parts) < 4 or parts[-3] != "evidence":
+            print("check_validation: %s is not at <product>/evidence/<version>/manifest.json"
+                  % manifest_path, file=sys.stderr)
             return EXIT_INCOMPLETE
-        record_path = "/".join(parts[at:-1]) + "/"
+        record_path = "/".join(parts[-4:-1]) + "/"
         try:
             manifest = json.loads(manifest_path.read_text())
         except (OSError, ValueError) as exc:

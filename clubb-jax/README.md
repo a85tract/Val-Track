@@ -84,25 +84,25 @@ with no waiver.
 ## Re-evaluating
 
 The summaries live in the case repository, not here. Extract the one to evaluate, then
-build a manifest (the invocation is described in `../../correctness/README.md`):
+build a manifest (the invocation is described in `../correctness/README.md`):
 
 ```bash
 git -C ~/agent/cesm/clubb-jax show 99c8b22f:summaries/tier0.json > /tmp/tier0.json
 correctness/make_manifest.py \
     --case tier0=/tmp/tier0.json \
-    --benchmark-dir benchmarks/clubb-jax \
+    --benchmark-dir clubb-jax/benchmarks \
     --artifact-repo ~/agent/cesm/clubb-jax \
     --artifact-commit 99c8b22fab697d5fb5fb14b4bfaa6a2963fed78d \
     --artifact-version unreleased-99c8b22f \
     --outputs-location https://github.com/a85tract/clubb-jax/tree/main/summaries \
     --machine laptop \
-    --out evidence/clubb-jax/unreleased-99c8b22f/manifest.json
+    --out clubb-jax/evidence/unreleased-99c8b22f/manifest.json
 ```
 
 On 2026-09-24 all 15 evaluate PASS (exit 0) against their summaries at `99c8b22f`. As a
 negative control, removing `fortran:calendar` from `tier0`'s unit list evaluates FAIL with
 the detail `not named by the benchmark: fortran:calendar`. All 15 are filed together as
-the acceptance record `evidence/clubb-jax/unreleased-99c8b22f/`.
+the acceptance record `evidence/unreleased-99c8b22f/` here.
 
 To re-gate the summaries themselves after an engine change, run `python tools/regate.py
 run` in the case repository (`tools/regate/jobs.json` lists the jobs); every file's

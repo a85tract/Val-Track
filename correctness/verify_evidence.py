@@ -8,7 +8,7 @@ run (see docs/VALIDATION-ARCHITECTURE.md §4, adjustment A).
 
 Usage
 -----
-    verify_evidence.py [PATH ...]      # defaults to every manifest under evidence/
+    verify_evidence.py [PATH ...]      # defaults to every manifest under <product>/evidence/
     verify_evidence.py --strict        # treat warnings and skipped checks as errors
     verify_evidence.py --base-ref REF  # enables the append-only check (invariant 8)
     verify_evidence.py --artifact-checkout NAME=DIR   # enables invariant 4
@@ -38,13 +38,17 @@ As of schema v1:
        check failed; ERROR only with an error message.
     3. Top-level result is the roll-up of the case statuses.
     4. artifact.commit resolves in artifact.repo.
-    5. artifact.version equals the directory name under evidence/<product>/.
+    5. artifact.version equals the directory name under <product>/evidence/.
     6. cases[].benchmark names a file that exists here, and cases[].id equals
-       that file's stem.
+       that file's stem. A record filed before the per-product layout names
+       benchmarks/<product>/<case>; that is read as <product>/benchmarks/<case>,
+       since the record cannot be edited.
     7. cc_test.commit resolves in this repository.
-    8. evidence/ is append-only: no file of an acceptance record already on the
-       base branch (evidence/<product>/<version>/*) may be modified, deleted or
-       renamed by a pull request. INDEX.md and README.md are not records.
+    8. Records are append-only: no file of an acceptance record already on the
+       base branch (<product>/evidence/<version>/*) may be modified, deleted
+       or renamed by a pull request. The one move allowed is a record from the
+       old evidence/<product>/<version>/ layout to <product>/evidence/<version>/,
+       byte for byte. INDEX.md, index.json and READMEs are not records.
     9. acceptance.kind: statistical is rejected while its status is provisional
        (decision D4 — the vocabulary is a placeholder, not something evidence
        may be filed against yet).
@@ -61,7 +65,7 @@ As of schema v1:
    17. security.scans.vulnerabilities.vex_applied is false.
 
 Invariants 4, 5 and 8 need something this tool is not always given — the product
-checkout, a manifest that actually lives under evidence/, the base branch. Each
+checkout, a manifest that actually lives at <product>/evidence/<version>/, the base branch. Each
 is then reported as SKIP with the reason, never quietly counted as passing.
 In CI, pass --base-ref so invariant 8 runs; locally it is expected to skip.
 
@@ -82,8 +86,32 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
-EVIDENCE_DIR = Path(__file__).resolve().parent.parent / "evidence"
 REPO_ROOT = Path(__file__).resolve().parent.parent
+# Each product is a top-level directory: <product>/benchmarks/, <product>/evidence/.
+PRODUCTS_DIR = REPO_ROOT
+# Before the per-product layout, records lived at evidence/<product>/<version>/ and
+# criteria at benchmarks/<product>/. Only the append-only check and old records'
+# benchmark paths still need to know.
+LEGACY_EVIDENCE = "evidence"
+
+
+def record_file(name: str) -> Optional[Tuple[str, str, str]]:
+    """(product, version, file) when a repository path is a file of an acceptance
+    record, in either layout; None for indexes, READMEs and everything else."""
+    parts = Path(name).parts
+    if len(parts) >= 4 and parts[0] == LEGACY_EVIDENCE:
+        return parts[1], parts[2], "/".join(parts[3:])
+    if len(parts) >= 4 and parts[1] == "evidence":
+        return parts[0], parts[2], "/".join(parts[3:])
+    return None
+
+
+def benchmark_file(benchmark: str) -> Path:
+    """Where a manifest's cases[].benchmark is on disk, for either layout."""
+    parts = Path(benchmark).parts
+    if len(parts) >= 3 and parts[0] == "benchmarks":
+        return PRODUCTS_DIR.joinpath(parts[1], "benchmarks", *parts[2:])
+    return REPO_ROOT / benchmark
 
 EXIT_PASS, EXIT_FINDINGS, EXIT_INCOMPLETE = 0, 1, 2
 
@@ -203,18 +231,19 @@ def check_artifact_commit(manifest: dict, report, checkouts: Dict[str, Path]) ->
 def check_version_directory(manifest: dict, path: Path, report) -> None:
     """Invariant 5."""
     try:
-        relative = path.resolve().relative_to(EVIDENCE_DIR)
+        relative = path.resolve().relative_to(PRODUCTS_DIR)
     except ValueError:
-        report(SKIP, "version directory not checked: %s is not under evidence/" % path)
+        report(SKIP, "version directory not checked: %s is not in this repository" % path)
         return
-    if len(relative.parts) < 3:
-        report(ERROR, "%s is not at evidence/<product>/<version>/manifest.json" % path)
+    if len(relative.parts) != 4 or relative.parts[1] != "evidence":
+        report(ERROR, "%s is not at <product>/evidence/<version>/manifest.json"
+                      % path)
         return
-    directory = relative.parts[1]
+    product, directory = relative.parts[0], relative.parts[2]
     version = (manifest.get("artifact") or {}).get("version")
     if directory != version:
-        report(ERROR, "artifact.version %r but the directory is evidence/%s/%s/"
-                      % (version, relative.parts[0], directory))
+        report(ERROR, "artifact.version %r but the directory is %s/evidence/%s/"
+                      % (version, product, directory))
 
 
 def check_benchmarks(manifest: dict, report) -> None:
@@ -222,7 +251,7 @@ def check_benchmarks(manifest: dict, report) -> None:
     for index, case in enumerate(manifest.get("cases", [])):
         benchmark = case.get("benchmark") or ""
         where = "cases[%d] (%s)" % (index, case.get("id"))
-        path = REPO_ROOT / benchmark
+        path = benchmark_file(benchmark)
         if not path.is_file():
             report(ERROR, "%s: benchmark %s does not exist in this repository"
                           % (where, benchmark))
@@ -243,37 +272,38 @@ def check_cc_test_commit(manifest: dict, report) -> None:
 
 
 def check_append_only(paths: List[Path], base_ref: Optional[str], findings: Findings) -> None:
-    """Invariant 8, asked once for the whole evidence tree rather than per manifest."""
+    """Invariant 8, asked once for the whole tree rather than per manifest."""
     if not base_ref:
         for path in paths:
             findings.add(str(path), SKIP, "append-only not checked: no --base-ref given")
         return
     try:
         out = subprocess.check_output(
-            ["git", "-C", str(REPO_ROOT), "diff", "--name-status", base_ref, "--",
-             str(EVIDENCE_DIR.relative_to(REPO_ROOT))],
+            ["git", "-C", str(REPO_ROOT), "diff", "--name-status", "-M", base_ref],
             text=True, stderr=subprocess.STDOUT)
     except (OSError, subprocess.CalledProcessError) as exc:
         for path in paths:
             findings.add(str(path), SKIP, "append-only not checked: %s" % exc)
         return
-    changed = {}
-    for line in out.splitlines():
+    verbs = {"M": "modified", "D": "deleted", "R": "renamed", "T": "retyped"}
+    for line in sorted(out.splitlines()):
         parts = line.split("\t")
         if len(parts) < 2:
             continue
-        # Only an acceptance record is immutable: evidence/<product>/<version>/<file>.
-        # INDEX.md is regenerated by every filing and README.md is documentation;
-        # holding them to append-only would fail every pull request that files a record.
-        if len(Path(parts[-1]).parts) < 4:
+        status, old = parts[0], parts[1]
+        record = record_file(old)
+        # Additions are what filing a record is; INDEX.md and README.md are
+        # regenerated or edited by every filing and are not records.
+        if record is None or status[0] not in verbs:
             continue
-        changed[parts[-1]] = parts[0][0]
-    verbs = {"M": "modified", "D": "deleted", "R": "renamed"}
-    for name, status in sorted(changed.items()):
-        if status in verbs:
-            findings.add(str(REPO_ROOT / name), ERROR,
-                         "evidence/ is append-only: %s was %s relative to %s"
-                         % (name, verbs[status], base_ref))
+        if status[0] == "R" and len(parts) == 3:
+            product, version, name = record
+            moved = "/".join((product, "evidence", version, name))
+            if status == "R100" and parts[2] == moved:
+                continue
+        findings.add(str(REPO_ROOT / old), ERROR,
+                     "records are append-only: %s was %s relative to %s"
+                     % (old, verbs[status[0]], base_ref))
 
 
 def check_provisional_statistical(manifest: dict, report) -> None:
@@ -352,7 +382,7 @@ def check_soft(manifest: dict, report) -> None:
 
 def discover(paths: List[str]) -> List[Path]:
     if not paths:
-        return sorted(EVIDENCE_DIR.glob("*/*/manifest.json"))
+        return sorted(PRODUCTS_DIR.glob("*/evidence/*/manifest.json"))
     found: List[Path] = []
     for item in paths:
         path = Path(item)
@@ -400,7 +430,7 @@ def parse_args(argv: Optional[List[str]] = None):
         description="Validate acceptance records' manifests against the schema and the "
                     "invariants JSON Schema cannot express.")
     parser.add_argument("paths", nargs="*",
-                        help="manifest files or directories (default: evidence/*/*/manifest.json)")
+                        help="manifest files or directories (default: */evidence/*/manifest.json)")
     parser.add_argument("--strict", action="store_true",
                         help="treat warnings and skipped checks as errors")
     parser.add_argument("--base-ref",
@@ -436,7 +466,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     paths = [p for p in paths if p.is_file()]
     if not paths:
         print("verify_evidence: no manifest to verify%s. Nothing was checked, which is "
-              "not the same as a clean run." % (" under %s" % EVIDENCE_DIR
+              "not the same as a clean run." % (" under %s" % PRODUCTS_DIR
                                                 if not args.paths else ""),
               file=sys.stderr)
         return EXIT_INCOMPLETE
