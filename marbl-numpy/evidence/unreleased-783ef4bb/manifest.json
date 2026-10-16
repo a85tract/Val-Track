@@ -1,0 +1,234 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "marbl-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "MARBL (Marine Biogeochemistry Library), stand-alone test driver tests/driver_src",
+    "commit_or_tag": "6b2a5e41dc5b0faaf9b600c96432e2487515e878",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "call-compute-subroutines",
+      "benchmark": "marbl-numpy/benchmarks/call-compute-subroutines.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{history_1inst.nc,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "history_1inst.nc",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run.log",
+            "dump_tool": "md5 of the text after the kit's mask (recast.insitu compare._masked: the file split on \\n, the lines the mask matches dropped, the rest joined by \\n)",
+            "dump_format": "drop lines matching ^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "history_1inst.nc",
+            "numeric_count": 628392,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "714acde6b5e2e2e9ccd8f27bdb0ec5f5",
+            "numeric_md5_reference": "714acde6b5e2e2e9ccd8f27bdb0ec5f5"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 10,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "22d04525588b1c4bfc95ac1c8602c556",
+            "numeric_md5_reference": "22d04525588b1c4bfc95ac1c8602c556"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.634,
+            "delta_pct": 1186.6141732283463,
+            "reference": 0.127
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "history_1inst.nc",
+            "md5": "714acde6b5e2e2e9ccd8f27bdb0ec5f5",
+            "bytes": 628392
+          },
+          {
+            "name": "run.log",
+            "md5": "ada0d35e3e11f94a82ebd95b9b333810",
+            "bytes": 400
+          }
+        ]
+      }
+    },
+    {
+      "id": "init",
+      "benchmark": "marbl-numpy/benchmarks/init.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "run.log",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run.log",
+            "dump_tool": "md5 of the text after the kit's mask (recast.insitu compare._masked: the file split on \\n, the lines the mask matches dropped, the rest joined by \\n)",
+            "dump_format": "drop lines matching ^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 366,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "f2a22941fe5c7baea24286fa85e43631",
+            "numeric_md5_reference": "f2a22941fe5c7baea24286fa85e43631"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.53,
+            "delta_pct": 373.2142857142857,
+            "reference": 0.112
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "run.log",
+            "md5": "32585ac1bd62a5a24f5fa0e6cd731061",
+            "bytes": 16506
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

@@ -1,0 +1,487 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "ww3-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "WAVEWATCH III (NOAA-EMC/WW3), ww3_shel built with switch_PR3_UQ",
+    "commit_or_tag": "a0eaffebde6246e096f240509c9acf159fe09003",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "tp1-1",
+      "benchmark": "ww3-numpy/benchmarks/tp1-1.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.ww3,ww3_shel.out,ww3_shel.err,ww3_outp*.out}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{mod_def.ww3,out_grd.ww3,out_pnt.ww3,restart.ww3,ww3_outp*}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{log.ww3,ww3_shel.out,ww3_shel.err}",
+            "dump_tool": "md5 of the file's bytes after the kit's masks, applied as recast.insitu.compare._masked (engine 783ef4bb) does: the bytes split on newline, a line dropped when a line mask (rule without '~') matches it, the text a value mask (rule with '~') matches replaced by '<masked>', the lines rejoined with newline; each rule '<file-name regex>::<line regex>' applies to the files whose name its first part matches",
+            "dump_format": "masked:log\\.ww3$::~(date|time) :\\s+(\\d{4}/\\d\\d/\\d\\d|\\d\\d:\\d\\d:\\d\\d)\\s*$ ;; (log\\.ww3|ww3_shel\\.out)$::~(Elapsed|Initialization) time\\s+:\\s+[0-9.]+ s ;; ww3_shel\\.out$::~(UTC|computation loop) at \\d\\d:\\d\\d:\\d\\d ;; ww3_shel\\.err$::^Note: The following floating-point exceptions are signalling",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (6 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "key": "log.ww3",
+            "numeric_count": 92,
+            "numeric_equal": true,
+            "numeric_md5_reference": "d39451d8bae47eeff749554f8fc50396",
+            "numeric_md5_candidate": "d39451d8bae47eeff749554f8fc50396",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "mod_def.ww3",
+            "numeric_count": 21641,
+            "numeric_equal": true,
+            "numeric_md5_reference": "0e4927931e9ba983a900335ba9169962",
+            "numeric_md5_candidate": "0e4927931e9ba983a900335ba9169962",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "out_grd.ww3",
+            "numeric_count": 164906,
+            "numeric_equal": true,
+            "numeric_md5_reference": "eff075cfb3f670d4595ab11e622f7a37",
+            "numeric_md5_candidate": "eff075cfb3f670d4595ab11e622f7a37",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "out_pnt.ww3",
+            "numeric_count": 62902,
+            "numeric_equal": true,
+            "numeric_md5_reference": "180a58a7189ed655209517d278a91720",
+            "numeric_md5_candidate": "180a58a7189ed655209517d278a91720",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "restart.ww3",
+            "numeric_count": 30408,
+            "numeric_equal": true,
+            "numeric_md5_reference": "dfc3beb2039c91b67f56131b81494fba",
+            "numeric_md5_candidate": "dfc3beb2039c91b67f56131b81494fba",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_outp.out",
+            "numeric_count": 3691,
+            "numeric_equal": true,
+            "numeric_md5_reference": "5f019c9147e0611a83e0efcec040d842",
+            "numeric_md5_candidate": "5f019c9147e0611a83e0efcec040d842",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_outp.tab50.ww3",
+            "numeric_count": 3816,
+            "numeric_equal": true,
+            "numeric_md5_reference": "30a0ab725d0e93fdccd84907d70ae3f2",
+            "numeric_md5_candidate": "30a0ab725d0e93fdccd84907d70ae3f2",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_shel.err",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_shel.out",
+            "numeric_count": 661,
+            "numeric_equal": true,
+            "numeric_md5_reference": "3c18c41a55ac84e0f599bb4d7bdc6358",
+            "numeric_md5_candidate": "3c18c41a55ac84e0f599bb4d7bdc6358",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "reference": 0.421,
+            "candidate": 266.304,
+            "delta_pct": 63155.10688836105
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "log.ww3",
+            "md5": "e8bbdaca9bb894b20a4b6fc7d0db886e",
+            "bytes": 5371
+          },
+          {
+            "name": "mod_def.ww3",
+            "md5": "0e4927931e9ba983a900335ba9169962",
+            "bytes": 21641
+          },
+          {
+            "name": "out_grd.ww3",
+            "md5": "eff075cfb3f670d4595ab11e622f7a37",
+            "bytes": 164906
+          },
+          {
+            "name": "out_pnt.ww3",
+            "md5": "180a58a7189ed655209517d278a91720",
+            "bytes": 62902
+          },
+          {
+            "name": "restart.ww3",
+            "md5": "dfc3beb2039c91b67f56131b81494fba",
+            "bytes": 30408
+          },
+          {
+            "name": "ww3_outp.out",
+            "md5": "5f019c9147e0611a83e0efcec040d842",
+            "bytes": 3691
+          },
+          {
+            "name": "ww3_outp.tab50.ww3",
+            "md5": "30a0ab725d0e93fdccd84907d70ae3f2",
+            "bytes": 3816
+          },
+          {
+            "name": "ww3_shel.err",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "ww3_shel.out",
+            "md5": "04529f2b3344f7df9872ed88d2630103",
+            "bytes": 42999
+          }
+        ]
+      }
+    },
+    {
+      "id": "ts1",
+      "benchmark": "ww3-numpy/benchmarks/ts1.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.ww3,ww3_shel.out,ww3_shel.err,ww3_outp*.out}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{mod_def.ww3,out_grd.ww3,out_pnt.ww3,restart.ww3,ww3_outp*}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{log.ww3,ww3_shel.out,ww3_shel.err}",
+            "dump_tool": "md5 of the file's bytes after the kit's masks, applied as recast.insitu.compare._masked (engine 783ef4bb) does: the bytes split on newline, a line dropped when a line mask (rule without '~') matches it, the text a value mask (rule with '~') matches replaced by '<masked>', the lines rejoined with newline; each rule '<file-name regex>::<line regex>' applies to the files whose name its first part matches",
+            "dump_format": "masked:log\\.ww3$::~(date|time) :\\s+(\\d{4}/\\d\\d/\\d\\d|\\d\\d:\\d\\d:\\d\\d)\\s*$ ;; (log\\.ww3|ww3_shel\\.out)$::~(Elapsed|Initialization) time\\s+:\\s+[0-9.]+ s ;; ww3_shel\\.out$::~(UTC|computation loop) at \\d\\d:\\d\\d:\\d\\d ;; ww3_shel\\.err$::^Note: The following floating-point exceptions are signalling",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (7 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "key": "log.ww3",
+            "numeric_count": 2226,
+            "numeric_equal": true,
+            "numeric_md5_reference": "4fc76a77a59f3cab435ca771266e6758",
+            "numeric_md5_candidate": "4fc76a77a59f3cab435ca771266e6758",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "mod_def.ww3",
+            "numeric_count": 35065,
+            "numeric_equal": true,
+            "numeric_md5_reference": "a9624dbe8367c497a27ed011d0f98aed",
+            "numeric_md5_candidate": "a9624dbe8367c497a27ed011d0f98aed",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "out_grd.ww3",
+            "numeric_count": 41694,
+            "numeric_equal": true,
+            "numeric_md5_reference": "98654fd6a7871ed845afa1dcb3e7d9fd",
+            "numeric_md5_candidate": "98654fd6a7871ed845afa1dcb3e7d9fd",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "out_pnt.ww3",
+            "numeric_count": 7652218,
+            "numeric_equal": true,
+            "numeric_md5_reference": "cd1829b31e72c032303dc2ff9523f641",
+            "numeric_md5_candidate": "cd1829b31e72c032303dc2ff9523f641",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "restart.ww3",
+            "numeric_count": 3456,
+            "numeric_equal": true,
+            "numeric_md5_reference": "a95240af2d54d15803032853189aeffc",
+            "numeric_md5_candidate": "a95240af2d54d15803032853189aeffc",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_outp_spec.out",
+            "numeric_count": 64079,
+            "numeric_equal": true,
+            "numeric_md5_reference": "106837d71650a996e030018b12f8280b",
+            "numeric_md5_candidate": "106837d71650a996e030018b12f8280b",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_outp_tab50.out",
+            "numeric_count": 1011,
+            "numeric_equal": true,
+            "numeric_md5_reference": "8b3510db143eb4f9915fefbabe096417",
+            "numeric_md5_candidate": "8b3510db143eb4f9915fefbabe096417",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_outp_tab50.tab49.ww3",
+            "numeric_count": 170957,
+            "numeric_equal": true,
+            "numeric_md5_reference": "b91d3e38770b1ab98b50eb47620135b2",
+            "numeric_md5_candidate": "b91d3e38770b1ab98b50eb47620135b2",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_shel.err",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          },
+          {
+            "key": "ww3_shel.out",
+            "numeric_count": 2284,
+            "numeric_equal": true,
+            "numeric_md5_reference": "67ed14b6acde3dac104c17c31aa0f48b",
+            "numeric_md5_candidate": "67ed14b6acde3dac104c17c31aa0f48b",
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": []
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "reference": 4.845,
+            "candidate": 7046.476,
+            "delta_pct": 145338.10113519093
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "log.ww3",
+            "md5": "837fde4359115a0c710dd868eeb3ce7e",
+            "bytes": 183566
+          },
+          {
+            "name": "mod_def.ww3",
+            "md5": "a9624dbe8367c497a27ed011d0f98aed",
+            "bytes": 35065
+          },
+          {
+            "name": "out_grd.ww3",
+            "md5": "98654fd6a7871ed845afa1dcb3e7d9fd",
+            "bytes": 41694
+          },
+          {
+            "name": "out_pnt.ww3",
+            "md5": "cd1829b31e72c032303dc2ff9523f641",
+            "bytes": 7652218
+          },
+          {
+            "name": "restart.ww3",
+            "md5": "a95240af2d54d15803032853189aeffc",
+            "bytes": 3456
+          },
+          {
+            "name": "ww3_outp_spec.out",
+            "md5": "106837d71650a996e030018b12f8280b",
+            "bytes": 64079
+          },
+          {
+            "name": "ww3_outp_tab50.out",
+            "md5": "8b3510db143eb4f9915fefbabe096417",
+            "bytes": 1011
+          },
+          {
+            "name": "ww3_outp_tab50.tab49.ww3",
+            "md5": "b91d3e38770b1ab98b50eb47620135b2",
+            "bytes": 170957
+          },
+          {
+            "name": "ww3_shel.err",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "ww3_shel.out",
+            "md5": "fe05174a9ab499d8ff7533eb36b885b1",
+            "bytes": 151391
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T08:31:00Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

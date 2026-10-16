@@ -1,0 +1,247 @@
+carma-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== bc2gtest: PASS
+benchmark: CARMA wrapper regression test BC2GTEST: main program tests/carma_bc2gtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_bc2gtest.txt and its standard output is captured as BC2GTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BC2GTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BC2GTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BC2GTEST/o5w/work/result_o5w.json
+wall seconds: original 0.528, translated 23.682
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+BC2GTEST.exe.log	35	bff6e8bc05a31ca71ea952190702f298	35	bff6e8bc05a31ca71ea952190702f298	raw	bff6e8bc05a31ca71ea952190702f298	bff6e8bc05a31ca71ea952190702f298	true
+carma_bc2gtest.txt	76646	f057f9edbc6e20a4e3614f0ce78a94bf	76646	f057f9edbc6e20a4e3614f0ce78a94bf	raw	f057f9edbc6e20a4e3614f0ce78a94bf	f057f9edbc6e20a4e3614f0ce78a94bf	true
+
+== bcoctest: PASS
+benchmark: CARMA wrapper regression test BCOCTEST: main program tests/carma_bcoctest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_bcoctest.txt and its standard output is captured as BCOCTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BCOCTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BCOCTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/BCOCTEST/o5w/work/result_o5w.json
+wall seconds: original 0.956, translated 29.976
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+BCOCTEST.exe.log	35	512db860f8e810d3bd6f43a3f1c223b8	35	512db860f8e810d3bd6f43a3f1c223b8	raw	512db860f8e810d3bd6f43a3f1c223b8	512db860f8e810d3bd6f43a3f1c223b8	true
+carma_bcoctest.txt	102066	7b64023c8c564dfe1a2d84b26b06da51	102066	7b64023c8c564dfe1a2d84b26b06da51	raw	7b64023c8c564dfe1a2d84b26b06da51	7b64023c8c564dfe1a2d84b26b06da51	true
+
+== cetest: PASS
+benchmark: CARMA wrapper regression test CETEST: main program tests/carma_cetest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_cetest.txt and its standard output is captured as CETEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/CETEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/CETEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/CETEST/o5w/work/result_o5w.json
+wall seconds: original 0.045, translated 3.306
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+CETEST.exe.log	34	9988a4183e4f852a47ea3872620857d3	34	9988a4183e4f852a47ea3872620857d3	raw	9988a4183e4f852a47ea3872620857d3	9988a4183e4f852a47ea3872620857d3	true
+carma_cetest.txt	2923	3396ba7af03699b0b5ef3490a3be23f7	2923	3396ba7af03699b0b5ef3490a3be23f7	raw	3396ba7af03699b0b5ef3490a3be23f7	3396ba7af03699b0b5ef3490a3be23f7	true
+
+== coagtest: PASS
+benchmark: CARMA wrapper regression test COAGTEST: main program tests/carma_coagtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_coagtest.txt and its standard output is captured as COAGTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/COAGTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/COAGTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/COAGTEST/o5w/work/result_o5w.json
+wall seconds: original 0.38, translated 10.147
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+COAGTEST.exe.log	24	2846463bbda067cd95bb007747733564	24	2846463bbda067cd95bb007747733564	raw	2846463bbda067cd95bb007747733564	2846463bbda067cd95bb007747733564	true
+carma_coagtest.txt	26406	7bf6b34a302a1115606e48aceaff49f2	26406	7bf6b34a302a1115606e48aceaff49f2	raw	7bf6b34a302a1115606e48aceaff49f2	7bf6b34a302a1115606e48aceaff49f2	true
+
+== drydeptest: PASS
+benchmark: CARMA wrapper regression test DRYDEPTEST: main program tests/carma_drydeptest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_drydeptest.txt, carma_vdry.txt and its standard output is captured as DRYDEPTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/DRYDEPTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/DRYDEPTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/DRYDEPTEST/o5w/work/result_o5w.json
+wall seconds: original 3.709, translated 157.568
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+DRYDEPTEST.exe.log	27	28f5116e2a3717c595978b019f13da1a	27	28f5116e2a3717c595978b019f13da1a	raw	28f5116e2a3717c595978b019f13da1a	28f5116e2a3717c595978b019f13da1a	true
+carma_drydeptest.txt	5240138	f38698c61cecbdd7c9a48ccd351ec2fb	5240138	f38698c61cecbdd7c9a48ccd351ec2fb	raw	f38698c61cecbdd7c9a48ccd351ec2fb	f38698c61cecbdd7c9a48ccd351ec2fb	true
+carma_vdry.txt	570	fccda82be01ab86c8f9198265fa2125a	570	fccda82be01ab86c8f9198265fa2125a	raw	fccda82be01ab86c8f9198265fa2125a	fccda82be01ab86c8f9198265fa2125a	true
+
+== falltest: PASS
+benchmark: CARMA wrapper regression test FALLTEST: main program tests/carma_falltest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_falltest.txt and its standard output is captured as FALLTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FALLTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FALLTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FALLTEST/o5w/work/result_o5w.json
+wall seconds: original 0.535, translated 27.123
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+FALLTEST.exe.log	26	cc9f6bab092daa692e8b29aab47b6f24	26	cc9f6bab092daa692e8b29aab47b6f24	raw	cc9f6bab092daa692e8b29aab47b6f24	cc9f6bab092daa692e8b29aab47b6f24	true
+carma_falltest.txt	1597106	6e454bed06a5bdba341ab13475988c0a	1597106	6e454bed06a5bdba341ab13475988c0a	raw	6e454bed06a5bdba341ab13475988c0a	6e454bed06a5bdba341ab13475988c0a	true
+
+== fractalmicrotest: PASS
+benchmark: CARMA wrapper regression test FRACTALMICROTEST: main program tests/carma_fractalmicrotest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_fractalmicrotest.txt and its standard output is captured as FRACTALMICROTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALMICROTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALMICROTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALMICROTEST/o5w/work/result_o5w.json
+wall seconds: original 20.791, translated 1212.305
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+FRACTALMICROTEST.exe.log	20	d79dcf337b4ac41332f0db1d4b6f3e0a	20	d79dcf337b4ac41332f0db1d4b6f3e0a	raw	d79dcf337b4ac41332f0db1d4b6f3e0a	d79dcf337b4ac41332f0db1d4b6f3e0a	true
+carma_fractalmicrotest.txt	7282662	42fbce4eef97ac1908f19cb11f172992	7282662	42fbce4eef97ac1908f19cb11f172992	raw	42fbce4eef97ac1908f19cb11f172992	42fbce4eef97ac1908f19cb11f172992	true
+
+== fractalopticstest: PASS
+benchmark: CARMA wrapper regression test FRACTALOPTICSTEST: main program tests/carma_fractalopticstest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_fractalopticstest.txt and its standard output is captured as FRACTALOPTICSTEST.exe.log
+accepted runs: Slurm job 33422613 (o5w-carma-fo), 2026-10-05 05:01:47-05:10:02 UTC, node c3cpu-c15-u1-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALOPTICSTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALOPTICSTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/FRACTALOPTICSTEST/o5w/work/result_o5w.json
+wall seconds: original 6.31, translated 417.341
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+FRACTALOPTICSTEST.exe.log	27	97cf9a96a930f1671784b77add45b382	27	97cf9a96a930f1671784b77add45b382	raw	97cf9a96a930f1671784b77add45b382	97cf9a96a930f1671784b77add45b382	true
+carma_fractalopticstest.txt	1161	99709eee61743f8bedddca6ab1c5ae01	1161	99709eee61743f8bedddca6ab1c5ae01	raw	99709eee61743f8bedddca6ab1c5ae01	99709eee61743f8bedddca6ab1c5ae01	true
+
+== growclrtest: PASS
+benchmark: CARMA wrapper regression test GROWCLRTEST: main program tests/carma_growclrtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_growclrtest.txt and its standard output is captured as GROWCLRTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWCLRTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWCLRTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWCLRTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.013, translated 1.009
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+GROWCLRTEST.exe.log	46	93a4a46645213dffb07ca17a3d4a7b6a	46	93a4a46645213dffb07ca17a3d4a7b6a	raw	93a4a46645213dffb07ca17a3d4a7b6a	93a4a46645213dffb07ca17a3d4a7b6a	true
+carma_growclrtest.txt	6045	d976a948e95fcaedbd708b1faad1ca20	6045	d976a948e95fcaedbd708b1faad1ca20	raw	d976a948e95fcaedbd708b1faad1ca20	d976a948e95fcaedbd708b1faad1ca20	true
+
+== growintest: PASS
+benchmark: CARMA wrapper regression test GROWINTEST: main program tests/carma_growintest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_growintest.txt and its standard output is captured as GROWINTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWINTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWINTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWINTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.013, translated 0.861
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+GROWINTEST.exe.log	45	2bc6197ea4130bb214681e9a8ae2324d	45	2bc6197ea4130bb214681e9a8ae2324d	raw	2bc6197ea4130bb214681e9a8ae2324d	2bc6197ea4130bb214681e9a8ae2324d	true
+carma_growintest.txt	3291	eabdf60b1d3e0788abec979ba4128570	3291	eabdf60b1d3e0788abec979ba4128570	raw	eabdf60b1d3e0788abec979ba4128570	eabdf60b1d3e0788abec979ba4128570	true
+
+== growsubtest: PASS
+benchmark: CARMA wrapper regression test GROWSUBTEST: main program tests/carma_growsubtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_growsubtest.txt and its standard output is captured as GROWSUBTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWSUBTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWSUBTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWSUBTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.007, translated 0.693
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+GROWSUBTEST.exe.log	36	911f145dcf8fc2fc83f39332dd6f05e3	36	911f145dcf8fc2fc83f39332dd6f05e3	raw	911f145dcf8fc2fc83f39332dd6f05e3	911f145dcf8fc2fc83f39332dd6f05e3	true
+carma_growsubtest.txt	3291	de523a63ff044a28ef6546439cc7ff93	3291	de523a63ff044a28ef6546439cc7ff93	raw	de523a63ff044a28ef6546439cc7ff93	de523a63ff044a28ef6546439cc7ff93	true
+
+== growtest: PASS
+benchmark: CARMA wrapper regression test GROWTEST: main program tests/carma_growtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_growtest.txt and its standard output is captured as GROWTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.01, translated 1.5
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+GROWTEST.exe.log	19	086700b014a043428508af8093b8652d	19	086700b014a043428508af8093b8652d	raw	086700b014a043428508af8093b8652d	086700b014a043428508af8093b8652d	true
+carma_growtest.txt	30852	9bd1c240179eb5e0aa33ca87ab5ae41c	30852	9bd1c240179eb5e0aa33ca87ab5ae41c	raw	9bd1c240179eb5e0aa33ca87ab5ae41c	9bd1c240179eb5e0aa33ca87ab5ae41c	true
+
+== kappawetrtest: PASS
+benchmark: CARMA wrapper regression test KAPPAWETRTEST: main program tests/carma_kappawetrtest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_kappawetrtest.txt and its standard output is captured as KAPPAWETRTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/KAPPAWETRTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/KAPPAWETRTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/KAPPAWETRTEST/o5w/work/result_o5w.json
+wall seconds: original 0.046, translated 7.634
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+KAPPAWETRTEST.exe.log	22	567a55579d4491a0710c81f9e83dad5a	22	567a55579d4491a0710c81f9e83dad5a	raw	567a55579d4491a0710c81f9e83dad5a	567a55579d4491a0710c81f9e83dad5a	true
+carma_kappawetrtest.txt	29580	3d4f34637b902f4f7771e1166591e855	29580	3d4f34637b902f4f7771e1166591e855	raw	3d4f34637b902f4f7771e1166591e855	3d4f34637b902f4f7771e1166591e855	true
+
+== mietest: PASS
+benchmark: CARMA wrapper regression test MIETEST: main program tests/carma_mietest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_mietest.txt and its standard output is captured as MIETEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/MIETEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/MIETEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/MIETEST/o5w/work/result_o5w.json
+wall seconds: original 0.071, translated 4.347
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+MIETEST.exe.log	16	0a3671658b0c0947355baf895f5c6ccb	16	0a3671658b0c0947355baf895f5c6ccb	raw	0a3671658b0c0947355baf895f5c6ccb	0a3671658b0c0947355baf895f5c6ccb	true
+carma_mietest.txt	30093	01a08b1a539ed6ba6979122591fb6c9f	30093	01a08b1a539ed6ba6979122591fb6c9f	raw	01a08b1a539ed6ba6979122591fb6c9f	01a08b1a539ed6ba6979122591fb6c9f	true
+
+== nuc2test: PASS
+benchmark: CARMA wrapper regression test NUC2TEST: main program tests/carma_nuc2test.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_nuc2test.txt and its standard output is captured as NUC2TEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUC2TEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUC2TEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUC2TEST/o5w/work/result_o5w.json
+wall seconds: original 0.118, translated 52.871
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+NUC2TEST.exe.log	32	ecb0e8e3f85383b45f5dc0531181a625	32	ecb0e8e3f85383b45f5dc0531181a625	raw	ecb0e8e3f85383b45f5dc0531181a625	ecb0e8e3f85383b45f5dc0531181a625	true
+carma_nuc2test.txt	108137	064b49fd222c34bb320a9ebd6501cd84	108137	064b49fd222c34bb320a9ebd6501cd84	raw	064b49fd222c34bb320a9ebd6501cd84	064b49fd222c34bb320a9ebd6501cd84	true
+
+== nuctest: PASS
+benchmark: CARMA wrapper regression test NUCTEST: main program tests/carma_nuctest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_nuctest.txt and its standard output is captured as NUCTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUCTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUCTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/NUCTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.02, translated 4.496
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+NUCTEST.exe.log	32	ecb0e8e3f85383b45f5dc0531181a625	32	ecb0e8e3f85383b45f5dc0531181a625	raw	ecb0e8e3f85383b45f5dc0531181a625	ecb0e8e3f85383b45f5dc0531181a625	true
+carma_nuctest.txt	108137	8c3e777b27b8d963b067e0eff9b732dc	108137	8c3e777b27b8d963b067e0eff9b732dc	raw	8c3e777b27b8d963b067e0eff9b732dc	8c3e777b27b8d963b067e0eff9b732dc	true
+
+== pheattest: PASS
+benchmark: CARMA wrapper regression test PHEATTEST: main program tests/carma_pheattest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_pheattest.txt and its standard output is captured as PHEATTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/PHEATTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/PHEATTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/PHEATTEST/o5w/work/result_o5wz.json
+wall seconds: original 0.043, translated 2.705
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+PHEATTEST.exe.log	29	bfd41145ee26e744bca2fb73b84f0dee	29	bfd41145ee26e744bca2fb73b84f0dee	raw	bfd41145ee26e744bca2fb73b84f0dee	bfd41145ee26e744bca2fb73b84f0dee	true
+carma_pheattest.txt	51284	39cbb61df61459edc97fdd02768998ca	51284	39cbb61df61459edc97fdd02768998ca	raw	39cbb61df61459edc97fdd02768998ca	39cbb61df61459edc97fdd02768998ca	true
+
+== scfalltest: PASS
+benchmark: CARMA wrapper regression test SCFALLTEST: main program tests/carma_scfalltest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_scfalltest.txt and its standard output is captured as SCFALLTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SCFALLTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SCFALLTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SCFALLTEST/o5w/work/result_o5w.json
+wall seconds: original 0.487, translated 27.813
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SCFALLTEST.exe.log	75	4e7c9b080b9f6ea766f37e151ebb36d1	75	4e7c9b080b9f6ea766f37e151ebb36d1	raw	4e7c9b080b9f6ea766f37e151ebb36d1	4e7c9b080b9f6ea766f37e151ebb36d1	true
+carma_scfalltest.txt	1048082	297ca73b5c624dbdf65e964b3ec43c98	1048082	297ca73b5c624dbdf65e964b3ec43c98	raw	297ca73b5c624dbdf65e964b3ec43c98	297ca73b5c624dbdf65e964b3ec43c98	true
+
+== sigmadrydeptest: PASS
+benchmark: CARMA wrapper regression test SIGMADRYDEPTEST: main program tests/carma_sigmadrydeptest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sigmadrydeptest.txt, carma_sigmavdry.txt and its standard output is captured as SIGMADRYDEPTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMADRYDEPTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMADRYDEPTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMADRYDEPTEST/o5w/work/result_o5w.json
+wall seconds: original 1.489, translated 91.142
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SIGMADRYDEPTEST.exe.log	46	69f5ba3bbd976e7c13ee75f5f5380479	46	69f5ba3bbd976e7c13ee75f5f5380479	raw	69f5ba3bbd976e7c13ee75f5f5380479	69f5ba3bbd976e7c13ee75f5f5380479	true
+carma_sigmadrydeptest.txt	2519342	04deb70b6d91866b6fe6d9ebf9e16267	2519342	04deb70b6d91866b6fe6d9ebf9e16267	raw	04deb70b6d91866b6fe6d9ebf9e16267	04deb70b6d91866b6fe6d9ebf9e16267	true
+carma_sigmavdry.txt	583	870d715b9f69c5b203545b005e64eced	583	870d715b9f69c5b203545b005e64eced	raw	870d715b9f69c5b203545b005e64eced	870d715b9f69c5b203545b005e64eced	true
+
+== sigmafalltest: PASS
+benchmark: CARMA wrapper regression test SIGMAFALLTEST: main program tests/carma_sigmafalltest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sigmafalltest.txt and its standard output is captured as SIGMAFALLTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMAFALLTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMAFALLTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SIGMAFALLTEST/o5w/work/result_o5w.json
+wall seconds: original 0.448, translated 27.261
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SIGMAFALLTEST.exe.log	46	69f5ba3bbd976e7c13ee75f5f5380479	46	69f5ba3bbd976e7c13ee75f5f5380479	raw	69f5ba3bbd976e7c13ee75f5f5380479	69f5ba3bbd976e7c13ee75f5f5380479	true
+carma_sigmafalltest.txt	1048082	fc95e643ef6d47bfca1ec2a661d2c16d	1048082	fc95e643ef6d47bfca1ec2a661d2c16d	raw	fc95e643ef6d47bfca1ec2a661d2c16d	fc95e643ef6d47bfca1ec2a661d2c16d	true
+
+== sulfate-ccdon-test: PASS
+benchmark: CARMA wrapper regression test SULFATE_CCDON_TEST: main program tests/carma_sulfate_ccdon_test.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sulfate_ccdon_test.txt and its standard output is captured as SULFATE_CCDON_TEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_CCDON_TEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_CCDON_TEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_CCDON_TEST/o5w/work/result_o5w.json
+wall seconds: original 0.159, translated 11.231
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SULFATE_CCDON_TEST.exe.log	40	2550671112d0f8e13cd446e88efe088f	40	2550671112d0f8e13cd446e88efe088f	raw	2550671112d0f8e13cd446e88efe088f	2550671112d0f8e13cd446e88efe088f	true
+carma_sulfate_ccdon_test.txt	94185	15572dfac4ffe8e09ce098e4cdcb0b0c	94185	15572dfac4ffe8e09ce098e4cdcb0b0c	raw	15572dfac4ffe8e09ce098e4cdcb0b0c	15572dfac4ffe8e09ce098e4cdcb0b0c	true
+
+== sulfate-vehkamaki-test: PASS
+benchmark: CARMA wrapper regression test SULFATE_VEHKAMAKI_TEST: main program tests/carma_sulfate_vehkamaki_test.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sulfate_vehkamaki_test.txt and its standard output is captured as SULFATE_VEHKAMAKI_TEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_VEHKAMAKI_TEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_VEHKAMAKI_TEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATE_VEHKAMAKI_TEST/o5w/work/result_o5w.json
+wall seconds: original 0.186, translated 14.654
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SULFATE_VEHKAMAKI_TEST.exe.log	14	3af06147037bb3e9ff25d8d16f37925b	14	3af06147037bb3e9ff25d8d16f37925b	raw	3af06147037bb3e9ff25d8d16f37925b	3af06147037bb3e9ff25d8d16f37925b	true
+carma_sulfate_vehkamaki_test.txt	94185	81f4a185ea399294c224f54544fd1ed0	94185	81f4a185ea399294c224f54544fd1ed0	raw	81f4a185ea399294c224f54544fd1ed0	81f4a185ea399294c224f54544fd1ed0	true
+
+== sulfatetest: PASS
+benchmark: CARMA wrapper regression test SULFATETEST: main program tests/carma_sulfatetest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sulfatetest.txt and its standard output is captured as SULFATETEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATETEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATETEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFATETEST/o5w/work/result_o5w.json
+wall seconds: original 0.228, translated 14.112
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SULFATETEST.exe.log	14	3af06147037bb3e9ff25d8d16f37925b	14	3af06147037bb3e9ff25d8d16f37925b	raw	3af06147037bb3e9ff25d8d16f37925b	3af06147037bb3e9ff25d8d16f37925b	true
+carma_sulfatetest.txt	94185	07df109550397888866e4becf353f743	94185	07df109550397888866e4becf353f743	raw	07df109550397888866e4becf353f743	07df109550397888866e4becf353f743	true
+
+== sulfhet-vehkamaki-test: PASS
+benchmark: CARMA wrapper regression test SULFHET_VEHKAMAKI_TEST: main program tests/carma_sulfhet_vehkamaki_test.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sulfhet_vehkamaki_test.txt and its standard output is captured as SULFHET_VEHKAMAKI_TEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHET_VEHKAMAKI_TEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHET_VEHKAMAKI_TEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHET_VEHKAMAKI_TEST/o5w/work/result_o5w.json
+wall seconds: original 0.205, translated 20.975
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SULFHET_VEHKAMAKI_TEST.exe.log	28	bfacaae7ab6ef72118c6eb2447997902	28	bfacaae7ab6ef72118c6eb2447997902	raw	bfacaae7ab6ef72118c6eb2447997902	bfacaae7ab6ef72118c6eb2447997902	true
+carma_sulfhet_vehkamaki_test.txt	192181	0578bb9de9c894c5a878992b511ed318	192181	0578bb9de9c894c5a878992b511ed318	raw	0578bb9de9c894c5a878992b511ed318	0578bb9de9c894c5a878992b511ed318	true
+
+== sulfhettest: PASS
+benchmark: CARMA wrapper regression test SULFHETTEST: main program tests/carma_sulfhettest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_sulfhettest.txt and its standard output is captured as SULFHETTEST.exe.log
+accepted runs: Slurm job 33422614 (o5w-carma-out), 2026-10-05 05:01:47-05:32:24 UTC, node c3cpu-a9-u1-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHETTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHETTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SULFHETTEST/o5w/work/result_o5w.json
+wall seconds: original 0.259, translated 25.993
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SULFHETTEST.exe.log	28	bfacaae7ab6ef72118c6eb2447997902	28	bfacaae7ab6ef72118c6eb2447997902	raw	bfacaae7ab6ef72118c6eb2447997902	bfacaae7ab6ef72118c6eb2447997902	true
+carma_sulfhettest.txt	192181	593049df0d865ba025bae8a1bb8a6b82	192181	593049df0d865ba025bae8a1bb8a6b82	raw	593049df0d865ba025bae8a1bb8a6b82	593049df0d865ba025bae8a1bb8a6b82	true
+
+== swelltest: PASS
+benchmark: CARMA wrapper regression test SWELLTEST: main program tests/carma_swelltest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_swelltest.txt and its standard output is captured as SWELLTEST.exe.log
+accepted runs: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SWELLTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SWELLTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/SWELLTEST/o5w/work/result_o5w.json
+wall seconds: original 5.051, translated 221.661
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+SWELLTEST.exe.log	30	5669fdaa7f61aece4fde89ff8cd1f5d5	30	5669fdaa7f61aece4fde89ff8cd1f5d5	raw	5669fdaa7f61aece4fde89ff8cd1f5d5	5669fdaa7f61aece4fde89ff8cd1f5d5	true
+carma_swelltest.txt	7854488	950a9832bb6251eac0eb5280037f7f58	7854488	950a9832bb6251eac0eb5280037f7f58	raw	950a9832bb6251eac0eb5280037f7f58	950a9832bb6251eac0eb5280037f7f58	true
+
+== vdiftest: PASS
+benchmark: CARMA wrapper regression test VDIFTEST: main program tests/carma_vdiftest.F90 (the test's own driver; no input files), run in an empty directory; it writes carma_vdiftest.txt and its standard output is captured as VDIFTEST.exe.log
+accepted runs: Slurm job 33422616 (o5w-carma-out), 2026-10-05 05:01:46-05:22:32 UTC, node c3cpu-a7-u5-4; reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/VDIFTEST/o5w/work/runs/pure, candidate $ALPINE_SCRATCH/recast-cand/o5w/carma/w/VDIFTEST/o5w/work/runs/o5w; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/VDIFTEST/o5w/work/result_o5w.json
+wall seconds: original 0.568, translated 18.005
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+VDIFTEST.exe.log	31	47ded53a9bfacd62ca05cef5069077d1	31	47ded53a9bfacd62ca05cef5069077d1	raw	47ded53a9bfacd62ca05cef5069077d1	47ded53a9bfacd62ca05cef5069077d1	true
+carma_vdiftest.txt	4051346	95c781a0416c2e6c1f74665a9d6c1a57	4051346	95c781a0416c2e6c1f74665a9d6c1a57	raw	95c781a0416c2e6c1f74665a9d6c1a57	95c781a0416c2e6c1f74665a9d6c1a57	true
+

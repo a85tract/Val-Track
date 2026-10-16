@@ -1,0 +1,35 @@
+ww3-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== tp1-1: PASS
+benchmark: NOAA-EMC/WW3 a0eaffeb regtests/ww3_tp1.1 (switch_PR3_UQ; 1-D propagation along the equator, PR3 propagation with the UQ scheme): input/ww3_grid.inp, ww3_strt.inp, ww3_shel.inp, ww3_outp.inp; chain ww3_grid -> ww3_strt -> ww3_shel -> ww3_outp, the program under test is ww3_shel
+accepted runs: Alpine job 33422610 (2026-10-05 05:01:47-05:10:27 UTC, cand-o5w-alpine-b (verifier); log $ALPINE_SCRATCH/recast-cand/runs/o5w-ww3-tpo_33422610.out); run directories $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/work_outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/work_outermost/runs/outermost (translated); record: the wave24 acceptance log (IDENTICAL 7/7 + 2/2)
+wall seconds: original 0.421, translated 266.304
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+log.ww3	5371	1bf965cb7ff42c940b0925886a961ee8	5371	e8bbdaca9bb894b20a4b6fc7d0db886e	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	d39451d8bae47eeff749554f8fc50396	d39451d8bae47eeff749554f8fc50396	true
+mod_def.ww3	21641	0e4927931e9ba983a900335ba9169962	21641	0e4927931e9ba983a900335ba9169962	raw	0e4927931e9ba983a900335ba9169962	0e4927931e9ba983a900335ba9169962	true
+out_grd.ww3	164906	eff075cfb3f670d4595ab11e622f7a37	164906	eff075cfb3f670d4595ab11e622f7a37	raw	eff075cfb3f670d4595ab11e622f7a37	eff075cfb3f670d4595ab11e622f7a37	true
+out_pnt.ww3	62902	180a58a7189ed655209517d278a91720	62902	180a58a7189ed655209517d278a91720	raw	180a58a7189ed655209517d278a91720	180a58a7189ed655209517d278a91720	true
+restart.ww3	30408	dfc3beb2039c91b67f56131b81494fba	30408	dfc3beb2039c91b67f56131b81494fba	raw	dfc3beb2039c91b67f56131b81494fba	dfc3beb2039c91b67f56131b81494fba	true
+ww3_outp.out	3691	5f019c9147e0611a83e0efcec040d842	3691	5f019c9147e0611a83e0efcec040d842	raw	5f019c9147e0611a83e0efcec040d842	5f019c9147e0611a83e0efcec040d842	true
+ww3_outp.tab50.ww3	3816	30a0ab725d0e93fdccd84907d70ae3f2	3816	30a0ab725d0e93fdccd84907d70ae3f2	raw	30a0ab725d0e93fdccd84907d70ae3f2	30a0ab725d0e93fdccd84907d70ae3f2	true
+ww3_shel.err	96	1a7557113e9fcd41d3fbf3ac15a49df8	0	d41d8cd98f00b204e9800998ecf8427e	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+ww3_shel.out	42999	1006608085790b7eaa3f642d404c7bd1	42999	04529f2b3344f7df9872ed88d2630103	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	3c18c41a55ac84e0f599bb4d7bdc6358	3c18c41a55ac84e0f599bb4d7bdc6358	true
+
+== ts1: PASS
+benchmark: NOAA-EMC/WW3 a0eaffeb regtests/ww3_ts1 (switch_ST3; single-point source-term integration over 36 h, ST3 source terms): input/ww3_grid.inp, ww3_strt.inp, ww3_shel.inp, ww3_outp_spec.inp, ww3_outp_tab50.inp; chain ww3_grid -> ww3_strt -> ww3_shel -> ww3_outp, the program under test is ww3_shel
+accepted runs: Alpine job 33424955 (2026-10-05 06:27:53-08:30:42 UTC, maintainer (full rerun after wave24-accepted); log $ALPINE_SCRATCH/recast-cand/runs/o5w-ww3-tso2_33424955.out); run directories $ALPINE_SCRATCH/recast-cand/o5w/ww3/ts/work_outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/ww3/ts/work_outermost/runs/outermost (translated); record: REPORT_ROUND3.md section 12 (10-05 08:31), PLAN.md 10-05 08:35, the speed log row 124 (the o5w job 33422608 was cancelled at step 1890/2161 and is not the record)
+wall seconds: original 4.845, translated 7046.476
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+log.ww3	183566	4dd1ffa1bc4daf4df17884db04fed18c	183566	837fde4359115a0c710dd868eeb3ce7e	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	4fc76a77a59f3cab435ca771266e6758	4fc76a77a59f3cab435ca771266e6758	true
+mod_def.ww3	35065	a9624dbe8367c497a27ed011d0f98aed	35065	a9624dbe8367c497a27ed011d0f98aed	raw	a9624dbe8367c497a27ed011d0f98aed	a9624dbe8367c497a27ed011d0f98aed	true
+out_grd.ww3	41694	98654fd6a7871ed845afa1dcb3e7d9fd	41694	98654fd6a7871ed845afa1dcb3e7d9fd	raw	98654fd6a7871ed845afa1dcb3e7d9fd	98654fd6a7871ed845afa1dcb3e7d9fd	true
+out_pnt.ww3	7652218	cd1829b31e72c032303dc2ff9523f641	7652218	cd1829b31e72c032303dc2ff9523f641	raw	cd1829b31e72c032303dc2ff9523f641	cd1829b31e72c032303dc2ff9523f641	true
+restart.ww3	3456	a95240af2d54d15803032853189aeffc	3456	a95240af2d54d15803032853189aeffc	raw	a95240af2d54d15803032853189aeffc	a95240af2d54d15803032853189aeffc	true
+ww3_outp_spec.out	64079	106837d71650a996e030018b12f8280b	64079	106837d71650a996e030018b12f8280b	raw	106837d71650a996e030018b12f8280b	106837d71650a996e030018b12f8280b	true
+ww3_outp_tab50.out	1011	8b3510db143eb4f9915fefbabe096417	1011	8b3510db143eb4f9915fefbabe096417	raw	8b3510db143eb4f9915fefbabe096417	8b3510db143eb4f9915fefbabe096417	true
+ww3_outp_tab50.tab49.ww3	170957	b91d3e38770b1ab98b50eb47620135b2	170957	b91d3e38770b1ab98b50eb47620135b2	raw	b91d3e38770b1ab98b50eb47620135b2	b91d3e38770b1ab98b50eb47620135b2	true
+ww3_shel.err	96	1a7557113e9fcd41d3fbf3ac15a49df8	0	d41d8cd98f00b204e9800998ecf8427e	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+ww3_shel.out	151391	ba561b0bdd952b4fcbfaab80a2778abf	151391	fe05174a9ab499d8ff7533eb36b885b1	masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling	67ed14b6acde3dac104c17c31aa0f48b	67ed14b6acde3dac104c17c31aa0f48b	true
+

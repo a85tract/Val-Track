@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "cosp2-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "COSPv2.0 (CFMIP, https://github.com/CFMIP/COSPv2.0), the CFMIP Observation Simulator Package offline driver",
+    "commit_or_tag": "5eb05e51187dd2d0e448b78c4e6b28e1d6f65493",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "ukmo",
+      "benchmark": "cosp2-numpy/benchmarks/ukmo.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{cosp2_output_um.nc,run.err,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{cosp2_output_um.nc,run.err}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run.log",
+            "dump_tool": "md5 of the text after the kit's masks (recast.insitu.compare._masked at 783ef4bb: split on \\n, drop every line matching a line regex, re-join with \\n)",
+            "dump_format": "masked:run\\.log$::^ (Time to |Total time)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "cosp2_output_um.nc",
+            "numeric_count": 6032344,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "8e24d9bb2372ace760228cdecd0e08f6",
+            "numeric_md5_reference": "8e24d9bb2372ace760228cdecd0e08f6"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.err",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 299.051,
+            "delta_pct": 96057.878,
+            "reference": 0.311
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "cosp2_output_um.nc",
+            "md5": "8e24d9bb2372ace760228cdecd0e08f6",
+            "bytes": 6032344
+          },
+          {
+            "name": "run.err",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "run.log",
+            "md5": "d5b4b158f3958a463c4370a0026385fb",
+            "bytes": 315
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

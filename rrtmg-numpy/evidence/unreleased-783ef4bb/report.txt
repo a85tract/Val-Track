@@ -1,0 +1,272 @@
+rrtmg-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== lw-icrccm-sonde: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case ICRCCM_sonde (the script's output_rrtm_ICRCCM_sonde): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/ICRCCM_sonde); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/ICRCCM_sonde/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/ICRCCM_sonde/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.079, translated 0.726
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	3536	98f2406c37753484a4f258ce223633a0	3536	98f2406c37753484a4f258ce223633a0	raw	98f2406c37753484a4f258ce223633a0	98f2406c37753484a4f258ce223633a0	true
+run.log	530	b2cef2b89dec36db974ddf06e2a3cf9a	530	b2cef2b89dec36db974ddf06e2a3cf9a	raw	b2cef2b89dec36db974ddf06e2a3cf9a	b2cef2b89dec36db974ddf06e2a3cf9a	true
+
+== lw-mls-cld5-imca0-icld2: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld5-imca0-icld2 (the script's output_rrtm_MLS-cld5-imca0-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld5-imca0-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33432017 (paper-wave24-rrtmg-zero, 2026-10-05 10:24:09-10:30:08Z, node c3cpu-c15-u1-1); extension built in job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12). Original: $ALPINE_SCRATCH/recast-cand/paper-wave24-rrtmg-33432017/runs/zero_heap/MLS-cld5-imca0-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/paper-wave24-rrtmg-33432017/runs/zero_heap/MLS-cld5-imca0-icld2/work/runs/zero_heap. Record: the wave24 evidence archive wave24/rrtmg_initialization (results.json, IDENTICAL); the acceptance tally '14 zero-heap LW controls'; the uninitialised-read investigation.
+wall seconds: original 0.015, translated 1.636
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	77580	648a81b346ff37469a8e2e6786700142	77580	648a81b346ff37469a8e2e6786700142	raw	648a81b346ff37469a8e2e6786700142	648a81b346ff37469a8e2e6786700142	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-cld5-imca1-icld2: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld5-imca1-icld2 (the script's output_rrtm_MLS-cld5-imca1-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld5-imca1-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld5-imca1-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld5-imca1-icld2/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.063, translated 33.319
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	f84454c91ad355622c13b8961c400353	5196	f84454c91ad355622c13b8961c400353	raw	f84454c91ad355622c13b8961c400353	f84454c91ad355622c13b8961c400353	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-cld7-imca1-icld2: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld2 (the script's output_rrtm_MLS-cld7-imca1-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld7-imca1-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld2/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.065, translated 33.956
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	bac1d1e07ecb2e47837d12b326c018aa	5196	bac1d1e07ecb2e47837d12b326c018aa	raw	bac1d1e07ecb2e47837d12b326c018aa	bac1d1e07ecb2e47837d12b326c018aa	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-cld7-imca1-icld4-idcor0: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld4-idcor0 (the script's output_rrtm_MLS-cld7-imca1-icld4-idcor0): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld7-imca1-icld4-idcor0); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld4-idcor0/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld4-idcor0/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.088, translated 51.459
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	817c942559ff45260f277c697bb14543	5196	817c942559ff45260f277c697bb14543	raw	817c942559ff45260f277c697bb14543	817c942559ff45260f277c697bb14543	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-cld7-imca1-icld5-idcor0: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld5-idcor0 (the script's output_rrtm_MLS-cld7-imca1-icld5-idcor0): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld7-imca1-icld5-idcor0); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld5-idcor0/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld5-idcor0/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.073, translated 51.038
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	dddb860b8faa42fc60724490f5b2e0c8	5196	dddb860b8faa42fc60724490f5b2e0c8	raw	dddb860b8faa42fc60724490f5b2e0c8	dddb860b8faa42fc60724490f5b2e0c8	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-cld7-imca1-icld5-idcor1: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld5-idcor1 (the script's output_rrtm_MLS-cld7-imca1-icld5-idcor1): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld7-imca1-icld5-idcor1); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld5-idcor1/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld7-imca1-icld5-idcor1/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.073, translated 50.963
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	923e4caadf36685e8f5e60cd06072532	5196	923e4caadf36685e8f5e60cd06072532	raw	923e4caadf36685e8f5e60cd06072532	923e4caadf36685e8f5e60cd06072532	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-clr: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr (the script's output_rrtm_MLS-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.01, translated 1.026
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	77580	ea4cf2fc20924fe2446cd34c56b2b70a	77580	ea4cf2fc20924fe2446cd34c56b2b70a	raw	ea4cf2fc20924fe2446cd34c56b2b70a	ea4cf2fc20924fe2446cd34c56b2b70a	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-clr-aer12: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-aer12 (the script's output_rrtm_MLS-clr-aer12): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-clr-aer12); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-aer12/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-aer12/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.023, translated 1.058
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	77580	d9e4bbed76426005f9f904abe531e866	77580	d9e4bbed76426005f9f904abe531e866	raw	d9e4bbed76426005f9f904abe531e866	d9e4bbed76426005f9f904abe531e866	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-clr-idrv1: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-idrv1 (the script's output_rrtm_MLS-clr-idrv1): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-clr-idrv1); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-idrv1/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-idrv1/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.01, translated 1.019
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	77580	16a795e6302114d0e28712a137e03a30	77580	16a795e6302114d0e28712a137e03a30	raw	16a795e6302114d0e28712a137e03a30	16a795e6302114d0e28712a137e03a30	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mls-clr-xsec: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-xsec (the script's output_rrtm_MLS-clr-xsec): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-clr-xsec); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-xsec/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-clr-xsec/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.009, translated 0.476
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5196	e0fce92b12e7d56541de720de9ba5112	5196	e0fce92b12e7d56541de720de9ba5112	raw	e0fce92b12e7d56541de720de9ba5112	e0fce92b12e7d56541de720de9ba5112	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-mlw-clr: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case MLW-clr (the script's output_rrtm_MLW-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLW-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLW-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLW-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.01, translated 0.516
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5943	898578569335fd966846f6ea7c64a462	5943	898578569335fd966846f6ea7c64a462	raw	898578569335fd966846f6ea7c64a462	898578569335fd966846f6ea7c64a462	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-saw-clr: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case SAW-clr (the script's output_rrtm_SAW-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/SAW-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/SAW-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/SAW-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.013, translated 0.506
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5860	08c284b6e84632282bed827dbd352b65	5860	08c284b6e84632282bed827dbd352b65	raw	08c284b6e84632282bed827dbd352b65	08c284b6e84632282bed827dbd352b65	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== lw-trop-clr: PASS
+benchmark: AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm, case TROP-clr (the script's output_rrtm_TROP-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/TROP-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/TROP-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/TROP-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.008, translated 0.497
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	5943	6979b77845f261385239891488b3ca06	5943	6979b77845f261385239891488b3ca06	raw	6979b77845f261385239891488b3ca06	6979b77845f261385239891488b3ca06	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-cld5-imca1-icld2: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld5-imca1-icld2 (the script's output_rrtm_MLS-cld5-imca1-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-cld5-imca1-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld5-imca1-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld5-imca1-icld2/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.136, translated 56.042
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	6f10f48aa8ff3aaf9a3bc426f15881c9	6173	6f10f48aa8ff3aaf9a3bc426f15881c9	raw	6f10f48aa8ff3aaf9a3bc426f15881c9	6f10f48aa8ff3aaf9a3bc426f15881c9	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-cld6-imca0-icld2: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld6-imca0-icld2 (the script's output_rrtm_MLS-cld6-imca0-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-cld6-imca0-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld6-imca0-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld6-imca0-icld2/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.05, translated 0.885
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	4b49aaaa600c2724c676dd52fa7f5621	6173	4b49aaaa600c2724c676dd52fa7f5621	raw	4b49aaaa600c2724c676dd52fa7f5621	4b49aaaa600c2724c676dd52fa7f5621	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-cld7-imca1-icld2: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld2 (the script's output_rrtm_MLS-cld7-imca1-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-cld7-imca1-icld2); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld2/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld2/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.14, translated 57.964
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	08bb0bba624c87d914e4e30d2577eee6	6173	08bb0bba624c87d914e4e30d2577eee6	raw	08bb0bba624c87d914e4e30d2577eee6	08bb0bba624c87d914e4e30d2577eee6	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-cld7-imca1-icld5-idcor0: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld5-idcor0 (the script's output_rrtm_MLS-cld7-imca1-icld5-idcor0): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-cld7-imca1-icld5-idcor0); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld5-idcor0/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld5-idcor0/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.158, translated 72.062
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	1a23736923f255c5bf07872cc34a8d55	6173	1a23736923f255c5bf07872cc34a8d55	raw	1a23736923f255c5bf07872cc34a8d55	1a23736923f255c5bf07872cc34a8d55	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-cld7-imca1-icld5-idcor1: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-cld7-imca1-icld5-idcor1 (the script's output_rrtm_MLS-cld7-imca1-icld5-idcor1): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-cld7-imca1-icld5-idcor1); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld5-idcor1/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-cld7-imca1-icld5-idcor1/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.157, translated 71.473
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	eb1b824e49eb8e840c28281f2f6cf976	6173	eb1b824e49eb8e840c28281f2f6cf976	raw	eb1b824e49eb8e840c28281f2f6cf976	eb1b824e49eb8e840c28281f2f6cf976	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr (the script's output_rrtm_MLS-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.013, translated 1.015
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	82473	47161e7c72ab43bab12d65c60699e6bd	82473	47161e7c72ab43bab12d65c60699e6bd	raw	47161e7c72ab43bab12d65c60699e6bd	47161e7c72ab43bab12d65c60699e6bd	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-aer12: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-aer12 (the script's output_rrtm_MLS-clr-aer12): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-aer12); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-aer12/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-aer12/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.009, translated 0.596
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6173	e1e417d7ef089eefc34dccbf70f54720	6173	e1e417d7ef089eefc34dccbf70f54720	raw	e1e417d7ef089eefc34dccbf70f54720	e1e417d7ef089eefc34dccbf70f54720	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza45-isolvar0-tsi-avg: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza45-isolvar0_tsi_avg (the script's output_rrtm_MLS-clr-sza45-isolvar0_tsi_avg): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza45-isolvar0_tsi_avg); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar0_tsi_avg/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar0_tsi_avg/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.016, translated 0.956
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	76473	6d3244e52a8a09711d78aa1dd8a63dbe	76473	6d3244e52a8a09711d78aa1dd8a63dbe	raw	6d3244e52a8a09711d78aa1dd8a63dbe	6d3244e52a8a09711d78aa1dd8a63dbe	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza45-isolvar1-tsi-max: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza45-isolvar1_tsi_max (the script's output_rrtm_MLS-clr-sza45-isolvar1_tsi_max): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza45-isolvar1_tsi_max); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar1_tsi_max/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar1_tsi_max/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.016, translated 0.978
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	76473	c5843afbed0fdd18695d11414ad78b85	76473	c5843afbed0fdd18695d11414ad78b85	raw	c5843afbed0fdd18695d11414ad78b85	c5843afbed0fdd18695d11414ad78b85	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza45-isolvar1-tsi-min: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza45-isolvar1_tsi_min (the script's output_rrtm_MLS-clr-sza45-isolvar1_tsi_min): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza45-isolvar1_tsi_min); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar1_tsi_min/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar1_tsi_min/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.016, translated 0.963
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	76473	fca85ce98470bd3f1a83e77410318e65	76473	fca85ce98470bd3f1a83e77410318e65	raw	fca85ce98470bd3f1a83e77410318e65	fca85ce98470bd3f1a83e77410318e65	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza45-isolvar2-01jan1950: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza45-isolvar2_01Jan1950 (the script's output_rrtm_MLS-clr-sza45-isolvar2_01Jan1950): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza45-isolvar2_01Jan1950); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar2_01Jan1950/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar2_01Jan1950/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.017, translated 1.026
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	76473	3d517da840c7a58a1be49f68d98a187a	76473	3d517da840c7a58a1be49f68d98a187a	raw	3d517da840c7a58a1be49f68d98a187a	3d517da840c7a58a1be49f68d98a187a	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza45-isolvar3-bndscl-tsi-max: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza45-isolvar3_bndscl_tsi_max (the script's output_rrtm_MLS-clr-sza45-isolvar3_bndscl_tsi_max): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza45-isolvar3_bndscl_tsi_max); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar3_bndscl_tsi_max/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza45-isolvar3_bndscl_tsi_max/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.019, translated 0.965
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	76473	a1f3d44836226f35bdec3b5b435ed091	76473	a1f3d44836226f35bdec3b5b435ed091	raw	a1f3d44836226f35bdec3b5b435ed091	a1f3d44836226f35bdec3b5b435ed091	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mls-clr-sza65: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLS-clr-sza65 (the script's output_rrtm_MLS-clr-sza65): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLS-clr-sza65); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza65/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLS-clr-sza65/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.017, translated 1.034
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	82473	b86b0700ef7211ccdc0c2647cfb52e3b	82473	b86b0700ef7211ccdc0c2647cfb52e3b	raw	b86b0700ef7211ccdc0c2647cfb52e3b	b86b0700ef7211ccdc0c2647cfb52e3b	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-mlw-clr: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case MLW-clr (the script's output_rrtm_MLW-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/MLW-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLW-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/MLW-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.013, translated 0.621
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	7073	94335e804eab94712dfb1c73497943fe	7073	94335e804eab94712dfb1c73497943fe	raw	94335e804eab94712dfb1c73497943fe	94335e804eab94712dfb1c73497943fe	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-saw-clr: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case SAW-clr (the script's output_rrtm_SAW-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/SAW-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/SAW-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/SAW-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.01, translated 0.646
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	6973	86949359a8ad82b46f0b7443ce82225a	6973	86949359a8ad82b46f0b7443ce82225a	raw	86949359a8ad82b46f0b7443ce82225a	86949359a8ad82b46f0b7443ce82225a	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+
+== sw-trop-clr: PASS
+benchmark: AER RRTMG_SW column model rrtmg_sw.1col (https://github.com/AER-RC/RRTMG_SW 286e84ed14), its own benchmark run_examples_std_atm/script.run_std_atm, case TROP-clr (the script's output_rrtm_TROP-clr): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/sw/TROP-clr); outputs OUTPUT_RRTM and the printed stdout (run.log).
+accepted runs: Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490 (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/TROP-clr/work/runs/pure; translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/sw/outermost/TROP-clr/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).
+wall seconds: original 0.011, translated 0.631
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+OUTPUT_RRTM	7073	0eb942af2e7db74cf7545225e73fb4fb	7073	0eb942af2e7db74cf7545225e73fb4fb	raw	0eb942af2e7db74cf7545225e73fb4fb	0eb942af2e7db74cf7545225e73fb4fb	true
+run.log	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+

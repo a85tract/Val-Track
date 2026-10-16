@@ -1,0 +1,2691 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "carma-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CARMA (Community Aerosol and Radiation Model for Atmospheres): the CARMA wrapper's regression test programs",
+    "commit_or_tag": "CARMA wrapper (ESCOMP/CARMA) 26b30b2738566de5d3979c1b2ccf191dd78c1207 with CARMA_base 7b12e0cce0f83de0c55682d20c64222cc339dfce in source/base",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "bc2gtest",
+      "benchmark": "carma-numpy/benchmarks/bc2gtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "BC2GTEST.exe.log",
+            "numeric_count": 35,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "bff6e8bc05a31ca71ea952190702f298",
+            "numeric_md5_reference": "bff6e8bc05a31ca71ea952190702f298"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_bc2gtest.txt",
+            "numeric_count": 76646,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "f057f9edbc6e20a4e3614f0ce78a94bf",
+            "numeric_md5_reference": "f057f9edbc6e20a4e3614f0ce78a94bf"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 23.682,
+            "delta_pct": 4385.227,
+            "reference": 0.528
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "BC2GTEST.exe.log",
+            "md5": "bff6e8bc05a31ca71ea952190702f298",
+            "bytes": 35
+          },
+          {
+            "name": "carma_bc2gtest.txt",
+            "md5": "f057f9edbc6e20a4e3614f0ce78a94bf",
+            "bytes": 76646
+          }
+        ]
+      }
+    },
+    {
+      "id": "bcoctest",
+      "benchmark": "carma-numpy/benchmarks/bcoctest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "BCOCTEST.exe.log",
+            "numeric_count": 35,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "512db860f8e810d3bd6f43a3f1c223b8",
+            "numeric_md5_reference": "512db860f8e810d3bd6f43a3f1c223b8"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_bcoctest.txt",
+            "numeric_count": 102066,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "7b64023c8c564dfe1a2d84b26b06da51",
+            "numeric_md5_reference": "7b64023c8c564dfe1a2d84b26b06da51"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 29.976,
+            "delta_pct": 3035.565,
+            "reference": 0.956
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "BCOCTEST.exe.log",
+            "md5": "512db860f8e810d3bd6f43a3f1c223b8",
+            "bytes": 35
+          },
+          {
+            "name": "carma_bcoctest.txt",
+            "md5": "7b64023c8c564dfe1a2d84b26b06da51",
+            "bytes": 102066
+          }
+        ]
+      }
+    },
+    {
+      "id": "cetest",
+      "benchmark": "carma-numpy/benchmarks/cetest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "CETEST.exe.log",
+            "numeric_count": 34,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "9988a4183e4f852a47ea3872620857d3",
+            "numeric_md5_reference": "9988a4183e4f852a47ea3872620857d3"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_cetest.txt",
+            "numeric_count": 2923,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3396ba7af03699b0b5ef3490a3be23f7",
+            "numeric_md5_reference": "3396ba7af03699b0b5ef3490a3be23f7"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 3.306,
+            "delta_pct": 7246.667,
+            "reference": 0.045
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "CETEST.exe.log",
+            "md5": "9988a4183e4f852a47ea3872620857d3",
+            "bytes": 34
+          },
+          {
+            "name": "carma_cetest.txt",
+            "md5": "3396ba7af03699b0b5ef3490a3be23f7",
+            "bytes": 2923
+          }
+        ]
+      }
+    },
+    {
+      "id": "coagtest",
+      "benchmark": "carma-numpy/benchmarks/coagtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "COAGTEST.exe.log",
+            "numeric_count": 24,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "2846463bbda067cd95bb007747733564",
+            "numeric_md5_reference": "2846463bbda067cd95bb007747733564"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_coagtest.txt",
+            "numeric_count": 26406,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "7bf6b34a302a1115606e48aceaff49f2",
+            "numeric_md5_reference": "7bf6b34a302a1115606e48aceaff49f2"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 10.147,
+            "delta_pct": 2570.263,
+            "reference": 0.38
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "COAGTEST.exe.log",
+            "md5": "2846463bbda067cd95bb007747733564",
+            "bytes": 24
+          },
+          {
+            "name": "carma_coagtest.txt",
+            "md5": "7bf6b34a302a1115606e48aceaff49f2",
+            "bytes": 26406
+          }
+        ]
+      }
+    },
+    {
+      "id": "drydeptest",
+      "benchmark": "carma-numpy/benchmarks/drydeptest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "DRYDEPTEST.exe.log",
+            "numeric_count": 27,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "28f5116e2a3717c595978b019f13da1a",
+            "numeric_md5_reference": "28f5116e2a3717c595978b019f13da1a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_drydeptest.txt",
+            "numeric_count": 5240138,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "f38698c61cecbdd7c9a48ccd351ec2fb",
+            "numeric_md5_reference": "f38698c61cecbdd7c9a48ccd351ec2fb"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_vdry.txt",
+            "numeric_count": 570,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "fccda82be01ab86c8f9198265fa2125a",
+            "numeric_md5_reference": "fccda82be01ab86c8f9198265fa2125a"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 157.568,
+            "delta_pct": 4148.261,
+            "reference": 3.709
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "DRYDEPTEST.exe.log",
+            "md5": "28f5116e2a3717c595978b019f13da1a",
+            "bytes": 27
+          },
+          {
+            "name": "carma_drydeptest.txt",
+            "md5": "f38698c61cecbdd7c9a48ccd351ec2fb",
+            "bytes": 5240138
+          },
+          {
+            "name": "carma_vdry.txt",
+            "md5": "fccda82be01ab86c8f9198265fa2125a",
+            "bytes": 570
+          }
+        ]
+      }
+    },
+    {
+      "id": "falltest",
+      "benchmark": "carma-numpy/benchmarks/falltest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "FALLTEST.exe.log",
+            "numeric_count": 26,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "cc9f6bab092daa692e8b29aab47b6f24",
+            "numeric_md5_reference": "cc9f6bab092daa692e8b29aab47b6f24"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_falltest.txt",
+            "numeric_count": 1597106,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "6e454bed06a5bdba341ab13475988c0a",
+            "numeric_md5_reference": "6e454bed06a5bdba341ab13475988c0a"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 27.123,
+            "delta_pct": 4969.72,
+            "reference": 0.535
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "FALLTEST.exe.log",
+            "md5": "cc9f6bab092daa692e8b29aab47b6f24",
+            "bytes": 26
+          },
+          {
+            "name": "carma_falltest.txt",
+            "md5": "6e454bed06a5bdba341ab13475988c0a",
+            "bytes": 1597106
+          }
+        ]
+      }
+    },
+    {
+      "id": "fractalmicrotest",
+      "benchmark": "carma-numpy/benchmarks/fractalmicrotest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "FRACTALMICROTEST.exe.log",
+            "numeric_count": 20,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d79dcf337b4ac41332f0db1d4b6f3e0a",
+            "numeric_md5_reference": "d79dcf337b4ac41332f0db1d4b6f3e0a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_fractalmicrotest.txt",
+            "numeric_count": 7282662,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "42fbce4eef97ac1908f19cb11f172992",
+            "numeric_md5_reference": "42fbce4eef97ac1908f19cb11f172992"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1212.305,
+            "delta_pct": 5730.912,
+            "reference": 20.791
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "FRACTALMICROTEST.exe.log",
+            "md5": "d79dcf337b4ac41332f0db1d4b6f3e0a",
+            "bytes": 20
+          },
+          {
+            "name": "carma_fractalmicrotest.txt",
+            "md5": "42fbce4eef97ac1908f19cb11f172992",
+            "bytes": 7282662
+          }
+        ]
+      }
+    },
+    {
+      "id": "fractalopticstest",
+      "benchmark": "carma-numpy/benchmarks/fractalopticstest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "FRACTALOPTICSTEST.exe.log",
+            "numeric_count": 27,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "97cf9a96a930f1671784b77add45b382",
+            "numeric_md5_reference": "97cf9a96a930f1671784b77add45b382"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_fractalopticstest.txt",
+            "numeric_count": 1161,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "99709eee61743f8bedddca6ab1c5ae01",
+            "numeric_md5_reference": "99709eee61743f8bedddca6ab1c5ae01"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 417.341,
+            "delta_pct": 6513.962,
+            "reference": 6.31
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "FRACTALOPTICSTEST.exe.log",
+            "md5": "97cf9a96a930f1671784b77add45b382",
+            "bytes": 27
+          },
+          {
+            "name": "carma_fractalopticstest.txt",
+            "md5": "99709eee61743f8bedddca6ab1c5ae01",
+            "bytes": 1161
+          }
+        ]
+      }
+    },
+    {
+      "id": "growclrtest",
+      "benchmark": "carma-numpy/benchmarks/growclrtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "GROWCLRTEST.exe.log",
+            "numeric_count": 46,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "93a4a46645213dffb07ca17a3d4a7b6a",
+            "numeric_md5_reference": "93a4a46645213dffb07ca17a3d4a7b6a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_growclrtest.txt",
+            "numeric_count": 6045,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d976a948e95fcaedbd708b1faad1ca20",
+            "numeric_md5_reference": "d976a948e95fcaedbd708b1faad1ca20"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.009,
+            "delta_pct": 7661.538,
+            "reference": 0.013
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "GROWCLRTEST.exe.log",
+            "md5": "93a4a46645213dffb07ca17a3d4a7b6a",
+            "bytes": 46
+          },
+          {
+            "name": "carma_growclrtest.txt",
+            "md5": "d976a948e95fcaedbd708b1faad1ca20",
+            "bytes": 6045
+          }
+        ]
+      }
+    },
+    {
+      "id": "growintest",
+      "benchmark": "carma-numpy/benchmarks/growintest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "GROWINTEST.exe.log",
+            "numeric_count": 45,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "2bc6197ea4130bb214681e9a8ae2324d",
+            "numeric_md5_reference": "2bc6197ea4130bb214681e9a8ae2324d"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_growintest.txt",
+            "numeric_count": 3291,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "eabdf60b1d3e0788abec979ba4128570",
+            "numeric_md5_reference": "eabdf60b1d3e0788abec979ba4128570"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.861,
+            "delta_pct": 6523.077,
+            "reference": 0.013
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "GROWINTEST.exe.log",
+            "md5": "2bc6197ea4130bb214681e9a8ae2324d",
+            "bytes": 45
+          },
+          {
+            "name": "carma_growintest.txt",
+            "md5": "eabdf60b1d3e0788abec979ba4128570",
+            "bytes": 3291
+          }
+        ]
+      }
+    },
+    {
+      "id": "growsubtest",
+      "benchmark": "carma-numpy/benchmarks/growsubtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "GROWSUBTEST.exe.log",
+            "numeric_count": 36,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "911f145dcf8fc2fc83f39332dd6f05e3",
+            "numeric_md5_reference": "911f145dcf8fc2fc83f39332dd6f05e3"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_growsubtest.txt",
+            "numeric_count": 3291,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "de523a63ff044a28ef6546439cc7ff93",
+            "numeric_md5_reference": "de523a63ff044a28ef6546439cc7ff93"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.693,
+            "delta_pct": 9800.0,
+            "reference": 0.007
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "GROWSUBTEST.exe.log",
+            "md5": "911f145dcf8fc2fc83f39332dd6f05e3",
+            "bytes": 36
+          },
+          {
+            "name": "carma_growsubtest.txt",
+            "md5": "de523a63ff044a28ef6546439cc7ff93",
+            "bytes": 3291
+          }
+        ]
+      }
+    },
+    {
+      "id": "growtest",
+      "benchmark": "carma-numpy/benchmarks/growtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "GROWTEST.exe.log",
+            "numeric_count": 19,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "086700b014a043428508af8093b8652d",
+            "numeric_md5_reference": "086700b014a043428508af8093b8652d"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_growtest.txt",
+            "numeric_count": 30852,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "9bd1c240179eb5e0aa33ca87ab5ae41c",
+            "numeric_md5_reference": "9bd1c240179eb5e0aa33ca87ab5ae41c"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.5,
+            "delta_pct": 14900.0,
+            "reference": 0.01
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "GROWTEST.exe.log",
+            "md5": "086700b014a043428508af8093b8652d",
+            "bytes": 19
+          },
+          {
+            "name": "carma_growtest.txt",
+            "md5": "9bd1c240179eb5e0aa33ca87ab5ae41c",
+            "bytes": 30852
+          }
+        ]
+      }
+    },
+    {
+      "id": "kappawetrtest",
+      "benchmark": "carma-numpy/benchmarks/kappawetrtest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "KAPPAWETRTEST.exe.log",
+            "numeric_count": 22,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "567a55579d4491a0710c81f9e83dad5a",
+            "numeric_md5_reference": "567a55579d4491a0710c81f9e83dad5a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_kappawetrtest.txt",
+            "numeric_count": 29580,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3d4f34637b902f4f7771e1166591e855",
+            "numeric_md5_reference": "3d4f34637b902f4f7771e1166591e855"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 7.634,
+            "delta_pct": 16495.652,
+            "reference": 0.046
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "KAPPAWETRTEST.exe.log",
+            "md5": "567a55579d4491a0710c81f9e83dad5a",
+            "bytes": 22
+          },
+          {
+            "name": "carma_kappawetrtest.txt",
+            "md5": "3d4f34637b902f4f7771e1166591e855",
+            "bytes": 29580
+          }
+        ]
+      }
+    },
+    {
+      "id": "mietest",
+      "benchmark": "carma-numpy/benchmarks/mietest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "MIETEST.exe.log",
+            "numeric_count": 16,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "0a3671658b0c0947355baf895f5c6ccb",
+            "numeric_md5_reference": "0a3671658b0c0947355baf895f5c6ccb"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_mietest.txt",
+            "numeric_count": 30093,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "01a08b1a539ed6ba6979122591fb6c9f",
+            "numeric_md5_reference": "01a08b1a539ed6ba6979122591fb6c9f"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 4.347,
+            "delta_pct": 6022.535,
+            "reference": 0.071
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "MIETEST.exe.log",
+            "md5": "0a3671658b0c0947355baf895f5c6ccb",
+            "bytes": 16
+          },
+          {
+            "name": "carma_mietest.txt",
+            "md5": "01a08b1a539ed6ba6979122591fb6c9f",
+            "bytes": 30093
+          }
+        ]
+      }
+    },
+    {
+      "id": "nuc2test",
+      "benchmark": "carma-numpy/benchmarks/nuc2test.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "NUC2TEST.exe.log",
+            "numeric_count": 32,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "ecb0e8e3f85383b45f5dc0531181a625",
+            "numeric_md5_reference": "ecb0e8e3f85383b45f5dc0531181a625"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_nuc2test.txt",
+            "numeric_count": 108137,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "064b49fd222c34bb320a9ebd6501cd84",
+            "numeric_md5_reference": "064b49fd222c34bb320a9ebd6501cd84"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 52.871,
+            "delta_pct": 44705.932,
+            "reference": 0.118
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "NUC2TEST.exe.log",
+            "md5": "ecb0e8e3f85383b45f5dc0531181a625",
+            "bytes": 32
+          },
+          {
+            "name": "carma_nuc2test.txt",
+            "md5": "064b49fd222c34bb320a9ebd6501cd84",
+            "bytes": 108137
+          }
+        ]
+      }
+    },
+    {
+      "id": "nuctest",
+      "benchmark": "carma-numpy/benchmarks/nuctest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "NUCTEST.exe.log",
+            "numeric_count": 32,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "ecb0e8e3f85383b45f5dc0531181a625",
+            "numeric_md5_reference": "ecb0e8e3f85383b45f5dc0531181a625"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_nuctest.txt",
+            "numeric_count": 108137,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "8c3e777b27b8d963b067e0eff9b732dc",
+            "numeric_md5_reference": "8c3e777b27b8d963b067e0eff9b732dc"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 4.496,
+            "delta_pct": 22380.0,
+            "reference": 0.02
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "NUCTEST.exe.log",
+            "md5": "ecb0e8e3f85383b45f5dc0531181a625",
+            "bytes": 32
+          },
+          {
+            "name": "carma_nuctest.txt",
+            "md5": "8c3e777b27b8d963b067e0eff9b732dc",
+            "bytes": 108137
+          }
+        ]
+      }
+    },
+    {
+      "id": "pheattest",
+      "benchmark": "carma-numpy/benchmarks/pheattest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "PHEATTEST.exe.log",
+            "numeric_count": 29,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "bfd41145ee26e744bca2fb73b84f0dee",
+            "numeric_md5_reference": "bfd41145ee26e744bca2fb73b84f0dee"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_pheattest.txt",
+            "numeric_count": 51284,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "39cbb61df61459edc97fdd02768998ca",
+            "numeric_md5_reference": "39cbb61df61459edc97fdd02768998ca"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 2.705,
+            "delta_pct": 6190.698,
+            "reference": 0.043
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "PHEATTEST.exe.log",
+            "md5": "bfd41145ee26e744bca2fb73b84f0dee",
+            "bytes": 29
+          },
+          {
+            "name": "carma_pheattest.txt",
+            "md5": "39cbb61df61459edc97fdd02768998ca",
+            "bytes": 51284
+          }
+        ]
+      }
+    },
+    {
+      "id": "scfalltest",
+      "benchmark": "carma-numpy/benchmarks/scfalltest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SCFALLTEST.exe.log",
+            "numeric_count": 75,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4e7c9b080b9f6ea766f37e151ebb36d1",
+            "numeric_md5_reference": "4e7c9b080b9f6ea766f37e151ebb36d1"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_scfalltest.txt",
+            "numeric_count": 1048082,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "297ca73b5c624dbdf65e964b3ec43c98",
+            "numeric_md5_reference": "297ca73b5c624dbdf65e964b3ec43c98"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 27.813,
+            "delta_pct": 5611.088,
+            "reference": 0.487
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SCFALLTEST.exe.log",
+            "md5": "4e7c9b080b9f6ea766f37e151ebb36d1",
+            "bytes": 75
+          },
+          {
+            "name": "carma_scfalltest.txt",
+            "md5": "297ca73b5c624dbdf65e964b3ec43c98",
+            "bytes": 1048082
+          }
+        ]
+      }
+    },
+    {
+      "id": "sigmadrydeptest",
+      "benchmark": "carma-numpy/benchmarks/sigmadrydeptest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SIGMADRYDEPTEST.exe.log",
+            "numeric_count": 46,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "69f5ba3bbd976e7c13ee75f5f5380479",
+            "numeric_md5_reference": "69f5ba3bbd976e7c13ee75f5f5380479"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sigmadrydeptest.txt",
+            "numeric_count": 2519342,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "04deb70b6d91866b6fe6d9ebf9e16267",
+            "numeric_md5_reference": "04deb70b6d91866b6fe6d9ebf9e16267"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sigmavdry.txt",
+            "numeric_count": 583,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "870d715b9f69c5b203545b005e64eced",
+            "numeric_md5_reference": "870d715b9f69c5b203545b005e64eced"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 91.142,
+            "delta_pct": 6021.021,
+            "reference": 1.489
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SIGMADRYDEPTEST.exe.log",
+            "md5": "69f5ba3bbd976e7c13ee75f5f5380479",
+            "bytes": 46
+          },
+          {
+            "name": "carma_sigmadrydeptest.txt",
+            "md5": "04deb70b6d91866b6fe6d9ebf9e16267",
+            "bytes": 2519342
+          },
+          {
+            "name": "carma_sigmavdry.txt",
+            "md5": "870d715b9f69c5b203545b005e64eced",
+            "bytes": 583
+          }
+        ]
+      }
+    },
+    {
+      "id": "sigmafalltest",
+      "benchmark": "carma-numpy/benchmarks/sigmafalltest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SIGMAFALLTEST.exe.log",
+            "numeric_count": 46,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "69f5ba3bbd976e7c13ee75f5f5380479",
+            "numeric_md5_reference": "69f5ba3bbd976e7c13ee75f5f5380479"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sigmafalltest.txt",
+            "numeric_count": 1048082,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "fc95e643ef6d47bfca1ec2a661d2c16d",
+            "numeric_md5_reference": "fc95e643ef6d47bfca1ec2a661d2c16d"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 27.261,
+            "delta_pct": 5985.045,
+            "reference": 0.448
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SIGMAFALLTEST.exe.log",
+            "md5": "69f5ba3bbd976e7c13ee75f5f5380479",
+            "bytes": 46
+          },
+          {
+            "name": "carma_sigmafalltest.txt",
+            "md5": "fc95e643ef6d47bfca1ec2a661d2c16d",
+            "bytes": 1048082
+          }
+        ]
+      }
+    },
+    {
+      "id": "sulfate-ccdon-test",
+      "benchmark": "carma-numpy/benchmarks/sulfate-ccdon-test.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SULFATE_CCDON_TEST.exe.log",
+            "numeric_count": 40,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "2550671112d0f8e13cd446e88efe088f",
+            "numeric_md5_reference": "2550671112d0f8e13cd446e88efe088f"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sulfate_ccdon_test.txt",
+            "numeric_count": 94185,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "15572dfac4ffe8e09ce098e4cdcb0b0c",
+            "numeric_md5_reference": "15572dfac4ffe8e09ce098e4cdcb0b0c"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 11.231,
+            "delta_pct": 6963.522,
+            "reference": 0.159
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SULFATE_CCDON_TEST.exe.log",
+            "md5": "2550671112d0f8e13cd446e88efe088f",
+            "bytes": 40
+          },
+          {
+            "name": "carma_sulfate_ccdon_test.txt",
+            "md5": "15572dfac4ffe8e09ce098e4cdcb0b0c",
+            "bytes": 94185
+          }
+        ]
+      }
+    },
+    {
+      "id": "sulfate-vehkamaki-test",
+      "benchmark": "carma-numpy/benchmarks/sulfate-vehkamaki-test.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SULFATE_VEHKAMAKI_TEST.exe.log",
+            "numeric_count": 14,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3af06147037bb3e9ff25d8d16f37925b",
+            "numeric_md5_reference": "3af06147037bb3e9ff25d8d16f37925b"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sulfate_vehkamaki_test.txt",
+            "numeric_count": 94185,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "81f4a185ea399294c224f54544fd1ed0",
+            "numeric_md5_reference": "81f4a185ea399294c224f54544fd1ed0"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 14.654,
+            "delta_pct": 7778.495,
+            "reference": 0.186
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SULFATE_VEHKAMAKI_TEST.exe.log",
+            "md5": "3af06147037bb3e9ff25d8d16f37925b",
+            "bytes": 14
+          },
+          {
+            "name": "carma_sulfate_vehkamaki_test.txt",
+            "md5": "81f4a185ea399294c224f54544fd1ed0",
+            "bytes": 94185
+          }
+        ]
+      }
+    },
+    {
+      "id": "sulfatetest",
+      "benchmark": "carma-numpy/benchmarks/sulfatetest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SULFATETEST.exe.log",
+            "numeric_count": 14,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3af06147037bb3e9ff25d8d16f37925b",
+            "numeric_md5_reference": "3af06147037bb3e9ff25d8d16f37925b"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sulfatetest.txt",
+            "numeric_count": 94185,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "07df109550397888866e4becf353f743",
+            "numeric_md5_reference": "07df109550397888866e4becf353f743"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 14.112,
+            "delta_pct": 6089.474,
+            "reference": 0.228
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SULFATETEST.exe.log",
+            "md5": "3af06147037bb3e9ff25d8d16f37925b",
+            "bytes": 14
+          },
+          {
+            "name": "carma_sulfatetest.txt",
+            "md5": "07df109550397888866e4becf353f743",
+            "bytes": 94185
+          }
+        ]
+      }
+    },
+    {
+      "id": "sulfhet-vehkamaki-test",
+      "benchmark": "carma-numpy/benchmarks/sulfhet-vehkamaki-test.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SULFHET_VEHKAMAKI_TEST.exe.log",
+            "numeric_count": 28,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "bfacaae7ab6ef72118c6eb2447997902",
+            "numeric_md5_reference": "bfacaae7ab6ef72118c6eb2447997902"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sulfhet_vehkamaki_test.txt",
+            "numeric_count": 192181,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "0578bb9de9c894c5a878992b511ed318",
+            "numeric_md5_reference": "0578bb9de9c894c5a878992b511ed318"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 20.975,
+            "delta_pct": 10131.707,
+            "reference": 0.205
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SULFHET_VEHKAMAKI_TEST.exe.log",
+            "md5": "bfacaae7ab6ef72118c6eb2447997902",
+            "bytes": 28
+          },
+          {
+            "name": "carma_sulfhet_vehkamaki_test.txt",
+            "md5": "0578bb9de9c894c5a878992b511ed318",
+            "bytes": 192181
+          }
+        ]
+      }
+    },
+    {
+      "id": "sulfhettest",
+      "benchmark": "carma-numpy/benchmarks/sulfhettest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SULFHETTEST.exe.log",
+            "numeric_count": 28,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "bfacaae7ab6ef72118c6eb2447997902",
+            "numeric_md5_reference": "bfacaae7ab6ef72118c6eb2447997902"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_sulfhettest.txt",
+            "numeric_count": 192181,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "593049df0d865ba025bae8a1bb8a6b82",
+            "numeric_md5_reference": "593049df0d865ba025bae8a1bb8a6b82"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 25.993,
+            "delta_pct": 9935.907,
+            "reference": 0.259
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SULFHETTEST.exe.log",
+            "md5": "bfacaae7ab6ef72118c6eb2447997902",
+            "bytes": 28
+          },
+          {
+            "name": "carma_sulfhettest.txt",
+            "md5": "593049df0d865ba025bae8a1bb8a6b82",
+            "bytes": 192181
+          }
+        ]
+      }
+    },
+    {
+      "id": "swelltest",
+      "benchmark": "carma-numpy/benchmarks/swelltest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "SWELLTEST.exe.log",
+            "numeric_count": 30,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "5669fdaa7f61aece4fde89ff8cd1f5d5",
+            "numeric_md5_reference": "5669fdaa7f61aece4fde89ff8cd1f5d5"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_swelltest.txt",
+            "numeric_count": 7854488,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "950a9832bb6251eac0eb5280037f7f58",
+            "numeric_md5_reference": "950a9832bb6251eac0eb5280037f7f58"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 221.661,
+            "delta_pct": 4288.458,
+            "reference": 5.051
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "SWELLTEST.exe.log",
+            "md5": "5669fdaa7f61aece4fde89ff8cd1f5d5",
+            "bytes": 30
+          },
+          {
+            "name": "carma_swelltest.txt",
+            "md5": "950a9832bb6251eac0eb5280037f7f58",
+            "bytes": 7854488
+          }
+        ]
+      }
+    },
+    {
+      "id": "vdiftest",
+      "benchmark": "carma-numpy/benchmarks/vdiftest.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.txt,*.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.txt,*.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing masked)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "VDIFTEST.exe.log",
+            "numeric_count": 31,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "47ded53a9bfacd62ca05cef5069077d1",
+            "numeric_md5_reference": "47ded53a9bfacd62ca05cef5069077d1"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "carma_vdiftest.txt",
+            "numeric_count": 4051346,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "95c781a0416c2e6c1f74665a9d6c1a57",
+            "numeric_md5_reference": "95c781a0416c2e6c1f74665a9d6c1a57"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 18.005,
+            "delta_pct": 3069.894,
+            "reference": 0.568
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "VDIFTEST.exe.log",
+            "md5": "47ded53a9bfacd62ca05cef5069077d1",
+            "bytes": 31
+          },
+          {
+            "name": "carma_vdiftest.txt",
+            "md5": "95c781a0416c2e6c1f74665a9d6c1a57",
+            "bytes": 4051346
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

@@ -1,0 +1,12 @@
+cism-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== halfar-ho-t5: PASS
+benchmark: CISM (cism_driver) tests/halfar halfar-HO: the Halfar dome on Glissade's higher-order (Blatter-Pattyn) solver, 31 x 31 x 10 grid, dx = dy = 2 km, PCG (which_ho_sparse = 3), MPI 1 rank; run over its first 5 model years (halfar.0031.config with `tend = 200.` replaced by `tend = 5.`, dt = 1, output frequency 5: records at years 0 and 5). Inputs: halfar.0031.config, halfar.0031.nc (initial state), trilinosOptions.xml, LOCAsettings_trilinosOptions.xml, copied from $ALPINE_SCRATCH/recast-cand/o1/cism/run_base/halfar-HO. Outputs compared: the files the run produces, halfar.0031.out.nc, halfar.0031.config.log and run.log (the kit's case.compare); halfar.0031.nc is the input state and is not compared.
+accepted runs: Alpine job 33422513, 2026-10-05 05:00:16-06:46:40 UTC (original run ended 05:11:00 UTC, translated run ended 06:46:37 UTC), verifier cand-o5v-cism-783ef4bb, verdict collected by the maintainers (the wave24 acceptance log IDENTICAL). Work dir $ALPINE_SCRATCH/recast-cand/o5v/cism-783ef4bb/cism/w_t5_outer; reference run dir work/runs/pure, candidate run dir work/runs/outermost; job log $ALPINE_SCRATCH/recast-cand/o5v/cism-783ef4bb/runs/o5vcism-t5_33422513.out.
+wall seconds: original 11.801, translated 5736.883
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+halfar.0031.config.log	26490	ddad8cc8a9f97203667a741ac9d3f6a2	26490	3199d8bce303b4c0447125a4b0c8cd52	masked:\.log$::~\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d(?:\.\d+)?|\d\d/\d\d/\d{2,4} \d\d:\d\d:\d\d ; \.log$::[Ee]lapsed|[Ww]all ?clock|[Tt]iming|seconds	718c14d18d2c0b3be74fbc0d57ebc5b0	718c14d18d2c0b3be74fbc0d57ebc5b0	true
+halfar.0031.out.nc	864532	03e60bafa999d2e526104e60060bde5e	864532	c8329a56f84c1db249cee8b01079c5ae	masked:halfar\.0031\.out\.nc$::~\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d(?:\.\d+)? ; halfar\.0031\.out\.nc$::~\b\d\d/\d\d/\d{2,4}\b|\b\d\d:\d\d:\d\d\b	c1ec07255dc3c1bf8a2de3242aea21eb	c1ec07255dc3c1bf8a2de3242aea21eb	true
+run.log	81826	3f4f6660042b9349e101859765acfd95	81826	3f4f6660042b9349e101859765acfd95	masked:\.log$::~\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d(?:\.\d+)?|\d\d/\d\d/\d{2,4} \d\d:\d\d:\d\d ; \.log$::[Ee]lapsed|[Ww]all ?clock|[Tt]iming|seconds	3f4f6660042b9349e101859765acfd95	3f4f6660042b9349e101859765acfd95	true
+
