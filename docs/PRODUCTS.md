@@ -19,6 +19,15 @@ schemas/benchmark.TEMPLATE.yaml   an annotated benchmark to start from
 |---|---|---|
 | `clubb-jax/` | 15, one per committed summary at clubb-jax `99c8b22f`; all evaluate PASS | `unreleased-99c8b22f` |
 | `clm-ml-jax/` | 2, schema-valid but not yet evaluable: the case commits a merged verdict-string file, not the engine's schema-1 summary | none |
+| `camsima-numpy/` | 4, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `cvmix-numpy/` | 4, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `marbl-numpy/` | 2, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `rrtmg-numpy/` | 30, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `cosp2-numpy/` | 1, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `carma-numpy/` | 27, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `fates-numpy/` | 1, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `cism-numpy/` | 1, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
+| `ww3-numpy/` | 2, one per benchmark case of the wave24 in-situ acceptance (`bitwise` run pairs) | `unreleased-783ef4bb` |
 | `pycam5/` | 0 — bitwise whole-model cases, not written yet | none |
 | `freecam/` | 0 — not written yet | none |
 
