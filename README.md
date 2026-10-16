@@ -33,6 +33,15 @@ docs/                         products, architecture, ownership, migration histo
 |---|---|---|
 | clubb-jax | 15 | `unreleased-99c8b22f`: 15 cases, PASS, security `NOT_RUN` |
 | clm-ml-jax | 2 | none yet: the case does not commit the engine's schema-1 summary (`clm-ml-jax/README.md`) |
+| camsima-numpy | 4 | `unreleased-783ef4bb`: 4 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| cvmix-numpy | 4 | `unreleased-783ef4bb`: 4 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| marbl-numpy | 2 | `unreleased-783ef4bb`: 2 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| rrtmg-numpy | 30 | `unreleased-783ef4bb`: 30 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| cosp2-numpy | 1 | `unreleased-783ef4bb`: 1 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| carma-numpy | 27 | `unreleased-783ef4bb`: 27 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| fates-numpy | 1 | `unreleased-783ef4bb`: 1 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| cism-numpy | 1 | `unreleased-783ef4bb`: 1 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
+| ww3-numpy | 2 | `unreleased-783ef4bb`: 2 cases, wave24 in-situ (original vs translated program, `bitwise`), security `NOT_RUN` |
 | pycam5, freecam | 0 | none yet |
 
 ## How a record is made and checked

@@ -1,0 +1,19 @@
+marbl-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== call-compute-subroutines: PASS
+benchmark: MARBL tests/regression_tests/call_compute_subroutines: the stand-alone driver marbl.exe with test.nml (testname=call_compute_subroutines, num_inst=1, hist_file=history_1inst.nc) and settings ../../input_files/settings/marbl_with_o2_consumption_scalef.settings; reads ../../input_files/initial_conditions/call_compute_subroutines.20190718.nc; writes history_1inst.nc (netCDF) and its log on stdout
+accepted runs: Alpine job 33422495 (2026-10-05 05:01-05:03 UTC; original program built by job 33422492, 04:59-05:00 UTC), work directory $ALPINE_SCRATCH/recast-cand/o5w/marbl/ccs/work_final: original runs/pure, translated runs/outermost; kit verdict IDENTICAL 2/2 (the wave24 acceptance log, cand-o5w alpine-a). Digested read only by job 34238999 (2026-10-16)
+wall seconds: original 0.127, translated 1.634
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+history_1inst.nc	628392	714acde6b5e2e2e9ccd8f27bdb0ec5f5	628392	714acde6b5e2e2e9ccd8f27bdb0ec5f5	raw	714acde6b5e2e2e9ccd8f27bdb0ec5f5	714acde6b5e2e2e9ccd8f27bdb0ec5f5	true
+run.log	400	326ae851815f8cc23eb5923eb6ca8cdd	400	ada0d35e3e11f94a82ebd95b9b333810	masked:drop lines matching ^\s*(Timer|timer|.*[Tt]ime \(s\)|.*seconds)	22d04525588b1c4bfc95ac1c8602c556	22d04525588b1c4bfc95ac1c8602c556	true
+
+== init: PASS
+benchmark: MARBL tests/regression_tests/init: the stand-alone driver marbl.exe with test.nml (testname=init) and no settings file (-s not given: the library defaults), num_inst 1; writes its log on stdout
+accepted runs: Alpine job 33422496 (2026-10-05 05:01-05:03 UTC; original program built by job 33422492, 04:59-05:00 UTC), work directory $ALPINE_SCRATCH/recast-cand/o5w/marbl/init/work_final: original runs/pure, translated runs/outermost; kit verdict IDENTICAL 1/1 (the wave24 acceptance log, cand-o5w alpine-a). Digested read only by job 34238999 (2026-10-16)
+wall seconds: original 0.112, translated 0.53
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+run.log	16506	5a4075abd7293d41d2f02747fcdefb51	16506	32585ac1bd62a5a24f5fa0e6cd731061	masked:drop lines matching ^\s*(Timer|timer|.*[Tt]ime \(s\)|.*seconds)	f2a22941fe5c7baea24286fa85e43631	f2a22941fe5c7baea24286fa85e43631	true
+

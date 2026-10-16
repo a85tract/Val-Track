@@ -1,0 +1,32 @@
+# cvmix-numpy / shear: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: "shear"
+product: "cvmix-numpy"
+description: "CVMix reg_tests shear: original vs translated program, 5 output files compared"
+case:
+  benchmark: "CVMix standalone driver (src/cvmix_driver.F90, src/drivers/cvmix_shear_drv.F90, src/cvmix_io.F90) on its regression test reg_tests/shear: input.nl on stdin (mix_type 'shear', nlev 30, max_nlev 60; LMD94 and Pacanowski-Philander (1d, 2d) parameters); output files compared: data_LMD.nc, data_PP1d.nc, data_PP2d.nc, stderr.txt, stdout.txt"
+  build: "Both programs are compiled by the kit's build_cvmix.sh with gfortran 14.2.0 and CVMix's own gfortran FCFLAGS (bld/CompileFlags.mak: -g -Og -Wall -Wno-maybe-uninitialized -Werror -fbacktrace -ffpe-trap=zero,overflow -fcheck=bounds) plus -Wno-error -D_NETCDF -I$(nf-config --includedir) and -fPIC -ffp-contract=off, in the dependency order of CVMix's makefiles (src/shared, src/cvmix_io.F90, src/drivers, src/cvmix_driver.F90), linked with $(nf-config --flibs). ORIGINAL: `STEPS=pure` of o3f_cvmix.sbatch builds o5w/cvmix/pure/cvmix (md5 ab437421d274ee84fa1f480bbda19721); its outputs of all four cases are byte-identical to cand-o1b's upstream-make -ffp-contract=off build (job log). TRANSLATED: recast.insitu (783ef4bb) splices the hybrid modules into a copy of the tree (<work>/project), runs the same build_cvmix.sh in project/bld/obj, compiles the f2py bridge recast_cvmix with the upstream flags and links the benchmark's own main program (src/cvmix_driver.F90) against it."
+  run: "o3f_cvmix.sbatch with STEPS='pure outermost' -> run_case.sh shear outermost -> make_config.py writes <work>/config.json; `python -m recast.insitu <work>/config.json <work> --label outermost` runs the ORIGINAL (runs/pure) and then the TRANSLATED program (runs/outermost), each in a fresh copy of reg_tests/shear/ as `cvmix < input.nl > stdout.txt 2> stderr.txt`, and compares every file matching case.compare (*.nc, stdout.txt, stderr.txt) byte for byte, case.mask empty."
+  environment: "CU Boulder Alpine, Slurm partition acpu, qos cpu-normal, constraint milan (node c3cpu-c15-u5-3, AMD EPYC 7713P), 1 task, 2 cpus, 16 GB; `module purge; module load gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28`; Python 3.12.14 venv $ALPINE_PROJECTS/recast-cand/venv-o5f (recast imports from engine-o5f/src, COMMIT.txt 783ef4bb); OMP_NUM_THREADS=1, TMPDIR=$SLURM_TMPDIR, XDG_CACHE_HOME=$ALPINE_SCRATCH/.cache, FC=$(which gfortran). No heap protocol (no zero-heap / MALLOC_PERTURB_ setting)."
+  engine: "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+  translation: "in-situ config = kit make_config.py shear --delegate outermost (kit o3f-fnout, unchanged): the 27 benchmark-reached rows of reached.json; compute_phi_inv is taken out of the plan by the config (NO_PLAN: a private function with a derived-type dummy; it runs inside NumPy as a callee of cvmix_kpp_compute_turbulent_scales_0d/_1d_sigma). 783ef4bb plans, by itself: delegated 25 (the outermost reached rows called from the Fortran drivers: background 4, ddiff 2, kpp 13, math 3, shear 2, utils 1), inside NumPy 1 (cvmix_kpp_compute_enhanced_diff, a callee of a delegated subprogram; plus compute_phi_inv as above), kept Fortran 0. The plan is the same for all four cases (one config shape); the case decides which delegated rows are called. Called from Fortran in this case: cvmix_coeffs_shear_wrap 8 (8 calls)."
+  accepted_run: "Alpine job 33422489 (o5w-a-cvmix, cand-o5w alpine-a), 2026-10-05 04:59:46-05:02:44 UTC; run directories $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/shear/outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/shear/outermost/runs/outermost (translated), files written 2026-10-05T05:02:44Z; record the wave24 acceptance log IDENTICAL 5/5; digests: Alpine jobs 34238990, 34239010 (kit/digest_cvmix.sbatch)"
+  notes: "Work dir $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/shear/outermost (config.json md5 56ead3637d567138354e9866a8ab6117, insitu.json 350bdda52b8580bae9b79a17ab92d4d0). Kit = work/o5w/cvmix (o3f-fnout as the o5v-nint verifier ran it; only venv/engine paths, work roots and job name changed), shipped to $ALPINE_SCRATCH/recast-cand/o5w/cvmix/kit. Sources: $ALPINE_SCRATCH/recast-cand/src/CVMix-src (not a git checkout; its 23 src/**/*.F90 and reg_tests/*/input.nl equal fce42219 by md5); translator input $ALPINE_SCRATCH/recast-cand/o1/cvmix/kit/staged (byte copies of src/shared, plus one labelled kinds edit that is not compiled: both builds compile the upstream cvmix_kinds_and_types.F90). Re-run: RUNS.md."
+reference:
+  model: "CVMix (Community ocean Vertical Mixing, CVMix-src): src/shared kernels driven by the standalone driver"
+  commit_or_tag: "fce422195a0c58f15a55946b5ed517ba4365e232"
+  provenance: "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+acceptance:
+  kind: bitwise
+  rules:
+    - check: file_set_equal
+      scope: "{*.nc,stdout.txt,stderr.txt}"
+      gating: true
+    - check: numeric_md5_equal
+      scope: "{*.nc,stdout.txt,stderr.txt}"
+      dump_tool: "md5 of the file's bytes"
+      dump_format: "raw bytes"
+      gating: true
+    - check: timing_delta_pct
+      timers: ["wall_seconds"]
+      gating: false
+      note: "wall time of the original vs the translated run; reported, never gates"

@@ -1,0 +1,86 @@
+# rrtmg-numpy / lw-mls-cld5-imca0-icld2: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: lw-mls-cld5-imca0-icld2
+product: rrtmg-numpy
+description: 'RRTMG_LW column model, run_examples_std_atm case MLS-cld5-imca0-icld2: original vs translated program, 2 output
+  files compared'
+case:
+  benchmark: 'AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm,
+    case MLS-cld5-imca0-icld2 (the script''s output_rrtm_MLS-cld5-imca0-icld2): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM
+    exactly as the tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld5-imca0-icld2);
+    outputs OUTPUT_RRTM and the printed stdout (run.log).'
+  build: 'Original: kit build_rrtmg.sh lw ''FC=gfortran -fPIC -ffp-contract=off'' link (make_rrtmg_lw_linux_pgi''s object
+    order; gfortran 14.2.0 -O2 -fdefault-real-8 -fdefault-double-8 -fdefault-integer-8 -ffp-contract=off -fPIC; rrtmg_lw_k_g.f90
+    at -O0; rrtatm.f, extra.f with -std=legacy -fallow-argument-mismatch) -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/pure/rrtmg_lw
+    (md5 83563d0d62b9eafe54a909b89af9cfd0), setup job 33422490. Translated: recast.insitu (engine 783ef4bb, venv-o5f) builds
+    the f2py extension recast_rrtmg_lw from the same source with the same build_rrtmg.sh and flags (bridge module -O2 -fdefault-real-8
+    -fdefault-double-8 -fdefault-integer-8), the main program linked to the NumPy translation of the delegated subprograms;
+    built once on ICRCCM_sonde in job 33422491, md5 9716ab0483f1c6fa826ac51c23c792e9; the zero-heap job reused that extension
+    and a copy of the identical generated Python, no recompilation.'
+  run: 'In the case directory (a copy of $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/MLS-cld5-imca0-icld2): the
+    original program `$ALPINE_SCRATCH/recast-cand/o5w/rrtmg/pure/rrtmg_lw > run.log 2> run.err` (runs/pure) and the
+    translated program, the same main program with the delegated subprograms in NumPy through the o5w extension (runs/zero_heap),
+    both launched by `python -m recast.insitu $ALPINE_SCRATCH/recast-cand/paper-wave24-rrtmg-33432017/runs/zero_heap/MLS-cld5-imca0-icld2/config.json
+    work --run-only --label zero_heap` under the zero-heap environment (kit recheck_rrtmg_initialization.py, job 33432017);
+    recast.insitu then compares OUTPUT_RRTM and run.log byte for byte.'
+  environment: 'Alpine (CU Boulder Research Computing), Slurm partition acpu, qos cpu-normal, constraint milan (AMD EPYC Milan);
+    modules gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; GNU Fortran 14.2.0; glibc 2.28; Python 3.12.14
+    and NumPy 2.5.3 (as job 33432017''s protocol.json records them) from $ALPINE_PROJECTS/recast-cand/venv-o5f (recast imported
+    from engine-o5f/src, COMMIT.txt 783ef4bb); OMP_NUM_THREADS=1. Both runs on the same node in the same job, one after the
+    other (pure, then hybrid). Node c3cpu-c15-u1-1. Zero-heap protocol in BOTH runs (original and translated): MALLOC_PERTURB_=255
+    GLIBC_TUNABLES=glibc.malloc.tcache_count=0 (every malloc returns zero bytes), plus OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1;
+    RECAST_INSITU_FORTRAN and PYTHONPATH unset (kit recheck_rrtmg_initialization.py, protocol.json). Under the default heap
+    this case''s original program reads heap storage it never wrote (upstream rtrnmr faccmb1/2, faccmb1d/2d); see notes.'
+  engine: 783ef4bbb334d8fa39572a13a6f04a9042ab43d2
+  translation: 'recast.insitu `delegate: outermost`, the plan 783ef4bb makes under the kit''s unchanged config (insitu.json
+    md5 6bc046108403bd62ce2b8e0084e0a9d0). Delegated (11, the outermost rows: each is replaced at its Fortran call sites by
+    the f2py bridge to its NumPy translation): twist, temper, get_alpha, mcica_subcol_lw, cldprmc, cldprop, rrtmg_lw_ini,
+    rtrnmc, rtrnmr, setcoef, taumol. Inside NumPy (24, callees of delegated subprograms): cmbgb1, cmbgb2, cmbgb3, cmbgb4,
+    cmbgb5, cmbgb6, cmbgb7, cmbgb8, cmbgb9, cmbgb10, cmbgb11, cmbgb12, cmbgb13, cmbgb14, cmbgb15, cmbgb16, generate_stochastic_clouds,
+    lwatmref, lwavplank, lwavplankderiv, lwcldpr, lwcmbdat, lwdatinit, mixbits. Rows the engine marks kept (16): taugb1, taugb2,
+    taugb3, taugb4, taugb5, taugb6, taugb7, taugb8, taugb9, taugb10, taugb11, taugb12, taugb13, taugb14, taugb15, taugb16,
+    reason ''internal procedure writing host variables fracs, taug'': they are taumol''s internal procedures, not bridged
+    on their own, and run inside taumol''s NumPy translation. The Mersenne Twister functions nextstate, getrandomint, getrandomreal,
+    initialize_scalar have no recorder plan (TYPE(randomNumberSequence) interface; kit make_config.py NOPLAN) and run in NumPy
+    as callees of mcica_subcol_lw. Kept Fortran among the 55 reached subprograms: none. Fortran outside the reach: the main
+    program rrtmg_lw.1col.f90 (input reading, the column loop, the OUTPUT_RRTM writer), the input utilities rrtatm.f / extra.f
+    / util_gfortran.f90, and the k-table loaders lw_kgb01..lw_kgb16 (rrtmg_lw_k_g.f90, outside the staged tree), which rrtmg_lw_ini''s
+    translation calls as compiled externals through the extension''s symbols. NumPy calls in this case: cldprop 17, rrtmg_lw_ini
+    1, rtrnmr 17, setcoef 17, taumol 17.'
+  accepted_run: 'Alpine job 33432017 (paper-wave24-rrtmg-zero, 2026-10-05 10:24:09-10:30:08Z, node c3cpu-c15-u1-1); extension
+    built in job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12). Original: $ALPINE_SCRATCH/recast-cand/paper-wave24-rrtmg-33432017/runs/zero_heap/MLS-cld5-imca0-icld2/work/runs/pure;
+    translated: $ALPINE_SCRATCH/recast-cand/paper-wave24-rrtmg-33432017/runs/zero_heap/MLS-cld5-imca0-icld2/work/runs/zero_heap.
+    Record: the wave24 evidence archive wave24/rrtmg_initialization (results.json, IDENTICAL); the acceptance tally ''14 zero-heap LW
+    controls''; the uninitialised-read investigation.'
+  notes: 'Digests: Alpine job 34239083 (kit/digest_rrtmg.py, read-only). Compared files [''OUTPUT_RRTM'', ''run.log''], mask
+    []. Re-run: RUNS.md. run.log (the program''s stdout) is empty in both runs: this column case prints nothing to stdout;
+    it is compared anyway, as the kit does (md5 of 0 bytes). Written by the program but not in the kit''s comparison (not
+    part of this verdict): run.err (equal). Zero-heap run pair (job 33432017). The default-heap pair of this case in the sweep
+    job 33422491 ($ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/MLS-cld5-imca0-icld2/work/runs/{pure,outermost})
+    differs: OUTPUT_RRTM md5 f538883c51102242e592d949f1691961 (original) vs 648a81b346ff37469a8e2e6786700142 (translated),
+    1 line (line 146, byte offset 11806, ''41.0870548'' vs ''41.0870549'', max abs 1.0000000116860974e-07); run.log equal.
+    The original program reads automatic-array elements it never assigned (rrtmg_lw_rtrnmr.f90 faccmb1/2 :183, faccmb1d/2d
+    :186, read at :604-609, :694-698; gfortran puts them on the heap); the translation''s locals are np.zeros. Under the zero-heap
+    protocol both read 0 and the files are identical; the translated OUTPUT_RRTM here (648a81b346ff37469a8e2e6786700142) is
+    byte for byte the default-heap translated file. the uninitialised-read investigation; the wave24 evidence archive wave24/rrtmg_initialization.'
+reference:
+  model: AER RRTMG_LW column model (rrtmg_lw.1col), https://github.com/AER-RC/RRTMG_LW (revision committed 2025-04-07T12:52:41-04:00;
+    the wave24 source-revision manifest)
+  commit_or_tag: 958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd
+  provenance: 'the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run
+    by the same kit as the candidate'
+acceptance:
+  kind: bitwise
+  rules:
+  - check: file_set_equal
+    scope: '{OUTPUT_RRTM,run.log}'
+    gating: true
+  - check: numeric_md5_equal
+    scope: '{OUTPUT_RRTM,run.log}'
+    dump_tool: md5 of the file's bytes
+    dump_format: raw bytes
+    gating: true
+  - check: timing_delta_pct
+    timers:
+    - wall_seconds
+    gating: false
+    note: wall time of the original vs the translated run; reported, never gates

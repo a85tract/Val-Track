@@ -1,0 +1,656 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "camsima-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CAM-SIMA (ESCOMP/CAM-SIMA, CIME FPHYStest) with ESCOMP/atmospheric_physics and NCAR/ccpp-framework",
+    "commit_or_tag": "CAM-SIMA 47e1e6303951d999f6939bdffff829f682a2e081 (development, + bin/git-fleximod update); atmospheric_physics 3fd57dde51ea63f35f3e3655012ad074a06ad051; ccpp-framework 766261cf0433692037eec258ba87dcdbea552692",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "NCAR Derecho CPU nodes, PBS, CIME machine derecho",
+    "compiler": "GNU Fortran 14.3.0 (CIME derecho_gnu, module gcc/14.3.0), the case's flags plus -ffp-contract=off",
+    "python": "CPython 3.11.14",
+    "numpy": "2.4.6",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "cesmdev/1.0",
+      "conda",
+      "nco",
+      "craype",
+      "cmake",
+      "gcc/14.3.0",
+      "cray-libsci/25.03.0"
+    ]
+  },
+  "cases": [
+    {
+      "id": "held-suarez",
+      "benchmark": "camsima-numpy/benchmarks/held-suarez.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{TestStatus,run/atm.log.*.gz,run/*.cam.h*.nc}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/*.cam.h*.nc",
+            "dump_tool": "numpy (digest_camsima.py's reader of the netCDF 64-bit offset format, checked value by value against ncdump -p 9,17 by check_reader.py; NCO is not on Derecho's default module path)",
+            "dump_format": "%+.17g: every numeric variable (byte/short/int/float/double) in sorted name order, a line with the name, then one line per value '%+.17g' (C order, all records); md5 of the text. The char variables date_written/time_written (wall-clock stamps) and all attributes are not dumped",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "TestStatus",
+            "dump_tool": "md5 of the text after the kit's TestStatus masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py TestStatus rules, in order, per line: re.sub(r' time=\\S+', ''); re.sub(r'\\S+\\.(pic|insitu\\S*)\\b', '<case>'); the test name (the reference case dir name without its test-id) -> '<test>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/atm.log.*.gz",
+            "dump_tool": "md5 of the text after the kit's atm.log masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py atm.log rules: gunzip; splitlines; drop every line where re.search(r'(\\d{4}-\\d{2}-\\d{2}|\\d{2}:\\d{2}:\\d{2}|memory|Memory|highwater|seconds|sec/|wall|Wall|time|Time|pid|PID|hostname)') matches (dates, clock times, timers, memory, pids, host names); the run's CASE (test name + test-id) -> '<case>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run (CIME TestStatus RUN time=, whole seconds); reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "TestStatus",
+            "numeric_count": 9,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4fd7441796d45cd5973fe6af83094f2a",
+            "numeric_md5_reference": "4fd7441796d45cd5973fe6af83094f2a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "cd85fb528fee62aefc9d3abbfeae09fd",
+            "numeric_md5_reference": "cd85fb528fee62aefc9d3abbfeae09fd"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "19077b3aded76d9fecb8bc615bfe494a",
+            "numeric_md5_reference": "19077b3aded76d9fecb8bc615bfe494a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/atm.log.<LID>.gz",
+            "numeric_count": 494,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3ffa100856ab11eab666a6434955a1d6",
+            "numeric_md5_reference": "3ffa100856ab11eab666a6434955a1d6"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 11.0,
+            "delta_pct": 37.5,
+            "reference": 8.0
+          }
+        }
+      },
+      "outputs": {
+        "location": "derecho:$DERECHO_SCRATCH/recast-cand/cases/<test>.<test-id> (the translated program's CIME case; the original's is <test>.pic); per case in report.txt",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "TestStatus",
+            "md5": "6936ceb159e2a566e452c62c71a0d58e",
+            "bytes": 881
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "md5": "9665b18d68c1287d3e1a5073058d9b20",
+            "bytes": 133944
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "md5": "3cb75e8d2d05d7d513f849bcf696828e",
+            "bytes": 133944
+          },
+          {
+            "name": "run/atm.log.<LID>.gz",
+            "md5": "4f2ffeb814641a043b9d25a548557d2f",
+            "bytes": 5380
+          }
+        ]
+      }
+    },
+    {
+      "id": "kessler",
+      "benchmark": "camsima-numpy/benchmarks/kessler.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{TestStatus,run/atm.log.*.gz,run/*.cam.h*.nc}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/*.cam.h*.nc",
+            "dump_tool": "numpy (digest_camsima.py's reader of the netCDF 64-bit offset format, checked value by value against ncdump -p 9,17 by check_reader.py; NCO is not on Derecho's default module path)",
+            "dump_format": "%+.17g: every numeric variable (byte/short/int/float/double) in sorted name order, a line with the name, then one line per value '%+.17g' (C order, all records); md5 of the text. The char variables date_written/time_written (wall-clock stamps) and all attributes are not dumped",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "TestStatus",
+            "dump_tool": "md5 of the text after the kit's TestStatus masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py TestStatus rules, in order, per line: re.sub(r' time=\\S+', ''); re.sub(r'\\S+\\.(pic|insitu\\S*)\\b', '<case>'); the test name (the reference case dir name without its test-id) -> '<test>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/atm.log.*.gz",
+            "dump_tool": "md5 of the text after the kit's atm.log masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py atm.log rules: gunzip; splitlines; drop every line where re.search(r'(\\d{4}-\\d{2}-\\d{2}|\\d{2}:\\d{2}:\\d{2}|memory|Memory|highwater|seconds|sec/|wall|Wall|time|Time|pid|PID|hostname)') matches (dates, clock times, timers, memory, pids, host names); the run's CASE (test name + test-id) -> '<case>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run (CIME TestStatus RUN time=, whole seconds); reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "TestStatus",
+            "numeric_count": 9,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4fd7441796d45cd5973fe6af83094f2a",
+            "numeric_md5_reference": "4fd7441796d45cd5973fe6af83094f2a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "fddac8f6e7d5a97a81c7dac4049573bb",
+            "numeric_md5_reference": "fddac8f6e7d5a97a81c7dac4049573bb"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "1a3553c8ad5c266dc4e7176bc69cf839",
+            "numeric_md5_reference": "1a3553c8ad5c266dc4e7176bc69cf839"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/atm.log.<LID>.gz",
+            "numeric_count": 507,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "b61cb90179f568ef82759697a1d47404",
+            "numeric_md5_reference": "b61cb90179f568ef82759697a1d47404"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 10.0,
+            "delta_pct": 25.0,
+            "reference": 8.0
+          }
+        }
+      },
+      "outputs": {
+        "location": "derecho:$DERECHO_SCRATCH/recast-cand/cases/<test>.<test-id> (the translated program's CIME case; the original's is <test>.pic); per case in report.txt",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "TestStatus",
+            "md5": "95aae8115cce787b4ebacdca93d5f129",
+            "bytes": 845
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "md5": "845e8e8401ebf3f15763f0b22a207673",
+            "bytes": 133944
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "md5": "8c3199113440c4eb6f59fcf79c61c60c",
+            "bytes": 133944
+          },
+          {
+            "name": "run/atm.log.<LID>.gz",
+            "md5": "3b6ae6fce85eaab7ffa96cc60fb70ea0",
+            "bytes": 5420
+          }
+        ]
+      }
+    },
+    {
+      "id": "tj2016-after-coupler",
+      "benchmark": "camsima-numpy/benchmarks/tj2016-after-coupler.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{TestStatus,run/atm.log.*.gz,run/*.cam.h*.nc}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/*.cam.h*.nc",
+            "dump_tool": "numpy (digest_camsima.py's reader of the netCDF 64-bit offset format, checked value by value against ncdump -p 9,17 by check_reader.py; NCO is not on Derecho's default module path)",
+            "dump_format": "%+.17g: every numeric variable (byte/short/int/float/double) in sorted name order, a line with the name, then one line per value '%+.17g' (C order, all records); md5 of the text. The char variables date_written/time_written (wall-clock stamps) and all attributes are not dumped",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "TestStatus",
+            "dump_tool": "md5 of the text after the kit's TestStatus masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py TestStatus rules, in order, per line: re.sub(r' time=\\S+', ''); re.sub(r'\\S+\\.(pic|insitu\\S*)\\b', '<case>'); the test name (the reference case dir name without its test-id) -> '<test>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/atm.log.*.gz",
+            "dump_tool": "md5 of the text after the kit's atm.log masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py atm.log rules: gunzip; splitlines; drop every line where re.search(r'(\\d{4}-\\d{2}-\\d{2}|\\d{2}:\\d{2}:\\d{2}|memory|Memory|highwater|seconds|sec/|wall|Wall|time|Time|pid|PID|hostname)') matches (dates, clock times, timers, memory, pids, host names); the run's CASE (test name + test-id) -> '<case>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run (CIME TestStatus RUN time=, whole seconds); reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "TestStatus",
+            "numeric_count": 9,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4fd7441796d45cd5973fe6af83094f2a",
+            "numeric_md5_reference": "4fd7441796d45cd5973fe6af83094f2a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "998004f4882ea25a3e30a8f3be10ab8c",
+            "numeric_md5_reference": "998004f4882ea25a3e30a8f3be10ab8c"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "9f2b15686c40cb975d856645d11a0f89",
+            "numeric_md5_reference": "9f2b15686c40cb975d856645d11a0f89"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/atm.log.<LID>.gz",
+            "numeric_count": 517,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "723e42e469cd8f253e5a3ccf0d0553d6",
+            "numeric_md5_reference": "723e42e469cd8f253e5a3ccf0d0553d6"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 9.0,
+            "delta_pct": 12.5,
+            "reference": 8.0
+          }
+        }
+      },
+      "outputs": {
+        "location": "derecho:$DERECHO_SCRATCH/recast-cand/cases/<test>.<test-id> (the translated program's CIME case; the original's is <test>.pic); per case in report.txt",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "TestStatus",
+            "md5": "b131526e40b0f2ca6a8002ae384821ce",
+            "bytes": 961
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "md5": "922a38d3df3ce19b454c8347d0a6b81c",
+            "bytes": 133944
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "md5": "7293cd0c31a7ba275d67a6bc226a1978",
+            "bytes": 133944
+          },
+          {
+            "name": "run/atm.log.<LID>.gz",
+            "md5": "f2db44de03074f39e34b1b61f7094953",
+            "bytes": 5439
+          }
+        ]
+      }
+    },
+    {
+      "id": "tj2016-before-coupler",
+      "benchmark": "camsima-numpy/benchmarks/tj2016-before-coupler.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{TestStatus,run/atm.log.*.gz,run/*.cam.h*.nc}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/*.cam.h*.nc",
+            "dump_tool": "numpy (digest_camsima.py's reader of the netCDF 64-bit offset format, checked value by value against ncdump -p 9,17 by check_reader.py; NCO is not on Derecho's default module path)",
+            "dump_format": "%+.17g: every numeric variable (byte/short/int/float/double) in sorted name order, a line with the name, then one line per value '%+.17g' (C order, all records); md5 of the text. The char variables date_written/time_written (wall-clock stamps) and all attributes are not dumped",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "TestStatus",
+            "dump_tool": "md5 of the text after the kit's TestStatus masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py TestStatus rules, in order, per line: re.sub(r' time=\\S+', ''); re.sub(r'\\S+\\.(pic|insitu\\S*)\\b', '<case>'); the test name (the reference case dir name without its test-id) -> '<test>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run/atm.log.*.gz",
+            "dump_tool": "md5 of the text after the kit's atm.log masks (compare_case.py at 783ef4bb)",
+            "dump_format": "compare_case.py atm.log rules: gunzip; splitlines; drop every line where re.search(r'(\\d{4}-\\d{2}-\\d{2}|\\d{2}:\\d{2}:\\d{2}|memory|Memory|highwater|seconds|sec/|wall|Wall|time|Time|pid|PID|hostname)') matches (dates, clock times, timers, memory, pids, host names); the run's CASE (test name + test-id) -> '<case>'; then md5 of the lines joined by '\\n'",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run (CIME TestStatus RUN time=, whole seconds); reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "TestStatus",
+            "numeric_count": 9,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4fd7441796d45cd5973fe6af83094f2a",
+            "numeric_md5_reference": "4fd7441796d45cd5973fe6af83094f2a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d9b50f47601f4851cb4d2db3d71fd24e",
+            "numeric_md5_reference": "d9b50f47601f4851cb4d2db3d71fd24e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "numeric_count": 30814,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3c7247b990b13ec1e13721fb6091e989",
+            "numeric_md5_reference": "3c7247b990b13ec1e13721fb6091e989"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run/atm.log.<LID>.gz",
+            "numeric_count": 509,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "9ccb49c3e411adb3fa13574e9fe435ed",
+            "numeric_md5_reference": "9ccb49c3e411adb3fa13574e9fe435ed"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 8.0,
+            "delta_pct": 0.0,
+            "reference": 8.0
+          }
+        }
+      },
+      "outputs": {
+        "location": "derecho:$DERECHO_SCRATCH/recast-cand/cases/<test>.<test-id> (the translated program's CIME case; the original's is <test>.pic); per case in report.txt",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "TestStatus",
+            "md5": "6ede393fe2a8bfe0a22db0bb5d9e4a82",
+            "bytes": 970
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-00000.nc",
+            "md5": "dcf16fecaa52db09d4ea5f014b166771",
+            "bytes": 133944
+          },
+          {
+            "name": "run/<case>.cam.h2i.0001-01-01-03600.nc",
+            "md5": "8c83c775bff994c38e76f9cb900fb252",
+            "bytes": 133944
+          },
+          {
+            "name": "run/atm.log.<LID>.gz",
+            "md5": "122f91899287cd8c0e736aecdb08e0d1",
+            "bytes": 5310
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

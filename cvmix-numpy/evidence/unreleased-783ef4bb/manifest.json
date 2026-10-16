@@ -1,0 +1,640 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "cvmix-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CVMix (Community ocean Vertical Mixing, CVMix-src): src/shared kernels driven by the standalone driver",
+    "commit_or_tag": "fce422195a0c58f15a55946b5ed517ba4365e232",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "bryan-lewis",
+      "benchmark": "cvmix-numpy/benchmarks/bryan-lewis.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (4 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data_memcopy.nc",
+            "numeric_count": 1056,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d479ea6840afba8095690801c19ae23e",
+            "numeric_md5_reference": "d479ea6840afba8095690801c19ae23e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data_pointer.nc",
+            "numeric_count": 1056,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d479ea6840afba8095690801c19ae23e",
+            "numeric_md5_reference": "d479ea6840afba8095690801c19ae23e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stderr.txt",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stdout.txt",
+            "numeric_count": 71,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "a04abf64b2dceb2157ddc873c1631983",
+            "numeric_md5_reference": "a04abf64b2dceb2157ddc873c1631983"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.56,
+            "delta_pct": 529.2134831460676,
+            "reference": 0.089
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "data_memcopy.nc",
+            "md5": "d479ea6840afba8095690801c19ae23e",
+            "bytes": 1056
+          },
+          {
+            "name": "data_pointer.nc",
+            "md5": "d479ea6840afba8095690801c19ae23e",
+            "bytes": 1056
+          },
+          {
+            "name": "stderr.txt",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "stdout.txt",
+            "md5": "a04abf64b2dceb2157ddc873c1631983",
+            "bytes": 71
+          }
+        ]
+      }
+    },
+    {
+      "id": "double-diff",
+      "benchmark": "cvmix-numpy/benchmarks/double-diff.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data.nc",
+            "numeric_count": 5348,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "e119ef0a6b36e461147f9bfef8c4b150",
+            "numeric_md5_reference": "e119ef0a6b36e461147f9bfef8c4b150"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stderr.txt",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stdout.txt",
+            "numeric_count": 71,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "a0fe02bdaa09ecce0fb0412c515cf028",
+            "numeric_md5_reference": "a0fe02bdaa09ecce0fb0412c515cf028"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.464,
+            "delta_pct": 409.89010989010984,
+            "reference": 0.091
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "data.nc",
+            "md5": "e119ef0a6b36e461147f9bfef8c4b150",
+            "bytes": 5348
+          },
+          {
+            "name": "stderr.txt",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "stdout.txt",
+            "md5": "a0fe02bdaa09ecce0fb0412c515cf028",
+            "bytes": 71
+          }
+        ]
+      }
+    },
+    {
+      "id": "kpp",
+      "benchmark": "cvmix-numpy/benchmarks/kpp.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (10 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stderr.txt",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stdout.txt",
+            "numeric_count": 3888,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "86d256a5e43c0d49d2a0af1884830423",
+            "numeric_md5_reference": "86d256a5e43c0d49d2a0af1884830423"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test1.nc",
+            "numeric_count": 432,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "2f0c695158fc65fce86f141fa2b8ddc0",
+            "numeric_md5_reference": "2f0c695158fc65fce86f141fa2b8ddc0"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test3.nc",
+            "numeric_count": 5400,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "8fc49fe6034d54ca6e00f57bfa29b08f",
+            "numeric_md5_reference": "8fc49fe6034d54ca6e00f57bfa29b08f"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test4a.nc",
+            "numeric_count": 548,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "6da8937d6ac3e92104f9703bf197acb4",
+            "numeric_md5_reference": "6da8937d6ac3e92104f9703bf197acb4"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test4b.nc",
+            "numeric_count": 548,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "408097c59466c2211880632b71899891",
+            "numeric_md5_reference": "408097c59466c2211880632b71899891"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test4c.nc",
+            "numeric_count": 548,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d9c6b434f1c7a5ca123ea46834f9bb4e",
+            "numeric_md5_reference": "d9c6b434f1c7a5ca123ea46834f9bb4e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test4d.nc",
+            "numeric_count": 548,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "202aaad0f6b8cae60c59f1141d0cc820",
+            "numeric_md5_reference": "202aaad0f6b8cae60c59f1141d0cc820"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test5.nc",
+            "numeric_count": 804,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "8e90a03bbb931be05fd7063be6d1e685",
+            "numeric_md5_reference": "8e90a03bbb931be05fd7063be6d1e685"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "test7.nc",
+            "numeric_count": 804,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "2e7b548563b5966083c4928c17308b95",
+            "numeric_md5_reference": "2e7b548563b5966083c4928c17308b95"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.832,
+            "delta_pct": 766.6666666666666,
+            "reference": 0.096
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "stderr.txt",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "stdout.txt",
+            "md5": "86d256a5e43c0d49d2a0af1884830423",
+            "bytes": 3888
+          },
+          {
+            "name": "test1.nc",
+            "md5": "2f0c695158fc65fce86f141fa2b8ddc0",
+            "bytes": 432
+          },
+          {
+            "name": "test3.nc",
+            "md5": "8fc49fe6034d54ca6e00f57bfa29b08f",
+            "bytes": 5400
+          },
+          {
+            "name": "test4a.nc",
+            "md5": "6da8937d6ac3e92104f9703bf197acb4",
+            "bytes": 548
+          },
+          {
+            "name": "test4b.nc",
+            "md5": "408097c59466c2211880632b71899891",
+            "bytes": 548
+          },
+          {
+            "name": "test4c.nc",
+            "md5": "d9c6b434f1c7a5ca123ea46834f9bb4e",
+            "bytes": 548
+          },
+          {
+            "name": "test4d.nc",
+            "md5": "202aaad0f6b8cae60c59f1141d0cc820",
+            "bytes": 548
+          },
+          {
+            "name": "test5.nc",
+            "md5": "8e90a03bbb931be05fd7063be6d1e685",
+            "bytes": 804
+          },
+          {
+            "name": "test7.nc",
+            "md5": "2e7b548563b5966083c4928c17308b95",
+            "bytes": 804
+          }
+        ]
+      }
+    },
+    {
+      "id": "shear",
+      "benchmark": "cvmix-numpy/benchmarks/shear.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{*.nc,stdout.txt,stderr.txt}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (5 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data_LMD.nc",
+            "numeric_count": 1076,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "9f689f41223f9b046826ae08634e49ee",
+            "numeric_md5_reference": "9f689f41223f9b046826ae08634e49ee"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data_PP1d.nc",
+            "numeric_count": 1072,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "ccd4012254a76aeb2268c38de944f557",
+            "numeric_md5_reference": "ccd4012254a76aeb2268c38de944f557"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "data_PP2d.nc",
+            "numeric_count": 3572,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "793f35ef2ec12a5bcb29bdb78f96d27c",
+            "numeric_md5_reference": "793f35ef2ec12a5bcb29bdb78f96d27c"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stderr.txt",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "stdout.txt",
+            "numeric_count": 427,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "306686248f3c69e7bbce694397f6b218",
+            "numeric_md5_reference": "306686248f3c69e7bbce694397f6b218"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.451,
+            "delta_pct": 430.5882352941176,
+            "reference": 0.085
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "data_LMD.nc",
+            "md5": "9f689f41223f9b046826ae08634e49ee",
+            "bytes": 1076
+          },
+          {
+            "name": "data_PP1d.nc",
+            "md5": "ccd4012254a76aeb2268c38de944f557",
+            "bytes": 1072
+          },
+          {
+            "name": "data_PP2d.nc",
+            "md5": "793f35ef2ec12a5bcb29bdb78f96d27c",
+            "bytes": 3572
+          },
+          {
+            "name": "stderr.txt",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          },
+          {
+            "name": "stdout.txt",
+            "md5": "306686248f3c69e7bbce694397f6b218",
+            "bytes": 427
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}

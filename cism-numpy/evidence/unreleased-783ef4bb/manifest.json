@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "complete",
+  "artifact": {
+    "name": "cism-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CISM (Community Ice Sheet Model), cism_driver with the Glissade dycore (libglide, libglissade, libglimmer)",
+    "commit_or_tag": "46e27de479f061ce7c0e96a148d3e7af7f65e461",
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+  },
+  "cc_test": {
+    "version": "unreleased-0ad9f1a1",
+    "commit": "0ad9f1a10790bfcae40fcd520d2d9190a9805a32"
+  },
+  "environment": {
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
+  },
+  "cases": [
+    {
+      "id": "halfar-ho-t5",
+      "benchmark": "cism-numpy/benchmarks/halfar-ho-t5.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{halfar.0031.out.nc,halfar.0031.config.log,run.log}",
+            "gating": true,
+            "note": "the files the benchmark run produces, as the kit's case.compare names them (halfar.0031.out.nc, halfar.0031.config.log, run.log). halfar.0031.nc is the case's input state (copied into both run directories before either run, written by neither): not a produced file, so not compared here (maintainer, 2026-10-16)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{halfar.0031.out.nc,halfar.0031.config.log,run.log}",
+            "dump_tool": "md5 of the file's bytes after the kit's masks: recast.insitu.compare._masked (RecastEngine-Pro 783ef4bb) -- bytes split on newline, a line any line mask matches dropped, what a value mask (~) matches replaced by <masked>, joined on newline (kit/digest_cism.py)",
+            "dump_format": "case.mask, each \"file_regex::line_regex\" or \"file_regex::~value_regex\": halfar\\.0031\\.out\\.nc$::~\\d{4}-\\d\\d-\\d\\d[ T]\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)? ; halfar\\.0031\\.out\\.nc$::~\\b\\d\\d/\\d\\d/\\d{2,4}\\b|\\b\\d\\d:\\d\\d:\\d\\d\\b ; \\.log$::~\\d{4}-\\d\\d-\\d\\d[ T]\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?|\\d\\d/\\d\\d/\\d{2,4} \\d\\d:\\d\\d:\\d\\d ; \\.log$::[Ee]lapsed|[Ww]all ?clock|[Tt]iming|seconds",
+            "gating": true,
+            "note": "the in-situ verdict (recast.insitu.compare, byte for byte after the masks); run.log is raw-identical (no mask matches it)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run (result_outermost.json: 11.801 s vs 5,736.883 s, build excluded); reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (3 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "halfar.0031.config.log",
+            "numeric_count": 513,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "718c14d18d2c0b3be74fbc0d57ebc5b0",
+            "numeric_md5_reference": "718c14d18d2c0b3be74fbc0d57ebc5b0"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "halfar.0031.out.nc",
+            "numeric_count": 108973,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "c1ec07255dc3c1bf8a2de3242aea21eb",
+            "numeric_md5_reference": "c1ec07255dc3c1bf8a2de3242aea21eb"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 1293,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3f4f6660042b9349e101859765acfd95",
+            "numeric_md5_reference": "3f4f6660042b9349e101859765acfd95"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 5736.883,
+            "delta_pct": 48513.533,
+            "reference": 11.801
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "halfar.0031.config.log",
+            "md5": "3199d8bce303b4c0447125a4b0c8cd52",
+            "bytes": 26490
+          },
+          {
+            "name": "halfar.0031.out.nc",
+            "md5": "c8329a56f84c1db249cee8b01079c5ae",
+            "bytes": 864532
+          },
+          {
+            "name": "run.log",
+            "md5": "3f4f6660042b9349e101859765acfd95",
+            "bytes": 81826
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files)."
+}
