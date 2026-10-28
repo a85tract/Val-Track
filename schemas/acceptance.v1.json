@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/a85tract/Val-Track/main/schemas/acceptance.v1.json",
   "title": "Val-Track acceptance criteria, version 1",
-  "description": "Vocabulary for declaring what a validation case must satisfy to be called PASS. Three families: 'bitwise' (whole-model run pairs - PyCAM5, freeCAM) is complete; 'unit-differential' (per-unit gates run by RecastEngine and summarised in a verification.json - clubb-jax, clm-ml-jax, elm-jax) is complete; 'statistical' (whole-model ensemble criteria) is provisional and must be finalised before any evidence is accepted against it. Every rule carries an explicit 'gating' flag: a check that is computed but does not gate must say so, so that the meaning of PASS is never implicit.",
+  "description": "Vocabulary for declaring what a validation case must satisfy to be called PASS. Four families: 'bitwise' (whole-model run pairs - PyCAM5, freeCAM) is complete; 'unit-differential' (per-unit gates run by RecastEngine and summarised in a verification.json - clubb-jax, clm-ml-jax, elm-jax) is complete; 'output-verdict' (a case kit's own verifier judged each run's outputs identical or not, and only that verdict survives - the wave24 application backfill) is complete; 'statistical' (whole-model ensemble criteria) is provisional and must be finalised before any evidence is accepted against it. Every rule carries an explicit 'gating' flag: a check that is computed but does not gate must say so, so that the meaning of PASS is never implicit.",
 
   "$defs": {
 
@@ -11,6 +11,7 @@
       "oneOf": [
         { "$ref": "#/$defs/bitwiseAcceptance" },
         { "$ref": "#/$defs/unitDifferentialAcceptance" },
+        { "$ref": "#/$defs/outputVerdictAcceptance" },
         { "$ref": "#/$defs/statisticalAcceptance" }
       ]
     },
@@ -264,6 +265,86 @@
         "note": { "type": "string" }
       },
       "required": ["check", "verifier", "gating"],
+      "additionalProperties": false
+    },
+
+    "outputVerdictAcceptance": {
+      "type": "object",
+      "description": "Per-run verdicts from a case kit's own verifier: each run of the benchmark's native and translated programs was compared output file by output file, after the kit's declared normalization, and the verifier said identical or not. The measurements this block reads are a verdict table (`schema: 1`): one entry per run, each with its role, the verifier's verdict, and the counts the verifier reported. Val-Track recomputes nothing and holds no digest of the outputs; it decides which runs gate. This is the shape a backfill takes when only the verdicts survived the run.",
+      "properties": {
+        "kind": { "const": "output-verdict" },
+        "verdict_schema": {
+          "const": 1,
+          "description": "The `schema` value of the verdict table these rules are written against. A table with any other value is not read."
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/outputVerdictRule" },
+          "contains": {
+            "type": "object",
+            "properties": { "gating": { "const": true } },
+            "required": ["gating"]
+          },
+          "description": "At least one rule must be gating."
+        }
+      },
+      "required": ["kind", "verdict_schema", "rules"],
+      "additionalProperties": false
+    },
+
+    "outputVerdictRule": {
+      "description": "One per-run check. The 'check' value selects the rule shape.",
+      "oneOf": [
+        { "$ref": "#/$defs/ruleRunSetEqual" },
+        { "$ref": "#/$defs/ruleRunsIdentical" }
+      ]
+    },
+
+    "ruleRunSetEqual": {
+      "type": "object",
+      "description": "The verdict table must cover exactly these runs - no fewer, no more. Always gating, for the reason unit_set_equal is: a PASS over fewer runs than the benchmark names is the cheapest path to green.",
+      "properties": {
+        "check": { "const": "run_set_equal" },
+        "runs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "gating": { "const": true },
+        "note": { "type": "string" }
+      },
+      "required": ["check", "runs", "gating"],
+      "additionalProperties": false
+    },
+
+    "ruleRunsIdentical": {
+      "type": "object",
+      "description": "Every run of the named roles must carry the verdict 'identical' from the named verifier, and where the verifier reported how many outputs it compared, all of them must have matched. The verifier is the one the table names; a table from a different verifier does not describe the same criterion. A run that is accepted without the verdict must be listed in ungated with the reason.",
+      "properties": {
+        "check": { "const": "runs_identical" },
+        "verifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The verifier as the verdict table names it."
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Which runs this rule judges, by the role the table gives them, e.g. 'primary' for the benchmark's own tests and a diagnostic role for control runs reported beside them."
+        },
+        "normalization": {
+          "type": "string",
+          "description": "What the verifier masked or normalized before comparing (timestamps, undefined padding, cprnc's field comparison), so that 'identical' is never read as byte-for-byte when it was not."
+        },
+        "ungated": { "$ref": "#/$defs/ungatedUnits" },
+        "gating": { "type": "boolean" },
+        "note": { "type": "string" }
+      },
+      "required": ["check", "verifier", "roles", "gating"],
       "additionalProperties": false
     },
 

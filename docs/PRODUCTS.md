@@ -21,6 +21,7 @@ schemas/benchmark.TEMPLATE.yaml   an annotated benchmark to start from
 | `clm-ml-jax/` | 2, schema-valid but not yet evaluable: the case commits a merged verdict-string file, not the engine's schema-1 summary | none |
 | `pycam5/` | 0 — bitwise whole-model cases, not written yet | none |
 | `freecam/` | 0 — not written yet | none |
+| `<system>-numpy/`, fifteen of them (qe, mfc, njoy, ramses, duo, cvmix, marbl, rrtmg, cosp2, carma, fates, ww3, cism, camsima, clubb) | 18 output-verdict benchmarks backfilled by `tools/backfill_wave24.py`: one per system, three for CAM-SIMA, two for CLUBB | `unreleased-783ef4bb` each (RecastEngine-Pro `783ef4b`), `reconstructed`; rrtmg-numpy FAIL, the rest PASS |
 
 `elm-jax/` is added when that case repository exists (`CORRECTNESS-ORGANIZATION.md`
 step 7).
@@ -36,9 +37,13 @@ it measured; the benchmark decides which of those measurements gate. `make_manif
 copies the `acceptance` block into the record, so changing a criterion means editing a
 benchmark, never editing an acceptance record.
 
-`../schemas/benchmark.TEMPLATE.yaml` has both shapes: `bitwise` for a whole-model run pair, and
+`../schemas/benchmark.TEMPLATE.yaml` has three shapes: `bitwise` for a whole-model run pair,
 `unit-differential` for a RecastEngine case, whose measurements are the verdicts in the case
-repository's summaries.
+repository's summaries, and `output-verdict` for a run judged by a case kit's own verifier,
+whose measurements are that verifier's per-run verdicts. The last is how the wave24
+application validations were backfilled (`tools/backfill_wave24.py`, the `<system>-numpy`
+products): their outputs and logs are gone, the verdicts are what survived, and every
+record built that way is `reconstructed`.
 
 ### Benchmark format
 

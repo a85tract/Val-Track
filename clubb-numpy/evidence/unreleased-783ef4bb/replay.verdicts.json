@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "verifier": "clubb boundary harness, sha256 edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+  "runs": [
+    {
+      "run": "bomex_initial",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bomex_initial 20/20: 260720/260720 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 260720,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "bomex_developed",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bomex_developed 20/20: 260720/260720 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 260720,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "cgils_s6",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "cgils_s6 20/20: 192980/192980 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 192980,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "arm",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "arm 20/20: 448340/448340 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 448340,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "dycoms2",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "dycoms2 20/20: 135860/135860 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 135860,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "bomex_e3sm",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bomex_e3sm 20/20: 260720/260720 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 260720,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "gabls2_scalars",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "gabls2_scalars 10/10: 660830/660830 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 10,
+      "values_compared": 660830,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    },
+    {
+      "run": "bomex_multicol4",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bomex_multicol4 20/20: 1042880/1042880 bit-identical values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 20,
+      "values_compared": 1042880,
+      "source": "wave24/scope/clubb_wave24_replay150_stdout.txt"
+    }
+  ]
+}

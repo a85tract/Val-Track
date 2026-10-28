@@ -34,6 +34,7 @@ docs/                         products, architecture, ownership, migration histo
 | clubb-jax | 15 | `unreleased-99c8b22f`: 15 cases, PASS, security `NOT_RUN` |
 | clm-ml-jax | 2 | none yet: the case does not commit the engine's schema-1 summary (`clm-ml-jax/README.md`) |
 | pycam5, freecam | 0 | none yet |
+| 15 `<system>-numpy` products: qe, mfc, njoy, ramses, duo, cvmix, marbl, rrtmg, cosp2, carma, fates, ww3, cism, camsima, clubb | 18 (output-verdict) | `unreleased-783ef4bb` each, backfilled from the wave24 application validation, `reconstructed`: 14 PASS, rrtmg-numpy FAIL (one LW run, `rrtmg-numpy/README.md`), security `NOT_RUN` |
 
 ## How a record is made and checked
 

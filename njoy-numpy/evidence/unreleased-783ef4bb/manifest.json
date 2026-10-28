@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "reconstructed",
+  "artifact": {
+    "name": "njoy-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "NJOY2016",
+    "commit_or_tag": "ac5adf5f33d893e42f2eed7fb286b0d51c7580da",
+    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy"
+  },
+  "cc_test": {
+    "version": "unreleased-53515314",
+    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+  },
+  "environment": {
+    "machine": "Alpine (CU Boulder Research Computing), Linux el8_10 x86_64",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3",
+    "compiler": "gfortran 14.2.0 (/curc/sw/install/gcc/14.2.0)"
+  },
+  "cases": [
+    {
+      "id": "njoy",
+      "benchmark": "njoy-numpy/benchmarks/njoy.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "01",
+              "02",
+              "09",
+              "10",
+              "01 tapes",
+              "02 tapes",
+              "09 tapes",
+              "10 tapes"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+            "roles": [
+              "primary",
+              "tape_outputs"
+            ],
+            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "8 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "8 of 8 runs identical (41 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "njoy.verdicts.json",
+            "md5": "b19408326a919c942f60829dcefa3465",
+            "bytes": 3319
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T05:01:39Z",
+  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: the guard_o5f run on Alpine; the time is when its prep (job 33422506) finished, as the job header records. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+}

@@ -962,6 +962,125 @@ def test_ungated_units_are_skipped_and_named_but_must_still_be_present(workspace
 
 
 # --------------------------------------------------------------------------
+# output-verdict cases: a case kit's verdict table as the comparator
+
+
+VERDICT_RULES = [
+    {"check": "run_set_equal", "runs": ["a", "b", "a zero-heap"], "gating": True},
+    {"check": "runs_identical", "verifier": "verify_insitu", "roles": ["primary"],
+     "normalization": "timestamps masked", "gating": True},
+    {"check": "runs_identical", "verifier": "verify_insitu", "roles": ["diagnostic"],
+     "gating": False, "note": "control runs; reported, not gated"},
+]
+
+
+def verdict_table(tmp_path, b_verdict: str = "identical", verifier: str = "verify_insitu",
+                  schema: int = 1) -> Path:
+    """A synthetic table: two primary runs and one diagnostic control run."""
+    runs = [
+        {"run": "a", "role": "primary", "verdict": "identical", "reported": "IDENTICAL 2/2",
+         "outputs_compared": 2, "outputs_identical": 2},
+        {"run": "b", "role": "primary", "verdict": b_verdict, "reported": b_verdict,
+         "outputs_compared": 3, "outputs_identical": 3 if b_verdict == "identical" else 2},
+        {"run": "a zero-heap", "role": "diagnostic", "verdict": "different",
+         "reported": "False", "outputs_compared": None, "outputs_identical": None},
+    ]
+    path = tmp_path / "verdicts.json"
+    path.write_text(json.dumps({"schema": schema, "verifier": verifier, "runs": runs}))
+    return path
+
+
+def verdict_benchmark(workspace, case_id: str, rules) -> Path:
+    directory = workspace["cc_test"] / "toy-numpy" / "benchmarks"
+    directory.mkdir(parents=True, exist_ok=True)
+    document = {
+        "id": case_id,
+        "product": "toy-numpy",
+        "description": "synthetic output-verdict case for the test suite",
+        "case": {"kit": "toy"},
+        "reference": {"model": "toy, native build",
+                      "provenance": "the same source tree, built without translation"},
+        "acceptance": {"kind": "output-verdict", "verdict_schema": 1, "rules": rules},
+    }
+    path = directory / (case_id + ".json")
+    path.write_text(json.dumps(document, indent=2))
+    return path
+
+
+def test_output_verdict_round_trip_pass(workspace, tmp_path, capsys):
+    verdict_benchmark(workspace, "toy", VERDICT_RULES)
+    table = verdict_table(tmp_path)
+
+    assert make_manifest.main(unit_argv(workspace, "toy", table, product="toy-numpy")) == 0
+    case, = written_manifest(workspace, product="toy-numpy")["cases"]
+    assert case["result"]["status"] == "PASS"
+    checks = case["result"]["checks"]
+    assert checks[1]["detail"] == "2 of 2 runs identical (5 output files compared)"
+    # A differing control run is reported against a non-gating rule and gates nothing.
+    assert checks[2]["passed"] is False and "differ: a zero-heap (False)" in checks[2]["detail"]
+    fingerprint, = case["outputs"]["files"]
+    assert fingerprint["name"] == "verdicts.json"
+    assert fingerprint["md5"] == make_manifest.md5_file(table)
+
+    path = workspace["cc_test"] / "toy-numpy" / "evidence" / workspace["version"] / "manifest.json"
+    capsys.readouterr()
+    assert verify_evidence.main([str(path)]) == 0
+    assert "ERROR" not in capsys.readouterr().out
+
+
+def test_output_verdict_a_differing_primary_run_fails(workspace, tmp_path):
+    verdict_benchmark(workspace, "toy", VERDICT_RULES)
+
+    assert make_manifest.main(
+        unit_argv(workspace, "toy", verdict_table(tmp_path, "different"), product="toy-numpy")) == 1
+    case, = written_manifest(workspace, product="toy-numpy")["cases"]
+    assert case["result"]["status"] == "FAIL"
+    assert case["result"]["checks"][1]["detail"].endswith("; differ: b (different)")
+
+
+def test_output_verdict_from_another_verifier_is_error(workspace, tmp_path):
+    verdict_benchmark(workspace, "toy", VERDICT_RULES)
+    table = verdict_table(tmp_path, verifier="cprnc")
+
+    assert make_manifest.main(unit_argv(workspace, "toy", table, product="toy-numpy")) == 2
+    case, = written_manifest(workspace, product="toy-numpy")["cases"]
+    assert case["result"]["status"] == "ERROR"
+    assert "from 'cprnc' but the benchmark names 'verify_insitu'" in case["result"]["error"]
+
+
+def test_output_verdict_narrower_run_set_is_not_a_pass(workspace, tmp_path):
+    rules = json.loads(json.dumps(VERDICT_RULES))
+    rules[0]["runs"].append("c")
+    verdict_benchmark(workspace, "toy", rules)
+
+    assert make_manifest.main(
+        unit_argv(workspace, "toy", verdict_table(tmp_path), product="toy-numpy")) == 1
+    case, = written_manifest(workspace, product="toy-numpy")["cases"]
+    assert case["result"]["checks"][0]["detail"] == "missing from the table: c"
+
+
+def test_output_verdict_ungated_run_is_skipped_and_named(workspace, tmp_path):
+    rules = json.loads(json.dumps(VERDICT_RULES))
+    rules[1]["ungated"] = {"b": {"reason": "the reference reads undefined storage"}}
+    verdict_benchmark(workspace, "toy", rules)
+
+    assert make_manifest.main(
+        unit_argv(workspace, "toy", verdict_table(tmp_path, "different"), product="toy-numpy")) == 0
+    case, = written_manifest(workspace, product="toy-numpy")["cases"]
+    assert case["result"]["checks"][1]["detail"] == (
+        "1 of 1 runs identical (2 output files compared); ungated: b")
+
+
+def test_output_verdict_wrong_table_schema_writes_nothing(workspace, tmp_path, capsys):
+    verdict_benchmark(workspace, "toy", VERDICT_RULES)
+
+    assert make_manifest.main(
+        unit_argv(workspace, "toy", verdict_table(tmp_path, schema=2), product="toy-numpy")) == 2
+    assert "verdict table with schema 1 (found 2)" in capsys.readouterr().err
+    assert not list(workspace["cc_test"].glob("*/evidence"))
+
+
+# --------------------------------------------------------------------------
 # the acceptance-record index
 
 

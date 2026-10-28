@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "reconstructed",
+  "artifact": {
+    "name": "cism-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CISM",
+    "commit_or_tag": "46e27de479f061ce7c0e96a148d3e7af7f65e461",
+    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy"
+  },
+  "cc_test": {
+    "version": "unreleased-53515314",
+    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+  },
+  "environment": {
+    "machine": "Alpine (CU Boulder Research Computing), Linux el8_10 x86_64",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3"
+  },
+  "cases": [
+    {
+      "id": "cism",
+      "benchmark": "cism-numpy/benchmarks/cism.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "halfar-HO-t0 outermost, the merged plan",
+              "halfar-HO-t1 outermost, the merged plan",
+              "halfar-HO t5",
+              "halfar-HO t5 restart"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+            "roles": [
+              "primary",
+              "restart_output"
+            ],
+            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+            "roles": [
+              "short_run_diagnostic"
+            ],
+            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
+            "gating": false,
+            "note": "control and overlap runs reported beside the tests; they do not gate"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "4 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "2 of 2 runs identical (4 output files compared)"
+          },
+          {
+            "check": "runs_identical",
+            "gating": false,
+            "passed": true,
+            "detail": "2 of 2 runs identical (6 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "cism.verdicts.json",
+            "md5": "a1c86fe8074de89849d7fa6deb6e18b0",
+            "bytes": 1931
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T05:50:48Z",
+  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: verifier job cand-o5v-cism-783ef4bb; the time is when the job finished. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+}

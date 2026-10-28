@@ -1,0 +1,3 @@
+target	layer	role	case	engine_commit	benchmark_runs	output_files	delegated_calls	compared_values	raw_bytes_known	files_with_sizes	raw_bytes_total	exact_compared_bytes	verdict	source	notes	f64_points	int32_points
+marbl	in_situ	primary	ccs outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	2	12	未查到	未查到	0	未查到	未查到	IDENTICAL 2/2	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
+marbl	in_situ	primary	init outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	1	1	未查到	未查到	0	未查到	未查到	IDENTICAL 1/1	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		

@@ -1,0 +1,31 @@
+# kessler: CAM-SIMA with Kessler physics, outfrq test.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: kessler
+product: camsima-numpy
+description: CAM-SIMA with Kessler physics, outfrq test
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: verifier job cand-o5w/o5w-derecho; the time is when the job finished
+  runs: 1 (primary 1)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: CAM-SIMA (Kessler)
+  commit_or_tag: 47e1e6303951d999f6939bdffff829f682a2e081
+  provenance: 'the case kit''s native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy; components: CAM-SIMA 47e1e6303951,
+    atmospheric_physics 3fd57dde51ea, ccpp-framework 766261cf0433'
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - outfrq_kessler_derecho
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier with cprnc (Derecho)
+    roles:
+    - primary
+    normalization: cprnc compares the history files' numeric fields; the atmosphere log is normalized
+    gating: true

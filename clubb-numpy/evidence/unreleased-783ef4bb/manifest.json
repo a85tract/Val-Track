@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "reconstructed",
+  "artifact": {
+    "name": "clubb-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CLUBB_core, larson-group/clubb_release",
+    "commit_or_tag": "8ab3902e812c2883976b4f1f57c085d682666d92",
+    "provenance": "dump-replay recordings of clubb_standalone (clubb-jax bench/out/fortran), built from 8ab3902; the candidate replays them through the generated NumPy"
+  },
+  "cc_test": {
+    "version": "unreleased-53515314",
+    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+  },
+  "environment": {
+    "machine": "Linux workstation (host not recorded)"
+  },
+  "cases": [
+    {
+      "id": "replay",
+      "benchmark": "clubb-numpy/benchmarks/replay.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "bomex_initial",
+              "bomex_developed",
+              "cgils_s6",
+              "arm",
+              "dycoms2",
+              "bomex_e3sm",
+              "gabls2_scalars",
+              "bomex_multicol4"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "clubb boundary harness, sha256 edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+            "roles": [
+              "primary"
+            ],
+            "normalization": "none: binary64 bit patterns and exact int32 values of every argument at the routine boundary",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "8 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "8 of 8 runs identical"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: wave24/scope/clubb_wave24/aggregate.json",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "replay.verdicts.json",
+            "md5": "80b15a61f28d653cf2f0fdf1cb0ca407",
+            "bytes": 3048
+          }
+        ]
+      }
+    },
+    {
+      "id": "feedback",
+      "benchmark": "clubb-numpy/benchmarks/feedback.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "bomex",
+              "bomex_e3sm",
+              "bomex_multicol4",
+              "arm",
+              "dycoms2",
+              "cgils_s6",
+              "gabls2"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "clubb boundary harness, sha256 edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+            "roles": [
+              "primary"
+            ],
+            "normalization": "none: binary64 bit patterns and exact int32 values of every argument at the routine boundary",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "7 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "7 of 7 runs identical"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: wave24/scope/clubb_wave24/aggregate.json",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "feedback.verdicts.json",
+            "md5": "636f29db6aab0344984de601155fa7a6",
+            "bytes": 2749
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-07T23:55:48Z",
+  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: no run time was recorded; the time is when the bitexact_scale inventory read the aggregate, so the runs are no later. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+}

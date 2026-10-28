@@ -1,0 +1,43 @@
+# cism: halfar-HO t5 with the merged plan, its restart, and the t0/t1 short runs.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: cism
+product: cism-numpy
+description: halfar-HO t5 with the merged plan, its restart, and the t0/t1 short runs
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: verifier job cand-o5v-cism-783ef4bb; the time is when the job finished
+  runs: 4 (primary 1, restart_output 1, short_run_diagnostic 2)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: CISM
+  commit_or_tag: 46e27de479f061ce7c0e96a148d3e7af7f65e461
+  provenance: the case kit's native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - halfar-HO-t0 outermost, the merged plan
+    - halfar-HO-t1 outermost, the merged plan
+    - halfar-HO t5
+    - halfar-HO t5 restart
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    - restart_output
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - short_run_diagnostic
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: false
+    note: control and overlap runs reported beside the tests; they do not gate

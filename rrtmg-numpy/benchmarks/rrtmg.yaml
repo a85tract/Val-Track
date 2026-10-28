@@ -1,0 +1,86 @@
+# rrtmg: the RRTMG LW and SW benchmark configurations, outermost plan.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: rrtmg
+product: rrtmg-numpy
+description: the RRTMG LW and SW benchmark configurations, outermost plan
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: verifier job cand-o5w/o5w-alpine-a; the time is when the job finished
+  runs: 44 (primary 30, zero_heap_diagnostic 14)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: RRTMG (LW, SW)
+  commit_or_tag: 958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd
+  provenance: 'the case kit''s native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy; components: LW 958edb1ad161, SW 286e84ed14f6'
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - LW ICRCCM_sonde outermost
+    - LW MLS-cld5-imca0-icld2 outermost
+    - LW MLS-cld5-imca1-icld2 outermost
+    - LW MLS-cld7-imca1-icld2 outermost
+    - LW MLS-cld7-imca1-icld4-idcor0 outermost
+    - LW MLS-cld7-imca1-icld5-idcor0 outermost
+    - LW MLS-cld7-imca1-icld5-idcor1 outermost
+    - LW MLS-clr outermost
+    - LW MLS-clr-aer12 outermost
+    - LW MLS-clr-xsec outermost
+    - LW MLS-clr-idrv1 outermost
+    - LW MLW-clr outermost
+    - LW SAW-clr outermost
+    - LW TROP-clr outermost
+    - SW MLS-cld6-imca0-icld2 outermost
+    - SW MLS-cld5-imca1-icld2 outermost
+    - SW MLS-cld7-imca1-icld2 outermost
+    - SW MLS-cld7-imca1-icld5-idcor0 outermost
+    - SW MLS-cld7-imca1-icld5-idcor1 outermost
+    - SW MLS-clr outermost
+    - SW MLS-clr-aer12 outermost
+    - SW MLS-clr-sza45-isolvar0_tsi_avg outermost
+    - SW MLS-clr-sza45-isolvar1_tsi_max outermost
+    - SW MLS-clr-sza45-isolvar1_tsi_min outermost
+    - SW MLS-clr-sza45-isolvar2_01Jan1950 outermost
+    - SW MLS-clr-sza45-isolvar3_bndscl_tsi_max outermost
+    - SW MLS-clr-sza65 outermost
+    - SW MLW-clr outermost
+    - SW SAW-clr outermost
+    - SW TROP-clr outermost
+    - LW ICRCCM_sonde
+    - LW MLS-cld5-imca0-icld2
+    - LW MLS-cld5-imca1-icld2
+    - LW MLS-cld7-imca1-icld2
+    - LW MLS-cld7-imca1-icld4-idcor0
+    - LW MLS-cld7-imca1-icld5-idcor0
+    - LW MLS-cld7-imca1-icld5-idcor1
+    - LW MLS-clr
+    - LW MLS-clr-aer12
+    - LW MLS-clr-idrv1
+    - LW MLS-clr-xsec
+    - LW MLW-clr
+    - LW SAW-clr
+    - LW TROP-clr
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true
+    note: 'LW MLS-cld5-imca0-icld2 differs by one value (max abs 1.0e-07) under the default allocator:
+      the native program reads undefined heap storage. Under zero-filled malloc all 14 LW configurations
+      are byte-identical (the zero_heap_diagnostic runs; OOPSLA2027_evidence wave24/rrtmg_initialization).
+      The run stays gated: ungating it is a maintainer''s decision, not something a backfill does.'
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - zero_heap_diagnostic
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: false
+    note: control and overlap runs reported beside the tests; they do not gate

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+  "runs": [
+    {
+      "run": "ccs outermost",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "IDENTICAL 2/2",
+      "outputs_compared": 2,
+      "outputs_identical": 2,
+      "delegated_calls": 12,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json",
+      "note": "Returned verifier table; raw sizes not recorded. Ordinary heap condition."
+    },
+    {
+      "run": "init outermost",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "IDENTICAL 1/1",
+      "outputs_compared": 1,
+      "outputs_identical": 1,
+      "delegated_calls": 1,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json",
+      "note": "Returned verifier table; raw sizes not recorded. Ordinary heap condition."
+    }
+  ]
+}

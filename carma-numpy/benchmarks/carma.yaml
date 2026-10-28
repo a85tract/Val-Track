@@ -1,0 +1,77 @@
+# carma: the CARMA test programs.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: carma
+product: carma-numpy
+description: the CARMA test programs
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: verifier job cand-o5w/o5w-alpine-b; the time is when the job finished
+  runs: 33 (ordinary_overlap_diagnostic 6, primary 27)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: CARMA
+  commit_or_tag: 26b30b2738566de5d3979c1b2ccf191dd78c1207
+  provenance: 'the case kit''s native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy; components: wrapper 26b30b273856,
+    base 7b12e0cce0f8'
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - BC2GTEST
+    - BCOCTEST
+    - CETEST
+    - COAGTEST
+    - DRYDEPTEST
+    - FALLTEST
+    - FRACTALMICROTEST
+    - FRACTALOPTICSTEST
+    - GROWCLRTEST
+    - GROWCLRTEST [ordinary_overlap_diagnostic]
+    - GROWINTEST
+    - GROWINTEST [ordinary_overlap_diagnostic]
+    - GROWSUBTEST
+    - GROWSUBTEST [ordinary_overlap_diagnostic]
+    - GROWTEST
+    - GROWTEST [ordinary_overlap_diagnostic]
+    - KAPPAWETRTEST
+    - MIETEST
+    - NUC2TEST
+    - NUCTEST
+    - NUCTEST [ordinary_overlap_diagnostic]
+    - PHEATTEST
+    - PHEATTEST [ordinary_overlap_diagnostic]
+    - SCFALLTEST
+    - SIGMADRYDEPTEST
+    - SIGMAFALLTEST
+    - SULFATETEST
+    - SULFATE_CCDON_TEST
+    - SULFATE_VEHKAMAKI_TEST
+    - SULFHETTEST
+    - SULFHET_VEHKAMAKI_TEST
+    - SWELLTEST
+    - VDIFTEST
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true
+    note: For GROWCLRTEST, GROWINTEST, GROWSUBTEST, GROWTEST, NUCTEST and PHEATTEST the gated run is the
+      zero-heap one (malloc zero-filled in both processes), as the table selects it. The default-allocator
+      runs of those tests are the ordinary_overlap_diagnostic rows, and GROWTEST and PHEATTEST differ
+      there - the same undefined-storage reading that keeps RRTMG's MLS-cld5-imca0-icld2 failing, where
+      the table selected the default-allocator run instead.
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - ordinary_overlap_diagnostic
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: false
+    note: control and overlap runs reported beside the tests; they do not gate

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "verifier": "candidates in-situ verifier with cprnc (Derecho)",
+  "runs": [
+    {
+      "run": "outfrq_kessler_derecho",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "normalized/cprnc identical",
+      "outputs_compared": 3,
+      "outputs_identical": 3,
+      "delegated_calls": 641,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/derecho/outfrq_kessler_derecho/result_outermost.json",
+      "note": "Two history files plus one atmosphere log; TestStatus/snapshot predicates are additional checks, not extra benchmark cases. Known bytes cover the two raw history files only."
+    }
+  ]
+}

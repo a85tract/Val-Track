@@ -61,6 +61,17 @@ benchmark that describe different criteria cannot yield a PASS. The engine's own
 per-verdict files are `recast.evidence.v1` records, a different document; Val-Track never
 reads those.
 
+**Output-verdict acceptance reads a case kit's verdicts.** Some validations were judged by
+the case's own verifier — the native program and the translated one run side by side, output
+files compared after the kit's normalization — and only the verdicts outlived the run. An
+`output-verdict` block names the verdict-table schema it reads (`verdict_schema: 1`) and
+rules over its runs: `run_set_equal` (always gating, as `unit_set_equal` is) and
+`runs_identical`, which names the verifier, the run roles it judges, and the normalization
+the verifier applied, so that "identical" is never read as byte-for-byte when it was not.
+Control runs reported beside the tests take a second, non-gating `runs_identical`. A table
+from a different verifier than the rule names is unevaluable. Val-Track holds no digest of
+those outputs, so such a record cannot be checked against a re-run the way a bitwise one can.
+
 **Statistical acceptance is provisional and blocked.** `acceptance.v1.json` defines
 placeholder rules for Pipeline 2 derived from the dashboard figures, but the tolerance
 semantics, norm, compared variable set and spread test are not agreed (decision D4). The

@@ -2,7 +2,7 @@
 # The `acceptance` block must validate against ../schemas/acceptance.v1.json.
 
 id: TODO-case-id            # must equal this file's stem
-product: TODO               # pycam5 | freecam | clubb-jax | clm-ml-jax | elm-jax
+product: TODO               # pycam5 | freecam | clubb-jax | clm-ml-jax | elm-jax | <system>-numpy
 description: TODO           # one line, shown in the generated evidence index
 
 case:
@@ -83,3 +83,25 @@ acceptance:
 #     - check: nan_mask_equal
 #       verifier: differential.tolerance
 #       gating: true
+
+# ---------------------------------------------------------------------------
+# Output-verdict shape (the <system>-numpy backfill). The comparator is the case
+# kit's own verifier; the measurements are its per-run verdicts, in a verdict
+# table (`schema: 1`). Runs and roles are named exactly as the table spells them.
+# ---------------------------------------------------------------------------
+# acceptance:
+#   kind: output-verdict
+#   verdict_schema: 1
+#   rules:
+#     - check: run_set_equal           # always gating: a PASS over fewer runs is not a PASS
+#       runs: ["Bryan-Lewis outermost", "double_diff outermost"]
+#       gating: true
+#     - check: runs_identical
+#       verifier: "candidates in-situ verifier (alpine/verify_insitu.sh)"
+#       roles: [primary]
+#       normalization: "time fields and undefined padding, as the kit records them"
+#       gating: true
+#     - check: runs_identical          # control runs beside the tests
+#       verifier: "candidates in-situ verifier (alpine/verify_insitu.sh)"
+#       roles: [zero_heap_diagnostic]
+#       gating: false

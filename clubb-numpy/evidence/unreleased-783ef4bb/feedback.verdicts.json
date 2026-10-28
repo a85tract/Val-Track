@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "verifier": "clubb boundary harness, sha256 edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+  "runs": [
+    {
+      "run": "bomex",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 360/360 steps bit-identical, 4692960/4692960 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 360,
+      "values_compared": 4692960,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "bomex_e3sm",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 360/360 steps bit-identical, 4692960/4692960 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 360,
+      "values_compared": 4692960,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "bomex_multicol4",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 360/360 steps bit-identical, 18771840/18771840 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 360,
+      "values_compared": 18771840,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "arm",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 870/870 steps bit-identical, 19502790/19502790 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 870,
+      "values_compared": 19502790,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "dycoms2",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 360/360 steps bit-identical, 2445480/2445480 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 360,
+      "values_compared": 2445480,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "cgils_s6",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 2880/2880 steps bit-identical, 27789120/27789120 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 2880,
+      "values_compared": 27789120,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    },
+    {
+      "run": "gabls2",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "bit_identical: 3540/3540 steps bit-identical, 233933820/233933820 values",
+      "outputs_compared": null,
+      "outputs_identical": null,
+      "delegated_calls": 3540,
+      "values_compared": 233933820,
+      "source": "wave24/scope/clubb_wave24/aggregate.json"
+    }
+  ]
+}
