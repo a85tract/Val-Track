@@ -75,6 +75,18 @@ fingerprinted into `outputs.files`, so the manifest names the record it was
 built from. A summary with a different `schema` value, or a unit with no verdict
 from the verifier a rule names, is unevaluable — never a pass.
 
+Output-verdict cases
+--------------------
+For a benchmark whose acceptance `kind` is `output-verdict`, the comparator JSON
+is a verdict table (`schema: 1`): the verdicts a case kit's own verifier gave,
+one entry per run — `run`, `role`, `verdict` (`identical` or `different`), the
+verdict as the verifier `reported` it, and `outputs_compared` /
+`outputs_identical` where it counted them — under one table-level `verifier`.
+It is what is left of a run whose outputs and raw logs are gone, so the table is
+fingerprinted like a summary and the record is normally `reconstructed`. A table
+from a verifier other than the one a rule names, or a verdict that is neither
+`identical` nor `different`, is unevaluable.
+
 A rule the comparator did not measure
 -------------------------------------
 A rule whose measurement is absent (a scope that matched no file, a gating timer
@@ -399,10 +411,66 @@ def _unit_differential_check(rule: dict, summary: dict) -> Tuple[Optional[bool],
     raise Unevaluable("no evaluator for check %r" % check)
 
 
+def table_runs(table: dict) -> List[dict]:
+    runs = table.get("runs")
+    if not isinstance(runs, list) or not runs:
+        raise Unevaluable("the verdict table lists no runs")
+    return runs
+
+
+def _output_verdict_check(rule: dict, table: dict) -> Tuple[Optional[bool], str]:
+    check = rule.get("check")
+    runs = table_runs(table)
+
+    if check == "run_set_equal":
+        present = {str(r.get("run")) for r in runs}
+        expected = set(rule["runs"])
+        parts = []
+        if expected - present:
+            parts.append("missing from the table: %s" % ", ".join(sorted(expected - present)))
+        if present - expected:
+            parts.append("not named by the benchmark: %s" % ", ".join(sorted(present - expected)))
+        return not parts, "; ".join(parts) or "%d runs, as the benchmark names them" % len(expected)
+
+    if check == "runs_identical":
+        if table.get("verifier") != rule["verifier"]:
+            raise Unevaluable(
+                "the table's verdicts are from %r but the benchmark names %r; the benchmark "
+                "and the run do not describe the same criterion"
+                % (table.get("verifier"), rule["verifier"]))
+        skip = set(rule.get("ungated") or {})
+        judged = [r for r in runs
+                  if r.get("role") in rule["roles"] and str(r.get("run")) not in skip]
+        if not judged:
+            raise Unevaluable("no run of role %s is judged; nothing was compared"
+                              % ", ".join(rule["roles"]))
+        differing: List[str] = []
+        outputs = 0
+        for run in judged:
+            name = str(run.get("run"))
+            verdict = run.get("verdict")
+            if verdict not in ("identical", "different"):
+                raise Unevaluable("run %s: verdict %r is neither identical nor different"
+                                  % (name, verdict))
+            compared, matched = run.get("outputs_compared"), run.get("outputs_identical")
+            if verdict == "different" or (compared is not None and matched != compared):
+                differing.append("%s (%s)" % (name, run.get("reported") or verdict))
+            outputs += int(compared or 0)
+        detail = "%d of %d runs identical" % (len(judged) - len(differing), len(judged))
+        if outputs:
+            detail += " (%d output files compared)" % outputs
+        if differing:
+            detail += "; differ: " + ", ".join(differing)
+        return not differing, detail + _ungated_note(rule)
+
+    raise Unevaluable("no evaluator for check %r" % check)
+
+
 EVALUATORS = {
     "bitwise": _bitwise_check,
     "statistical": _statistical_check,
     "unit-differential": _unit_differential_check,
+    "output-verdict": _output_verdict_check,
 }
 
 
@@ -664,6 +732,13 @@ def build_case(case_id: str, comparator_json: Path, args) -> Tuple[dict, dict, L
                 "unit-differential case reads the file `recast run --summary` writes"
                 % (comparator_json, expected_schema,
                    comparison.get("schema") if isinstance(comparison, dict) else type(comparison).__name__))
+    if acceptance.get("kind") == "output-verdict":
+        expected_schema = acceptance.get("verdict_schema")
+        if not isinstance(comparison, dict) or comparison.get("schema") != expected_schema:
+            raise BuildError(
+                "%s is not a verdict table with schema %r (found %r)"
+                % (comparator_json, expected_schema,
+                   comparison.get("schema") if isinstance(comparison, dict) else type(comparison).__name__))
 
     case: Dict[str, object] = {
         "id": case_id,
@@ -692,8 +767,8 @@ def build_case(case_id: str, comparator_json: Path, args) -> Tuple[dict, dict, L
             "case %r has no outputs location; pass --outputs-location or "
             "--case-outputs %s=DIR" % (case_id, case_id))
     files: List[dict] = []
-    if acceptance.get("kind") == "unit-differential":
-        # The summary is the record this case was judged from; name it.
+    if acceptance.get("kind") in ("unit-differential", "output-verdict"):
+        # The summary or verdict table is the record this case was judged from; name it.
         files.append({"name": comparator_json.name, "md5": md5_file(comparator_json),
                       "bytes": comparator_json.stat().st_size})
     if outputs_dir is not None:

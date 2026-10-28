@@ -1,0 +1,40 @@
+# replay: independent replay of 150 recorded calls over eight trajectories.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: replay
+product: clubb-numpy
+description: independent replay of 150 recorded calls over eight trajectories
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: no run time was recorded; the time is when the bitexact_scale inventory read the aggregate,
+    so the runs are no later
+  runs: 8 (primary 8)
+  extension: recast-clubb cbca7b6
+  notes: backfilled from a85tract/OOPSLA2027_evidence wave24/scope/clubb_wave24/aggregate.json
+reference:
+  model: CLUBB_core, larson-group/clubb_release
+  commit_or_tag: 8ab3902e812c2883976b4f1f57c085d682666d92
+  provenance: dump-replay recordings of clubb_standalone (clubb-jax bench/out/fortran), built from 8ab3902;
+    the candidate replays them through the generated NumPy
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - bomex_initial
+    - bomex_developed
+    - cgils_s6
+    - arm
+    - dycoms2
+    - bomex_e3sm
+    - gabls2_scalars
+    - bomex_multicol4
+    gating: true
+  - check: runs_identical
+    verifier: clubb boundary harness, sha256 edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41
+    roles:
+    - primary
+    normalization: 'none: binary64 bit patterns and exact int32 values of every argument at the routine
+      boundary'
+    gating: true

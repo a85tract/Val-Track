@@ -1,0 +1,40 @@
+# mfc: nine MFC regression tests.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: mfc
+product: mfc-numpy
+description: nine MFC regression tests
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: the guard_o5f run on Alpine; the time is when its prep (job 33422506) finished, as the job
+    header records
+  runs: 9 (primary 9)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: MFC
+  commit_or_tag: 1ececa3456a5ee57807327a4deebacdd723d0fa6
+  provenance: the case kit's native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - D79C3E6F
+    - 3AE495F4
+    - 5EC236F2
+    - 48CCE072
+    - AED93D34
+    - C5B79059
+    - 727F72ED
+    - A60691E7
+    - 3FC6FC4A
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true

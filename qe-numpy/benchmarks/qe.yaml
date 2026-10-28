@@ -1,0 +1,35 @@
+# qe: XClib all_terms and derivative drivers, dft-d3 graphite.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: qe
+product: qe-numpy
+description: XClib all_terms and derivative drivers, dft-d3 graphite
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: the guard_o5f run on Alpine; the time is when its prep (job 33422506) finished, as the job
+    header records
+  runs: 4 (primary 4)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: Quantum ESPRESSO (XClib, dft-d3)
+  commit_or_tag: 61569eb480231b649c47f631df9c5c83537df461
+  provenance: the case kit's native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - d3
+    - terms
+    - deriv
+    - d3s
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true

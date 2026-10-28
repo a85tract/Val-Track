@@ -36,9 +36,13 @@ it measured; the benchmark decides which of those measurements gate. `make_manif
 copies the `acceptance` block into the record, so changing a criterion means editing a
 benchmark, never editing an acceptance record.
 
-`../schemas/benchmark.TEMPLATE.yaml` has both shapes: `bitwise` for a whole-model run pair, and
+`../schemas/benchmark.TEMPLATE.yaml` has three shapes: `bitwise` for a whole-model run pair,
 `unit-differential` for a RecastEngine case, whose measurements are the verdicts in the case
-repository's summaries.
+repository's summaries, and `output-verdict` for a run judged by a case kit's own verifier,
+whose measurements are that verifier's per-run verdicts. The last is how the wave24
+application validations were backfilled (`tools/backfill_wave24.py`, the `<system>-numpy`
+products): their outputs and logs are gone, the verdicts are what survived, and every
+record built that way is `reconstructed`.
 
 ### Benchmark format
 

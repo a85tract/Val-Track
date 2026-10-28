@@ -1,0 +1,40 @@
+# njoy: four NJOY2016 tests and their additional tapes.
+# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
+
+id: njoy
+product: njoy-numpy
+description: four NJOY2016 tests and their additional tapes
+case:
+  engine: 783ef4b (wave24-accepted)
+  campaign: the guard_o5f run on Alpine; the time is when its prep (job 33422506) finished, as the job
+    header records
+  runs: 8 (primary 4, tape_outputs 4)
+  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+reference:
+  model: NJOY2016
+  commit_or_tag: ac5adf5f33d893e42f2eed7fb286b0d51c7580da
+  provenance: the case kit's native build of the same staged source tree; the candidate is that driver
+    with the translated procedures delegated to the generated NumPy
+acceptance:
+  kind: output-verdict
+  verdict_schema: 1
+  rules:
+  - check: run_set_equal
+    runs:
+    - '01'
+    - '02'
+    - 09
+    - '10'
+    - 01 tapes
+    - 02 tapes
+    - 09 tapes
+    - 10 tapes
+    gating: true
+  - check: runs_identical
+    verifier: candidates in-situ verifier (alpine/verify_insitu.sh)
+    roles:
+    - primary
+    - tape_outputs
+    normalization: output files compared after the time fields and undefined padding each kit records
+      are normalized; not a claim that the raw files are byte-identical
+    gating: true
