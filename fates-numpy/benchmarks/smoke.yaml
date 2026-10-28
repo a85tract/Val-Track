@@ -1,0 +1,37 @@
+# fates-numpy / smoke: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: "smoke"
+product: "fates-numpy"
+description: "FATES leaf_biophys smoke test (DriveSmokeTestLeafBiophys.py --smoketest, 337,500 leaf photosynthesis tests): original vs translated program, 3 output files compared"
+case:
+  benchmark: "FATES functional_unit_testing/leaf_biophys smoke test: `python DriveSmokeTestLeafBiophys.py --fin leaf_biophys_controls.xml --smoketest` in fut/leaf_biophys, the driver unchanged, calling the FATES shared objects through ctypes (CtypesLeafBiophys.py); input leaf_biophys_controls.xml; grid SMOKE_LEAF_TEMPC_N=5 SMOKE_RH_N=5 SMOKE_PAR_ABS_N=5 SMOKE_GB_N=3 SMOKE_BTRAN_N=5 SMOKE_VCMAX25T_N=3 (the log: 2 conductance models, 2 pathways, stomatal/agross btran options, 5 leaf temperatures, 5 RH, 5 PAR, 3 gb, 5 BTRAN, 3 Vcmax25top; 'Running a total of 337500 tests', '0 Failures out of 337500'). Outputs compared: the driver's stdout leaf_smoke.log, and plotdata/DriveSmokeTestLeafBiophys.py.{plotdata.json,values.txt} written by the kit's matplotlib stand-in (pyshim: digest and values of every array the driver plots; the smoke driver plots none). The benchmark tree is cand-o1b's copy (drivers patched L1-L3 by its build.sh), copied into $ALPINE_SCRATCH/recast-cand/o5w/fates/proj by the job's STEPS=proj"
+  build: "Both programs built by recast.insitu build.shared exactly as functional_unit_testing/leaf_biophys/build_leafbiophys_objects.sh does, one shared object per source, in fut/leaf_biophys: `gfortran -shared -O3 -I bld/ -J bld/ -fPIC -ffp-contract=off -o bld/<X>.o <src>` for FatesConstantsMod, WrapShrMod, FatesUtilsMod, LeafBiophysicsMod, LeafBiophysSuppMod, FatesRadiationMemMod, TwoStreamMLPEMod (GNU Fortran 14.2.0, /curc/sw/install/gcc/14.2.0/bin/gfortran). Original: work/pure tree. Translated: work/project tree with LeafBiophysicsMod.F90, FatesUtilsMod.F90, WrapShrMod.F90 spliced (the delegated subprograms call the bridge) plus bld/recast_insitu_bridge.so built with the same flags; 4.7 s build. Only LeafBiophysicsMod.o and its .mod differ between the two trees; the other six objects are byte-identical"
+  run: "recast.insitu (`python -m recast.insitu config.json <work> --label outermost`, from kit/run_case.sh smoke outermost outermost) runs the driver twice, OMP_NUM_THREADS=1: the original (runs/pure) and the translated (runs/outermost; the host loads recast_insitu_bridge.so with RTLD_GLOBAL first, so each delegated call goes to the NumPy translation in the same Python process), then compares case.compare under case.mask"
+  environment: "CU Boulder Alpine, partition acpu, QOS cpu-normal, constraint milan (node c3cpu-c15-u1-4), one process, OMP_NUM_THREADS=1; sbatch resources 4 CPUs / 24 GB / 45 min on the command line (sacct: 7 CPUs allocated, 24G); modules gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; Python 3.12.14 from $ALPINE_PROJECTS/recast-cand/venv-o5f (editable install of engine-o5f, COMMIT.txt 783ef4bb); TMPDIR=$SLURM_TMPDIR, XDG_CACHE_HOME=$ALPINE_SCRATCH/.cache; case environment MPLBACKEND=Agg, PYTHONPATH=<kit>/pyshim, FATES_PLOTDATA=<run>/plotdata, FATES_PLOTDATA_VALUES=1 and the SMOKE_* grid above; no heap protocol (no MALLOC_PERTURB_ / GLIBC_TUNABLES)"
+  engine: "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+  translation: "in-situ config kit/make_config.py smoke (delegate: outermost, units leafbiophysicsmod and fatesutilsmod, 22 reached rows from gcov, keep: none). Delegated (12): agrosspepc4, agrossrubiscoc3, agrossrubpc3, agrossrubpc4, getcanopygasparameters, getconstrainedvpress, getje_fvcb, leaflayerbiophysicalrates, leaflayermaintenancerespiration_ryan_1991, leaflayerphotosynthesis, qsat, stomatalcondmedlyn (344,700 NumPy calls, 337,500 of them leaflayerphotosynthesis). Inside NumPy as callees (9): cibisection, cifromanetdiffgrad, cifunc, ciminmax, ft1_f, fth25_f, fth_f, getje, stomatalcondballberry. Kept Fortran (1): fatesutilsmod quadraticrootssridharachary, the engine's reason: no caller of it found outside the reached set, and no delegated subprogram reaches it"
+  accepted_run: "Slurm job 33422762 (o5w-fates, cand-o5w-alpine-b), 2026-10-05 05:05:45-05:08:45 UTC, both runs: $ALPINE_SCRATCH/recast-cand/o5w/fates/work_smoke_outermost/runs/pure (original, 2.894 s) and .../runs/outermost (translated, 92.721 s); verdict IDENTICAL (the wave24 acceptance log). Not the first job 33422617 (work_smoke_outermost_noshim): its kit lacked pyshim/, both drivers stopped at `import matplotlib`"
+  notes: "Re-run: kit and job file the wave24 acceptance log (on Alpine $ALPINE_SCRATCH/recast-cand/o5w/fates/kit, md5s in kit/server/accepted/provenance_md5.txt), `sbatch --cpus-per-task=4 --mem=24G --time=00:45:00 --export=ALL,STEPS='proj smoke' fates_o2.sbatch`; STEPS=proj recopies proj/ and staged/ from cand-o1b's $ALPINE_SCRATCH/recast-cand/o1/fates (build_ref, work/staged). The Elapsed Time line of leaf_smoke.log is the driver's own process time and is the only masked text"
+reference:
+  model: "FATES (NGEET/fates), functional_unit_testing/leaf_biophys with biogeophys/LeafBiophysicsMod.F90 and main/FatesUtilsMod.F90"
+  commit_or_tag: "5a3c441ceeb141c35e87a33eeb2c168cc367b6f1"
+  provenance: "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate (the same recast.insitu invocation, the same Slurm job and node, immediately before the translated run)"
+acceptance:
+  kind: bitwise
+  rules:
+    - check: file_set_equal
+      scope: "{leaf_smoke.log,plotdata/*}"
+      gating: true
+    - check: numeric_md5_equal
+      scope: "plotdata/*"
+      dump_tool: "md5 of the file's bytes"
+      dump_format: "raw bytes"
+      gating: true
+    - check: numeric_md5_equal
+      scope: "leaf_smoke.log"
+      dump_tool: "md5 of the text after the kit's mask (recast.insitu.compare._masked, 783ef4bb: split on \\n, drop every line matching the line regex, join with \\n)"
+      dump_format: "case.mask leaf_smoke\\.log$::^Elapsed Time \\[s\\]:  -> drop lines matching /^Elapsed Time \\[s\\]: /"
+      gating: true
+    - check: timing_delta_pct
+      timers: ["wall_seconds"]
+      gating: false
+      note: "wall time of the original vs the translated run (2.894 s vs 92.721 s, from result_outermost.json; build excluded); reported, never gates"

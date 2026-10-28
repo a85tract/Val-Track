@@ -1,0 +1,78 @@
+# cism-numpy / halfar-ho-t5: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: "halfar-ho-t5"
+product: "cism-numpy"
+description: "CISM halfar-HO, first 5 model years: original vs translated program, 4 output files compared"
+case:
+  benchmark: >-
+    CISM (cism_driver) tests/halfar halfar-HO: the Halfar dome on Glissade's higher-order (Blatter-Pattyn) solver,
+    31 x 31 x 10 grid, dx = dy = 2 km, PCG (which_ho_sparse = 3), MPI 1 rank; run over its first 5 model years
+    (halfar.0031.config with `tend = 200.` replaced by `tend = 5.`, dt = 1, output frequency 5: records at years 0
+    and 5). Inputs: halfar.0031.config, halfar.0031.nc (initial state), trilinosOptions.xml,
+    LOCAsettings_trilinosOptions.xml, copied from $ALPINE_SCRATCH/recast-cand/o1/cism/run_base/halfar-HO.
+    Outputs compared: the files the run produces, halfar.0031.out.nc, halfar.0031.config.log and run.log (the
+    kit's case.compare); halfar.0031.nc is the input state and is not compared.
+  build: >-
+    Original: $ALPINE_SCRATCH/recast-cand/o1/cism/build/cism_driver/cism_driver (md5
+    fd324d6e285c00529f65e2fa3cd31f53), CISM's CMake build (MPI mode, Trilinos off, CISM front end, no GPTL) with
+    mpif90 of openmpi 5.0.6 over gfortran 14.2.0, CMAKE_Fortran_FLAGS "-g -O2 -ffree-line-length-none -fPIC
+    -fno-range-check -fallow-argument-mismatch -fallow-invalid-boz -ffp-contract=off", netcdf 4.9.2, openblas
+    0.3.28. Translated: `python -m recast.insitu config.json work` (RecastEngine-Pro 783ef4bb) rebuilds the same
+    source with the same CMake arguments and compiler, fflags "-g -O2 -ffree-line-length-none -fno-range-check
+    -fallow-argument-mismatch -fallow-invalid-boz" plus the engine's "-fPIC -ffp-contract=off"
+    (recast/insitu/build.py), and links the f2py extension recast_cism (CPython 3.12, recast_cism.cpython-312-x86_64-linux-gnu.so) into cism_driver.
+  run: >-
+    Slurm job 33422513 (insitu.sbatch STEP=run CASE=halfar-HO-t5 DELEGATE=outermost LABEL=outermost
+    WORK=w_t5_outer PARALLEL=1 ENGINE=o5i-783ef4bb, DROP_KEEP=glissade_slope_angle:glide_set_mask:init_velo:glissade_transport_setup_tracers:glissade_transport_finish_tracers):
+    recast.insitu runs the original `cism_driver halfar.0031.config` in work/runs/pure, then the translated program
+    with the same argument in work/runs/outermost, stdout to run.log, one after the other on the same node, and
+    compares case.compare after case.mask (recast.insitu.compare); then bench/compare_nc.py compares every netCDF
+    file value for value.
+  environment: >-
+    CU Boulder Alpine, partition acpu, qos cpu-normal, constraint milan (node c3cpu-c13-u1-3), 1 node,
+    1 task, 8 CPUs, 48 GB; modules gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28;
+    OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1
+    OMPI_MCA_rmaps_base_oversubscribe=1, LD_LIBRARY_PATH starting with openblas 0.3.28's lib; engine venv
+    $ALPINE_PROJECTS/recast-cand/venv-o5i-783ef4bb (numpy 2.5.3; engine-o5i-783ef4bb/COMMIT.txt 783ef4bb). No heap protocol.
+  engine: "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+  translation: >-
+    delegate: outermost, no keeps (the engine's own plan, work/insitu.json): 92 reached subprograms; 31 delegated
+    (the outermost reached rows, called from Fortran through f2py), 60 inside NumPy (their callees), 1 kept Fortran:
+    glissade_initialise (the flat plan has no spelling for the whole nested records it reads and writes --
+    model%general, model%numerics, model%parallel, model%projection -- for the 31 PRIVATE glissade_velo_higher
+    arrays it writes, or for the external calls handed `model`). 17 deferred blocks stay Fortran (13 in
+    glissade_initialise, glissade_tstep/B012 calc_lithot, to_column_format/B001, 2 random_number blocks in
+    glissade_calving). cism_parallel staged from parallel_mpi.F90 (PARALLEL=1) and translated with mpi_ranks 1.
+    In this run 13 delegated rows are called 18 times (glissade_tstep 5 calls, glissade_diagnostic_variable_solve 1).
+  accepted_run: >-
+    Alpine job 33422513, 2026-10-05 05:00:16-06:46:40 UTC (original run ended 05:11:00 UTC, translated run ended
+    06:46:37 UTC), verifier cand-o5v-cism-783ef4bb, verdict collected by the maintainers
+    (the wave24 acceptance log IDENTICAL). Work dir
+    $ALPINE_SCRATCH/recast-cand/o5v/cism-783ef4bb/cism/w_t5_outer; reference run dir work/runs/pure,
+    candidate run dir work/runs/outermost; job log $ALPINE_SCRATCH/recast-cand/o5v/cism-783ef4bb/runs/o5vcism-t5_33422513.out.
+  notes: >-
+    Digests taken read only on 2026-10-16 by Alpine jobs 34239094 (kit/digest_cism.py) and 34239117
+    (kit/ncks.sbatch). The kit is the cand-o6-cism kit (make_config.py = RecastEngine-Pro
+    REPAIR_NOTES/cand-o6-cism/make_config.py at 783ef4bb, md5 5490abdd0ea62cf97fcaecb44b54555c). halfar.0031.nc is
+    the case's input state copied into both run dirs; only compare_nc.py compares it. A re-run must use a new
+    WORK name: insitu.sbatch deletes and re-creates $WORK/case (RUNS.md).
+reference:
+  model: "CISM (Community Ice Sheet Model), cism_driver with the Glissade dycore (libglide, libglissade, libglimmer)"
+  commit_or_tag: "46e27de479f061ce7c0e96a148d3e7af7f65e461"
+  provenance: "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+acceptance:
+  kind: bitwise
+  rules:
+    - check: file_set_equal
+      scope: "{halfar.0031.out.nc,halfar.0031.config.log,run.log}"
+      gating: true
+      note: "the files the benchmark run produces, as the kit's case.compare names them (halfar.0031.out.nc, halfar.0031.config.log, run.log). halfar.0031.nc is the case's input state (copied into both run directories before either run, written by neither): not a produced file, so not compared here (maintainer, 2026-10-16)"
+    - check: numeric_md5_equal
+      scope: "{halfar.0031.out.nc,halfar.0031.config.log,run.log}"
+      dump_tool: "md5 of the file's bytes after the kit's masks: recast.insitu.compare._masked (RecastEngine-Pro 783ef4bb) -- bytes split on newline, a line any line mask matches dropped, what a value mask (~) matches replaced by <masked>, joined on newline (kit/digest_cism.py)"
+      dump_format: 'case.mask, each "file_regex::line_regex" or "file_regex::~value_regex": halfar\.0031\.out\.nc$::~\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d(?:\.\d+)? ; halfar\.0031\.out\.nc$::~\b\d\d/\d\d/\d{2,4}\b|\b\d\d:\d\d:\d\d\b ; \.log$::~\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d(?:\.\d+)?|\d\d/\d\d/\d{2,4} \d\d:\d\d:\d\d ; \.log$::[Ee]lapsed|[Ww]all ?clock|[Tt]iming|seconds'
+      gating: true
+      note: "the in-situ verdict (recast.insitu.compare, byte for byte after the masks); run.log is raw-identical (no mask matches it)"
+    - check: timing_delta_pct
+      timers: ["wall_seconds"]
+      gating: false
+      note: "wall time of the original vs the translated run (result_outermost.json: 11.801 s vs 5,736.883 s, build excluded); reported, never gates"
