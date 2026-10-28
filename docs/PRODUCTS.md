@@ -21,6 +21,7 @@ schemas/benchmark.TEMPLATE.yaml   an annotated benchmark to start from
 | `clm-ml-jax/` | 2, schema-valid but not yet evaluable: the case commits a merged verdict-string file, not the engine's schema-1 summary | none |
 | `pycam5/` | 0 — bitwise whole-model cases, not written yet | none |
 | `freecam/` | 0 — not written yet | none |
+| `<system>-numpy/`, fifteen of them (qe, mfc, njoy, ramses, duo, cvmix, marbl, rrtmg, cosp2, carma, fates, ww3, cism, camsima, clubb) | 18 output-verdict benchmarks backfilled by `tools/backfill_wave24.py`: one per system, three for CAM-SIMA, two for CLUBB | `unreleased-783ef4bb` each (RecastEngine-Pro `783ef4b`), `reconstructed`; rrtmg-numpy FAIL, the rest PASS |
 
 `elm-jax/` is added when that case repository exists (`CORRECTNESS-ORGANIZATION.md`
 step 7).

@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+  "runs": [
+    {
+      "run": "D79C3E6F",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "3AE495F4",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "5EC236F2",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "48CCE072",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "AED93D34",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "C5B79059",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "727F72ED",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "A60691E7",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "3FC6FC4A",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 30,
+      "outputs_identical": 30,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    }
+  ]
+}

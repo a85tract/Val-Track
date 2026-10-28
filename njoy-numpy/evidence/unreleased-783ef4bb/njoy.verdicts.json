@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+  "runs": [
+    {
+      "run": "01",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 2,
+      "outputs_identical": 2,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "02",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 2,
+      "outputs_identical": 2,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "09",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 2,
+      "outputs_identical": 2,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "10",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 2,
+      "outputs_identical": 2,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Final wave24 guard result; delegated-call count and byte size absent from returned log."
+    },
+    {
+      "run": "01 tapes",
+      "role": "tape_outputs",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 7,
+      "outputs_identical": 7,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Additional compared tapes; undefined Hollerith padding masked. These are not additional test invocations."
+    },
+    {
+      "run": "02 tapes",
+      "role": "tape_outputs",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 11,
+      "outputs_identical": 11,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Additional compared tapes; undefined Hollerith padding masked. These are not additional test invocations."
+    },
+    {
+      "run": "09 tapes",
+      "role": "tape_outputs",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 6,
+      "outputs_identical": 6,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Additional compared tapes; undefined Hollerith padding masked. These are not additional test invocations."
+    },
+    {
+      "run": "10 tapes",
+      "role": "tape_outputs",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 9,
+      "outputs_identical": 9,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/guard_o5f-783ef4bb.log",
+      "note": "Additional compared tapes; undefined Hollerith padding masked. These are not additional test invocations."
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "reconstructed",
+  "artifact": {
+    "name": "ww3-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "WAVEWATCH III",
+    "commit_or_tag": "a0eaffebde6246e096f240509c9acf159fe09003",
+    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy"
+  },
+  "cc_test": {
+    "version": "unreleased-53515314",
+    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+  },
+  "environment": {
+    "machine": "Alpine (CU Boulder Research Computing), Linux el8_10 x86_64",
+    "python": "CPython 3.12.14",
+    "numpy": "2.5.3"
+  },
+  "cases": [
+    {
+      "id": "ww3",
+      "benchmark": "ww3-numpy/benchmarks/ww3.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "tp1.1",
+              "tp1.1 postprocess",
+              "ts1"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+            "roles": [
+              "postprocess",
+              "primary"
+            ],
+            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "3 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "3 of 3 runs identical (16 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "ww3.verdicts.json",
+            "md5": "fe149c059426ed8ad0cb56cc9852b1f1",
+            "bytes": 1418
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T06:26:32Z",
+  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: verifier job cand-o5w/o5w-alpine-b; the time is when the job finished. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+}

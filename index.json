@@ -3,6 +3,399 @@
   "source": "<product>/evidence/<version>/manifest.json, via tools/index_evidence.py",
   "records": [
     {
+      "product": "clubb-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "clubb-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "clubb-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CLUBB_core, larson-group/clubb_release",
+        "commit_or_tag": "8ab3902e812c2883976b4f1f57c085d682666d92"
+      },
+      "cases": {
+        "total": 2,
+        "passed": 2,
+        "ids": [
+          "replay",
+          "feedback"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-07T23:55:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "carma-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "carma-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "carma-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CARMA",
+        "commit_or_tag": "26b30b2738566de5d3979c1b2ccf191dd78c1207"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "carma"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T06:26:32Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "fates-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "fates-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "fates-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "FATES",
+        "commit_or_tag": "5a3c441ceeb141c35e87a33eeb2c168cc367b6f1"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "fates"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T06:26:32Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "ww3-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "ww3-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "ww3-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "WAVEWATCH III",
+        "commit_or_tag": "a0eaffebde6246e096f240509c9acf159fe09003"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "ww3"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T06:26:32Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "cism-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cism-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cism-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CISM",
+        "commit_or_tag": "46e27de479f061ce7c0e96a148d3e7af7f65e461"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "cism"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:50:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "cosp2-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cosp2-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cosp2-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "COSP2",
+        "commit_or_tag": "5eb05e51187dd2d0e448b78c4e6b28e1d6f65493"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "cosp2"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:25:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "cvmix-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cvmix-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cvmix-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CVMix",
+        "commit_or_tag": "fce422195a0c58f15a55946b5ed517ba4365e232"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "cvmix"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:25:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "marbl-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "marbl-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "marbl-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "MARBL",
+        "commit_or_tag": "6b2a5e41dc5b0faaf9b600c96432e2487515e878"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "marbl"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:25:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "rrtmg-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "rrtmg-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "rrtmg-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "RRTMG (LW, SW)",
+        "commit_or_tag": "958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 0,
+        "ids": [
+          "rrtmg"
+        ]
+      },
+      "result": "FAIL",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:25:48Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "camsima-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "camsima-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "camsima-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CAM-SIMA (Kessler)",
+        "commit_or_tag": "47e1e6303951d999f6939bdffff829f682a2e081"
+      },
+      "cases": {
+        "total": 3,
+        "passed": 3,
+        "ids": [
+          "kessler",
+          "held-suarez",
+          "tj2016"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:05:05Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "duo-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "duo-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "duo-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "Duo",
+        "commit_or_tag": "04b4718955fedf3eb551fb36019beabac225a3af"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "duo"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:01:39Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "mfc-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "mfc-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "mfc-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "MFC",
+        "commit_or_tag": "1ececa3456a5ee57807327a4deebacdd723d0fa6"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "mfc"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:01:39Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "njoy-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "njoy-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "njoy-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "NJOY2016",
+        "commit_or_tag": "ac5adf5f33d893e42f2eed7fb286b0d51c7580da"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "njoy"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:01:39Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "qe-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "qe-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "qe-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "Quantum ESPRESSO (XClib, dft-d3)",
+        "commit_or_tag": "61569eb480231b649c47f631df9c5c83537df461"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "qe"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:01:39Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
+      "product": "ramses-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "ramses-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "ramses-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "RAMSES",
+        "commit_or_tag": "5f0ed46289f8eed71b2abd0e482f953bcaa02934"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "ramses"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "reconstructed",
+      "validated": "2026-10-05T05:01:39Z",
+      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    },
+    {
       "product": "clubb-jax",
       "version": "unreleased-99c8b22f",
       "path": "clubb-jax/evidence/unreleased-99c8b22f/",

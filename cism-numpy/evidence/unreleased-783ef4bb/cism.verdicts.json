@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
+  "runs": [
+    {
+      "run": "halfar-HO-t0 outermost, the merged plan",
+      "role": "short_run_diagnostic",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 3,
+      "outputs_identical": 3,
+      "delegated_calls": 13,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5/cism-783ef4bb.json",
+      "note": "Auxiliary t0/t1 runs, excluded from the t5 acceptance row."
+    },
+    {
+      "run": "halfar-HO-t1 outermost, the merged plan",
+      "role": "short_run_diagnostic",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 3,
+      "outputs_identical": 3,
+      "delegated_calls": 14,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5/cism-783ef4bb.json",
+      "note": "Auxiliary t0/t1 runs, excluded from the t5 acceptance row."
+    },
+    {
+      "run": "halfar-HO t5",
+      "role": "primary",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 3,
+      "outputs_identical": 3,
+      "values_compared": 108973,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/cism-t5.planner.md",
+      "note": "108,973 values in 28 out.nc variables; not all outputs. Separate restart has 2,045 values in 7 variables; kept separate. Byte normalization recorded in kit."
+    },
+    {
+      "run": "halfar-HO t5 restart",
+      "role": "restart_output",
+      "verdict": "identical",
+      "reported": "identical",
+      "outputs_compared": 1,
+      "outputs_identical": 1,
+      "values_compared": 2045,
+      "source": "/home/secondst/Code/recast/candidates/results/round3/verify_o5w/cism-t5.planner.md",
+      "note": "Same t5 invocation: separately reported restart comparison, 7 variables / 2,045 values. Not another benchmark test."
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "evidence_class": "reconstructed",
+  "artifact": {
+    "name": "camsima-numpy",
+    "repo": "https://github.com/a85tract/RecastEngine-Pro",
+    "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+    "version": "unreleased-783ef4bb"
+  },
+  "reference": {
+    "model": "CAM-SIMA (Kessler)",
+    "commit_or_tag": "47e1e6303951d999f6939bdffff829f682a2e081",
+    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy; components: CAM-SIMA 47e1e6303951, atmospheric_physics 3fd57dde51ea, ccpp-framework 766261cf0433"
+  },
+  "cc_test": {
+    "version": "unreleased-53515314",
+    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+  },
+  "environment": {
+    "machine": "Derecho (NCAR)"
+  },
+  "cases": [
+    {
+      "id": "kessler",
+      "benchmark": "camsima-numpy/benchmarks/kessler.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "outfrq_kessler_derecho"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier with cprnc (Derecho)",
+            "roles": [
+              "primary"
+            ],
+            "normalization": "cprnc compares the history files' numeric fields; the atmosphere log is normalized",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "1 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "1 of 1 runs identical (3 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "kessler.verdicts.json",
+            "md5": "f1ecf51a951c2b2ae82c2da734264b6a",
+            "bytes": 670
+          }
+        ]
+      }
+    },
+    {
+      "id": "held-suarez",
+      "benchmark": "camsima-numpy/benchmarks/held-suarez.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "outfrq_held_suarez_derecho"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier with cprnc (Derecho)",
+            "roles": [
+              "primary"
+            ],
+            "normalization": "cprnc compares the history files' numeric fields; the atmosphere log is normalized",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "1 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "1 of 1 runs identical (3 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "held-suarez.verdicts.json",
+            "md5": "17e32f34bf8c04a6b53348dd8e371ac6",
+            "bytes": 678
+          }
+        ]
+      }
+    },
+    {
+      "id": "tj2016",
+      "benchmark": "camsima-numpy/benchmarks/tj2016.yaml",
+      "acceptance": {
+        "kind": "output-verdict",
+        "verdict_schema": 1,
+        "rules": [
+          {
+            "check": "run_set_equal",
+            "runs": [
+              "outfrq_tj2016_before_coupler_derecho",
+              "outfrq_tj2016_after_coupler_derecho"
+            ],
+            "gating": true
+          },
+          {
+            "check": "runs_identical",
+            "verifier": "candidates in-situ verifier with cprnc (Derecho)",
+            "roles": [
+              "primary"
+            ],
+            "normalization": "cprnc compares the history files' numeric fields; the atmosphere log is normalized",
+            "gating": true
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "run_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "2 runs, as the benchmark names them"
+          },
+          {
+            "check": "runs_identical",
+            "gating": true,
+            "passed": true,
+            "detail": "2 of 2 runs identical (6 output files compared)"
+          }
+        ]
+      },
+      "outputs": {
+        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
+        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+        "files": [
+          {
+            "name": "tj2016.verdicts.json",
+            "md5": "2cda63c0bf488e82c4016b0fb582a7bc",
+            "bytes": 1294
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "gate": "recast audit",
+    "status": "NOT_RUN"
+  },
+  "result": "PASS",
+  "timestamp": "2026-10-05T05:05:05Z",
+  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: verifier job cand-o5w/o5w-derecho; the time is when the job finished. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+}

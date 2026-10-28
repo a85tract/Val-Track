@@ -1,0 +1,421 @@
+bomex_initial 1/20: 13036/13036 bit-identical values
+bomex_initial 20/20: 260720/260720 bit-identical values
+bomex_developed 1/20: 13036/13036 bit-identical values
+bomex_developed 20/20: 260720/260720 bit-identical values
+cgils_s6 1/20: 9649/9649 bit-identical values
+cgils_s6 20/20: 192980/192980 bit-identical values
+arm 1/20: 22417/22417 bit-identical values
+arm 20/20: 448340/448340 bit-identical values
+dycoms2 1/20: 6793/6793 bit-identical values
+dycoms2 20/20: 135860/135860 bit-identical values
+bomex_e3sm 1/20: 13036/13036 bit-identical values
+bomex_e3sm 20/20: 260720/260720 bit-identical values
+gabls2_scalars 1/10: 66083/66083 bit-identical values
+gabls2_scalars 10/10: 660830/660830 bit-identical values
+bomex_multicol4 1/20: 52144/52144 bit-identical values
+bomex_multicol4 20/20: 1042880/1042880 bit-identical values
+{
+  "mode": "independent recorded-call replay",
+  "in_situ": false,
+  "generated_path": "/var/tmp/recast-oopsla-wave24/clubb-wave24/numpy",
+  "boundary_harness": {
+    "mode": "Unchanged historical generated adapter reused as a separate recorded-input test harness",
+    "source": "/home/secondst/Code/recast/workstreams/clubb-jax/reference-jax/generated/port-clubb/advance_clubb_core_module/advance_clubb_core_module_numpy.py",
+    "source_sha256": "f04a7900ac3f6a7b95221db03976306b6e14f169df49e16e3339a655c8e680ee",
+    "extracted_adapter_sha256": "edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+    "emitted_computation_modified": false,
+    "statistics_domain": "stats.enabled and stats.l_sample are false in every tested input"
+  },
+  "manifest_sha256": "909517de1df9066397e1ddf591f1ee5323d2d1cba9ef162599d8e3e992d263c8",
+  "generated_hashes_sha256": "c6eb8bda2ed7864952cc4222b6f81db5ef4a672bbde767f113c9b4a4b7188123",
+  "reference_revision": "585d19006404a354587f1f589fbdfba2b9b29e46",
+  "fortran_revision": "8ab3902e812c2883976b4f1f57c085d682666d92",
+  "harness_sha256": "9fc66728b58101f645170330eb17914b0565bc5f8c18f2068fecec21e190418a",
+  "python": "3.12.12 (main, Feb 12 2026, 00:42:14) [Clang 21.1.4 ]",
+  "numpy": "2.5.3",
+  "signature_inputs": 291,
+  "signature_feedback_outputs": 185,
+  "interface_checks": {
+    "array_shapes": "Exact equality to the recorded OUTPUT shape; no array reshaping",
+    "scalar_shapes": "Generated scalar shape (); recorded () or (1,) normalized only for scalar fields",
+    "float64": "184 output fields must have NumPy float64 dtype; compare decoded recording values by uint64 bits",
+    "int32": "One integer array field must have int32 dtype; compare exact values against range-checked integral recording values",
+    "input_types": "All 476 input and feedback arguments constructed by declared signature type; integer values range/integrality checked before conversion, arrays retain recorded shape and Fortran order",
+    "observed_integer_transport_dtypes": {
+      "int32": 210
+    }
+  },
+  "source_routines_called": 157,
+  "source_files": 30,
+  "routine_source_code_lines_union": 22630,
+  "cases": [
+    {
+      "case": "bomex_initial",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 260720,
+      "bit_equal_values": 260720,
+      "float64_values": 260700,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "88",
+        "nzt": "87",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 1.000949956011027,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "bomex_developed",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 260720,
+      "bit_equal_values": 260720,
+      "float64_values": 260700,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "88",
+        "nzt": "87",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 0.9658528659492731,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "cgils_s6",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 192980,
+      "bit_equal_values": 192980,
+      "float64_values": 192960,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "58",
+        "nzt": "57",
+        "ngrdcol": "1",
+        "dt": "3.00000000000000000E+002"
+      },
+      "elapsed_seconds_including_profiling_and_io": 0.8616054670419544,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "arm",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 448340,
+      "bit_equal_values": 448340,
+      "float64_values": 448320,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "134",
+        "nzt": "133",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 1.578181304037571,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "dycoms2",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 135860,
+      "bit_equal_values": 135860,
+      "float64_values": 135840,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "41",
+        "nzt": "40",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 0.6877023801207542,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "bomex_e3sm",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 260720,
+      "bit_equal_values": 260720,
+      "float64_values": 260700,
+      "int32_values": 20,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "88",
+        "nzt": "87",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 0.9973896681331098,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "gabls2_scalars",
+      "expected_steps": 10,
+      "completed_steps": 10,
+      "bit_identical_steps": 10,
+      "compared_values": 660830,
+      "bit_equal_values": 660830,
+      "float64_values": 660820,
+      "int32_values": 10,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "401",
+        "nzt": "400",
+        "ngrdcol": "1",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 2.4447914788033813,
+      "error": null,
+      "status": "bit_identical"
+    },
+    {
+      "case": "bomex_multicol4",
+      "expected_steps": 20,
+      "completed_steps": 20,
+      "bit_identical_steps": 20,
+      "compared_values": 1042880,
+      "bit_equal_values": 1042880,
+      "float64_values": 1042800,
+      "int32_values": 80,
+      "nonfinite_reference_values": 0,
+      "dimensions": {
+        "nzm": "88",
+        "nzt": "87",
+        "ngrdcol": "4",
+        "dt": "6.00000000000000000E+001"
+      },
+      "elapsed_seconds_including_profiling_and_io": 2.8582634849008173,
+      "error": null,
+      "status": "bit_identical"
+    }
+  ],
+  "total_steps": 150,
+  "total_values": 3263050,
+  "bit_equal_values": 3263050,
+  "elapsed_seconds_including_profiling_and_io": 11.688276672037318,
+  "all_values_bit_identical": true
+}
+{
+  "engine_revision": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2",
+  "external_boundary_harness": true,
+  "boundary_harness_sha256": "edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41",
+  "flat_arguments_total": 476,
+  "recorded_driver_inputs": 291,
+  "feedback_outputs": 185,
+  "feedback_output_types": {
+    "float64_fields": 184,
+    "int32_fields": 1
+  },
+  "integer_field_shape": "err_info__err_code has one element per column; its input, feedback, and output arrays have int32 dtype",
+  "feedback_protocol": "Initialize all 476 flat arguments from each recording; from step 2 overwrite every one of the 185 INOUT fields with the previous generated output, preserving scalar type and Fortran array order. The remaining 291 IN arguments remain recorded driver inputs.",
+  "source_routines": 155,
+  "source_files": 28,
+  "source_sloc": 22606,
+  "raw_source_mapped_routines": 157,
+  "excluded_framework_routines": 2,
+  "loc_metric": "Deduplicated original-source nonblank/noncomment physical lines within reached procedures, including declarations and excluding preprocessor directives; not executed-line coverage.",
+  "routine_scope_basis": [
+    "replay150",
+    "feedback2310",
+    "feedback2880",
+    "feedback3540"
+  ],
+  "missing_run_groups": [],
+  "independent_replay": {
+    "total_steps": 150,
+    "total_values": 3263050,
+    "bit_equal_values": 3263050,
+    "all_values_bit_identical": true
+  },
+  "state_feedback": {
+    "configurations": 7,
+    "cases": [
+      {
+        "case": "bomex",
+        "expected_steps": 360,
+        "completed_steps": 360,
+        "bit_identical_steps": 360,
+        "compared_values": 4692960,
+        "bit_equal_values": 4692960,
+        "float64_values": 4692600,
+        "int32_values": 360,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "88",
+          "nzt": "87",
+          "ngrdcol": "1",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 17.924366591963917,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "bomex_e3sm",
+        "expected_steps": 360,
+        "completed_steps": 360,
+        "bit_identical_steps": 360,
+        "compared_values": 4692960,
+        "bit_equal_values": 4692960,
+        "float64_values": 4692600,
+        "int32_values": 360,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "88",
+          "nzt": "87",
+          "ngrdcol": "1",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 18.22762295184657,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "bomex_multicol4",
+        "expected_steps": 360,
+        "completed_steps": 360,
+        "bit_identical_steps": 360,
+        "compared_values": 18771840,
+        "bit_equal_values": 18771840,
+        "float64_values": 18770400,
+        "int32_values": 1440,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "88",
+          "nzt": "87",
+          "ngrdcol": "4",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 52.74072481505573,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "arm",
+        "expected_steps": 870,
+        "completed_steps": 870,
+        "bit_identical_steps": 870,
+        "compared_values": 19502790,
+        "bit_equal_values": 19502790,
+        "float64_values": 19501920,
+        "int32_values": 870,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "134",
+          "nzt": "133",
+          "ngrdcol": "1",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 70.40432602493092,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "dycoms2",
+        "expected_steps": 360,
+        "completed_steps": 360,
+        "bit_identical_steps": 360,
+        "compared_values": 2445480,
+        "bit_equal_values": 2445480,
+        "float64_values": 2445120,
+        "int32_values": 360,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "41",
+          "nzt": "40",
+          "ngrdcol": "1",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 13.23625057307072,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "cgils_s6",
+        "expected_steps": 2880,
+        "completed_steps": 2880,
+        "bit_identical_steps": 2880,
+        "compared_values": 27789120,
+        "bit_equal_values": 27789120,
+        "float64_values": 27786240,
+        "int32_values": 2880,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "58",
+          "nzt": "57",
+          "ngrdcol": "1",
+          "dt": "3.00000000000000000E+002"
+        },
+        "elapsed_seconds_including_profiling_and_io": 128.50208365009166,
+        "error": null,
+        "status": "bit_identical"
+      },
+      {
+        "case": "gabls2",
+        "expected_steps": 3540,
+        "completed_steps": 3540,
+        "bit_identical_steps": 3540,
+        "compared_values": 233933820,
+        "bit_equal_values": 233933820,
+        "float64_values": 233930280,
+        "int32_values": 3540,
+        "nonfinite_reference_values": 0,
+        "dimensions": {
+          "nzm": "401",
+          "nzt": "400",
+          "ngrdcol": "1",
+          "dt": "6.00000000000000000E+001"
+        },
+        "elapsed_seconds_including_profiling_and_io": 794.5202175939921,
+        "error": null,
+        "status": "bit_identical"
+      }
+    ],
+    "steps": 8730,
+    "output_values": 311828970,
+    "bit_equal_values": 311828970,
+    "float64_values": 311819160,
+    "int32_values": 9810,
+    "nonfinite_reference_values": 0,
+    "all_values_bit_identical": true
+  },
+  "source_evidence": {
+    "replay150": {
+      "summary_sha256": "3d54c8d01d5a197e815705140301c45fb54922cff9fc112623344ad82b2d27b5",
+      "steps_sha256": "c28c76e80d5ca65bd78fff93efcf26e6caa77f39ad2c2f7c4f6d976cc9dfc59e"
+    },
+    "feedback2310": {
+      "summary_sha256": "3b275b04aaaf61307eb354d8344c9aade5d6be689deda4d98d4dde53017c6724",
+      "steps_sha256": "2f823494267054707e087d00d128feb2a17865802ee73c9ee803bc63a52d5251"
+    },
+    "feedback2880": {
+      "summary_sha256": "e4e127ac93e14d3d3b7d55e24d2bdb11892777fb2370f33fa4bc252673402f12",
+      "steps_sha256": "189e49ac1e8026bec366c036032c0b9c04d7886db911490ac962c7a41396bd0f"
+    },
+    "feedback3540": {
+      "summary_sha256": "971dc51b3840a2e2afb0229932008a749121eb1c88e0a75f1d319cd00f8898cb",
+      "steps_sha256": "99b039c210721e8be1923c0ef892ed7003be0de4469c3b62d7ec519bee94c665"
+    }
+  }
+}
