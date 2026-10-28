@@ -1,5 +1,52 @@
-target	layer	role	case	engine_commit	benchmark_runs	output_files	delegated_calls	compared_values	raw_bytes_known	files_with_sizes	raw_bytes_total	exact_compared_bytes	verdict	source	notes	f64_points	int32_points
-cvmix	in_situ	primary	Bryan-Lewis outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	4	7	未查到	未查到	0	未查到	未查到	IDENTICAL 4/4	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
-cvmix	in_situ	primary	double_diff outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	3	2	未查到	未查到	0	未查到	未查到	IDENTICAL 3/3	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
-cvmix	in_situ	primary	kpp outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	10	42	未查到	未查到	0	未查到	未查到	IDENTICAL 10/10	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
-cvmix	in_situ	primary	shear outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	5	8	未查到	未查到	0	未查到	未查到	IDENTICAL 5/5	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
+cvmix-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== bryan-lewis: PASS
+benchmark: CVMix standalone driver (src/cvmix_driver.F90, src/drivers/cvmix_bgrnd_BL.F90, src/cvmix_io.F90) on its regression test reg_tests/Bryan-Lewis: input.nl on stdin (mix_type 'BryanLewis', nlev 30, max_nlev 60, ocn_depth 5250 m; two BL parameter sets); output files compared: data_memcopy.nc, data_pointer.nc, stderr.txt, stdout.txt
+accepted runs: Alpine job 33422489 (o5w-a-cvmix, cand-o5w alpine-a), 2026-10-05 04:59:46-05:02:44 UTC; run directories $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/Bryan-Lewis/outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/Bryan-Lewis/outermost/runs/outermost (translated), files written 2026-10-05T05:00:59Z; record the wave24 acceptance log IDENTICAL 4/4; digests: Alpine jobs 34238990, 34239010 (kit/digest_cvmix.sbatch)
+wall seconds: original 0.089, translated 0.56
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+data_memcopy.nc	1056	d479ea6840afba8095690801c19ae23e	1056	d479ea6840afba8095690801c19ae23e	raw	d479ea6840afba8095690801c19ae23e	d479ea6840afba8095690801c19ae23e	true
+data_pointer.nc	1056	d479ea6840afba8095690801c19ae23e	1056	d479ea6840afba8095690801c19ae23e	raw	d479ea6840afba8095690801c19ae23e	d479ea6840afba8095690801c19ae23e	true
+stderr.txt	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+stdout.txt	71	a04abf64b2dceb2157ddc873c1631983	71	a04abf64b2dceb2157ddc873c1631983	raw	a04abf64b2dceb2157ddc873c1631983	a04abf64b2dceb2157ddc873c1631983	true
+
+== double-diff: PASS
+benchmark: CVMix standalone driver (src/cvmix_driver.F90, src/drivers/cvmix_ddiff_drv.F90, src/cvmix_io.F90) on its regression test reg_tests/double_diff: input.nl on stdin (mix_type 'ddiff', nlev 61, max_nlev 75, ddiff_exp1 2.0, strat_param_max 1.9); output files compared: data.nc, stderr.txt, stdout.txt
+accepted runs: Alpine job 33422489 (o5w-a-cvmix, cand-o5w alpine-a), 2026-10-05 04:59:46-05:02:44 UTC; run directories $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/double_diff/outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/double_diff/outermost/runs/outermost (translated), files written 2026-10-05T05:01:34Z; record the wave24 acceptance log IDENTICAL 3/3; digests: Alpine jobs 34238990, 34239010 (kit/digest_cvmix.sbatch)
+wall seconds: original 0.091, translated 0.464
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+data.nc	5348	e119ef0a6b36e461147f9bfef8c4b150	5348	e119ef0a6b36e461147f9bfef8c4b150	raw	e119ef0a6b36e461147f9bfef8c4b150	e119ef0a6b36e461147f9bfef8c4b150	true
+stderr.txt	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+stdout.txt	71	a0fe02bdaa09ecce0fb0412c515cf028	71	a0fe02bdaa09ecce0fb0412c515cf028	raw	a0fe02bdaa09ecce0fb0412c515cf028	a0fe02bdaa09ecce0fb0412c515cf028	true
+
+== kpp: PASS
+benchmark: CVMix standalone driver (src/cvmix_driver.F90, src/drivers/cvmix_kpp_drv.F90, src/cvmix_io.F90) on its regression test reg_tests/kpp: input.nl on stdin (mix_type 'kpp', KPP tests 1-7 (test 2 and test 6 write no netCDF)); output files compared: stderr.txt, stdout.txt, test1.nc, test3.nc, test4a.nc, test4b.nc, test4c.nc, test4d.nc, test5.nc, test7.nc
+accepted runs: Alpine job 33422489 (o5w-a-cvmix, cand-o5w alpine-a), 2026-10-05 04:59:46-05:02:44 UTC; run directories $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/kpp/outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/kpp/outermost/runs/outermost (translated), files written 2026-10-05T05:02:09Z; record the wave24 acceptance log IDENTICAL 10/10; digests: Alpine jobs 34238990, 34239010 (kit/digest_cvmix.sbatch)
+wall seconds: original 0.096, translated 0.832
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+stderr.txt	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+stdout.txt	3888	86d256a5e43c0d49d2a0af1884830423	3888	86d256a5e43c0d49d2a0af1884830423	raw	86d256a5e43c0d49d2a0af1884830423	86d256a5e43c0d49d2a0af1884830423	true
+test1.nc	432	2f0c695158fc65fce86f141fa2b8ddc0	432	2f0c695158fc65fce86f141fa2b8ddc0	raw	2f0c695158fc65fce86f141fa2b8ddc0	2f0c695158fc65fce86f141fa2b8ddc0	true
+test3.nc	5400	8fc49fe6034d54ca6e00f57bfa29b08f	5400	8fc49fe6034d54ca6e00f57bfa29b08f	raw	8fc49fe6034d54ca6e00f57bfa29b08f	8fc49fe6034d54ca6e00f57bfa29b08f	true
+test4a.nc	548	6da8937d6ac3e92104f9703bf197acb4	548	6da8937d6ac3e92104f9703bf197acb4	raw	6da8937d6ac3e92104f9703bf197acb4	6da8937d6ac3e92104f9703bf197acb4	true
+test4b.nc	548	408097c59466c2211880632b71899891	548	408097c59466c2211880632b71899891	raw	408097c59466c2211880632b71899891	408097c59466c2211880632b71899891	true
+test4c.nc	548	d9c6b434f1c7a5ca123ea46834f9bb4e	548	d9c6b434f1c7a5ca123ea46834f9bb4e	raw	d9c6b434f1c7a5ca123ea46834f9bb4e	d9c6b434f1c7a5ca123ea46834f9bb4e	true
+test4d.nc	548	202aaad0f6b8cae60c59f1141d0cc820	548	202aaad0f6b8cae60c59f1141d0cc820	raw	202aaad0f6b8cae60c59f1141d0cc820	202aaad0f6b8cae60c59f1141d0cc820	true
+test5.nc	804	8e90a03bbb931be05fd7063be6d1e685	804	8e90a03bbb931be05fd7063be6d1e685	raw	8e90a03bbb931be05fd7063be6d1e685	8e90a03bbb931be05fd7063be6d1e685	true
+test7.nc	804	2e7b548563b5966083c4928c17308b95	804	2e7b548563b5966083c4928c17308b95	raw	2e7b548563b5966083c4928c17308b95	2e7b548563b5966083c4928c17308b95	true
+
+== shear: PASS
+benchmark: CVMix standalone driver (src/cvmix_driver.F90, src/drivers/cvmix_shear_drv.F90, src/cvmix_io.F90) on its regression test reg_tests/shear: input.nl on stdin (mix_type 'shear', nlev 30, max_nlev 60; LMD94 and Pacanowski-Philander (1d, 2d) parameters); output files compared: data_LMD.nc, data_PP1d.nc, data_PP2d.nc, stderr.txt, stdout.txt
+accepted runs: Alpine job 33422489 (o5w-a-cvmix, cand-o5w alpine-a), 2026-10-05 04:59:46-05:02:44 UTC; run directories $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/shear/outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/cvmix/insitu/shear/outermost/runs/outermost (translated), files written 2026-10-05T05:02:44Z; record the wave24 acceptance log IDENTICAL 5/5; digests: Alpine jobs 34238990, 34239010 (kit/digest_cvmix.sbatch)
+wall seconds: original 0.085, translated 0.451
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+data_LMD.nc	1076	9f689f41223f9b046826ae08634e49ee	1076	9f689f41223f9b046826ae08634e49ee	raw	9f689f41223f9b046826ae08634e49ee	9f689f41223f9b046826ae08634e49ee	true
+data_PP1d.nc	1072	ccd4012254a76aeb2268c38de944f557	1072	ccd4012254a76aeb2268c38de944f557	raw	ccd4012254a76aeb2268c38de944f557	ccd4012254a76aeb2268c38de944f557	true
+data_PP2d.nc	3572	793f35ef2ec12a5bcb29bdb78f96d27c	3572	793f35ef2ec12a5bcb29bdb78f96d27c	raw	793f35ef2ec12a5bcb29bdb78f96d27c	793f35ef2ec12a5bcb29bdb78f96d27c	true
+stderr.txt	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	true
+stdout.txt	427	306686248f3c69e7bbce694397f6b218	427	306686248f3c69e7bbce694397f6b218	raw	306686248f3c69e7bbce694397f6b218	306686248f3c69e7bbce694397f6b218	true
+

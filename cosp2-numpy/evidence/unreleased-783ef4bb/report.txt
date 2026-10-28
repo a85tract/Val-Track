@@ -1,2 +1,12 @@
-target	layer	role	case	engine_commit	benchmark_runs	output_files	delegated_calls	compared_values	raw_bytes_known	files_with_sizes	raw_bytes_total	exact_compared_bytes	verdict	source	notes	f64_points	int32_points
-cosp2	in_situ	primary	UKMO outermost	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	3	6079	未查到	未查到	0	未查到	未查到	IDENTICAL 3/3	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-a.json	Returned verifier table; raw sizes not recorded. Ordinary heap condition.		
+cosp2-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== ukmo: PASS
+benchmark: COSPv2.0 offline driver cosp2_test (driver/src/cosp2_test.F90 + cosp2_io.f90) on the shipped UKMO case: driver/data/inputs/UKMO/cosp_input_um.nc (153 points, 20 subcolumns, 38 levels; sha256 626db18d06dc6eeae1e9b1eabd6f857c6c1cc9a073ec453e57cf7c491978a618), namelists driver/run/cosp2_input_nl.txt (DINPUT made absolute, FINPUT='cosp_input_um.nc', FOUTPUT='cosp2_output_um.nc') and driver/run/cosp2_output_nl.txt; single precision as shipped (cosp_kinds: wp = sp). Outputs compared: cosp2_output_um.nc, run.log (stdout), run.err (stderr).
+accepted runs: Slurm job 33422497 (o5wa-cosp2-final), Alpine, 2026-10-04 23:00:12-23:08:57 MDT (2026-10-05T05:00Z), COMPLETED; run root $ALPINE_SCRATCH/recast-cand/o5w/cosp2/final/ (config_final.json md5 86763c61d7847ee77c2e793a6c13fec8, work_outermost/result_final.json md5 07b2ca0ac68ea71d82fb041c3cfe5b6c: IDENTICAL 3/3); original outputs in work_outermost/runs/pure/, translated in work_outermost/runs/final/. Record: the wave24 acceptance log (cand-o5w). Digested read-only by job 34238988 (2026-10-16).
+wall seconds: original 0.311, translated 299.051
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+cosp2_output_um.nc	6032344	8e24d9bb2372ace760228cdecd0e08f6	6032344	8e24d9bb2372ace760228cdecd0e08f6	raw	8e24d9bb2372ace760228cdecd0e08f6	8e24d9bb2372ace760228cdecd0e08f6	True
+run.err	0	d41d8cd98f00b204e9800998ecf8427e	0	d41d8cd98f00b204e9800998ecf8427e	raw	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	True
+run.log	315	96d8b891107e78483ba8f7040d1db5d1	315	d5b4b158f3958a463c4370a0026385fb	masked:run\.log$::^ (Time to |Total time)	d41d8cd98f00b204e9800998ecf8427e	d41d8cd98f00b204e9800998ecf8427e	True
+

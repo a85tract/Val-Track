@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "evidence_class": "reconstructed",
+  "evidence_class": "complete",
   "artifact": {
     "name": "rrtmg-numpy",
     "repo": "https://github.com/a85tract/RecastEngine-Pro",
@@ -8,96 +8,151 @@
     "version": "unreleased-783ef4bb"
   },
   "reference": {
-    "model": "RRTMG (LW, SW)",
+    "model": "AER RRTMG_LW column model (rrtmg_lw.1col), https://github.com/AER-RC/RRTMG_LW (revision committed 2025-04-07T12:52:41-04:00; the wave24 source-revision manifest)",
     "commit_or_tag": "958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd",
-    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy; components: LW 958edb1ad161, SW 286e84ed14f6"
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
   },
   "cc_test": {
-    "version": "unreleased-53515314",
-    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    "version": "unreleased-01b0f3a7",
+    "commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
   },
   "environment": {
-    "machine": "Alpine (CU Boulder Research Computing), Linux el8_10 x86_64",
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
     "python": "CPython 3.12.14",
-    "numpy": "2.5.3"
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
   },
   "cases": [
     {
-      "id": "rrtmg",
-      "benchmark": "rrtmg-numpy/benchmarks/rrtmg.yaml",
+      "id": "lw-icrccm-sonde",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-icrccm-sonde.yaml",
       "acceptance": {
-        "kind": "output-verdict",
-        "verdict_schema": 1,
+        "kind": "bitwise",
         "rules": [
           {
-            "check": "run_set_equal",
-            "runs": [
-              "LW ICRCCM_sonde outermost",
-              "LW MLS-cld5-imca0-icld2 outermost",
-              "LW MLS-cld5-imca1-icld2 outermost",
-              "LW MLS-cld7-imca1-icld2 outermost",
-              "LW MLS-cld7-imca1-icld4-idcor0 outermost",
-              "LW MLS-cld7-imca1-icld5-idcor0 outermost",
-              "LW MLS-cld7-imca1-icld5-idcor1 outermost",
-              "LW MLS-clr outermost",
-              "LW MLS-clr-aer12 outermost",
-              "LW MLS-clr-xsec outermost",
-              "LW MLS-clr-idrv1 outermost",
-              "LW MLW-clr outermost",
-              "LW SAW-clr outermost",
-              "LW TROP-clr outermost",
-              "SW MLS-cld6-imca0-icld2 outermost",
-              "SW MLS-cld5-imca1-icld2 outermost",
-              "SW MLS-cld7-imca1-icld2 outermost",
-              "SW MLS-cld7-imca1-icld5-idcor0 outermost",
-              "SW MLS-cld7-imca1-icld5-idcor1 outermost",
-              "SW MLS-clr outermost",
-              "SW MLS-clr-aer12 outermost",
-              "SW MLS-clr-sza45-isolvar0_tsi_avg outermost",
-              "SW MLS-clr-sza45-isolvar1_tsi_max outermost",
-              "SW MLS-clr-sza45-isolvar1_tsi_min outermost",
-              "SW MLS-clr-sza45-isolvar2_01Jan1950 outermost",
-              "SW MLS-clr-sza45-isolvar3_bndscl_tsi_max outermost",
-              "SW MLS-clr-sza65 outermost",
-              "SW MLW-clr outermost",
-              "SW SAW-clr outermost",
-              "SW TROP-clr outermost",
-              "LW ICRCCM_sonde",
-              "LW MLS-cld5-imca0-icld2",
-              "LW MLS-cld5-imca1-icld2",
-              "LW MLS-cld7-imca1-icld2",
-              "LW MLS-cld7-imca1-icld4-idcor0",
-              "LW MLS-cld7-imca1-icld5-idcor0",
-              "LW MLS-cld7-imca1-icld5-idcor1",
-              "LW MLS-clr",
-              "LW MLS-clr-aer12",
-              "LW MLS-clr-idrv1",
-              "LW MLS-clr-xsec",
-              "LW MLW-clr",
-              "LW SAW-clr",
-              "LW TROP-clr"
-            ],
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
             "gating": true
           },
           {
-            "check": "runs_identical",
-            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
-            "roles": [
-              "primary"
-            ],
-            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
-            "gating": true,
-            "note": "LW MLS-cld5-imca0-icld2 differs by one value (max abs 1.0e-07) under the default allocator: the native program reads undefined heap storage. Under zero-filled malloc all 14 LW configurations are byte-identical (the zero_heap_diagnostic runs; OOPSLA2027_evidence wave24/rrtmg_initialization). The run stays gated: ungating it is a maintainer's decision, not something a backfill does."
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
           },
           {
-            "check": "runs_identical",
-            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
-            "roles": [
-              "zero_heap_diagnostic"
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
             ],
-            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
             "gating": false,
-            "note": "control and overlap runs reported beside the tests; they do not gate"
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 3536,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "98f2406c37753484a4f258ce223633a0",
+            "numeric_md5_reference": "98f2406c37753484a4f258ce223633a0"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 530,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "b2cef2b89dec36db974ddf06e2a3cf9a",
+            "numeric_md5_reference": "b2cef2b89dec36db974ddf06e2a3cf9a"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.726,
+            "delta_pct": 818.987341772152,
+            "reference": 0.079
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "98f2406c37753484a4f258ce223633a0",
+            "bytes": 3536
+          },
+          {
+            "name": "run.log",
+            "md5": "b2cef2b89dec36db974ddf06e2a3cf9a",
+            "bytes": 530
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld5-imca0-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld5-imca0-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
           }
         ]
       },
@@ -105,33 +160,2783 @@
         "status": "FAIL",
         "checks": [
           {
-            "check": "run_set_equal",
+            "check": "file_set_equal",
             "gating": true,
             "passed": true,
-            "detail": "44 runs, as the benchmark names them"
+            "detail": "file sets match"
           },
           {
-            "check": "runs_identical",
+            "check": "numeric_md5_equal",
             "gating": true,
             "passed": false,
-            "detail": "29 of 30 runs identical (60 output files compared); differ: LW MLS-cld5-imca0-icld2 outermost (DIFFERENT 1/2)"
+            "detail": "overall_numeric_equal=False (2 files; differ: OUTPUT_RRTM)"
           },
           {
-            "check": "runs_identical",
+            "check": "timing_delta_pct",
             "gating": false,
-            "passed": true,
-            "detail": "14 of 14 runs identical (28 output files compared)"
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 77580,
+            "numeric_equal": false,
+            "numeric_md5_candidate": "648a81b346ff37469a8e2e6786700142",
+            "numeric_md5_reference": "f538883c51102242e592d949f1691961"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.577,
+            "reference": 0.055,
+            "delta_pct": 2767.272727272727
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "648a81b346ff37469a8e2e6786700142",
+            "bytes": 77580
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld5-imca1-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld5-imca1-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
           }
         ]
       },
-      "outputs": {
-        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
-        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
         "files": [
           {
-            "name": "rrtmg.verdicts.json",
-            "md5": "769b5b6f1e9dad2b682ca77555b99f16",
-            "bytes": 20235
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "f84454c91ad355622c13b8961c400353",
+            "numeric_md5_reference": "f84454c91ad355622c13b8961c400353"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 33.319,
+            "delta_pct": 52787.30158730159,
+            "reference": 0.063
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "f84454c91ad355622c13b8961c400353",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld7-imca1-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld7-imca1-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "bac1d1e07ecb2e47837d12b326c018aa",
+            "numeric_md5_reference": "bac1d1e07ecb2e47837d12b326c018aa"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 33.956,
+            "delta_pct": 52140.00000000001,
+            "reference": 0.065
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "bac1d1e07ecb2e47837d12b326c018aa",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld7-imca1-icld4-idcor0",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld7-imca1-icld4-idcor0.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "817c942559ff45260f277c697bb14543",
+            "numeric_md5_reference": "817c942559ff45260f277c697bb14543"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 51.459,
+            "delta_pct": 58376.136363636375,
+            "reference": 0.088
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "817c942559ff45260f277c697bb14543",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld7-imca1-icld5-idcor0",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld7-imca1-icld5-idcor0.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "dddb860b8faa42fc60724490f5b2e0c8",
+            "numeric_md5_reference": "dddb860b8faa42fc60724490f5b2e0c8"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 51.038,
+            "delta_pct": 69815.06849315068,
+            "reference": 0.073
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "dddb860b8faa42fc60724490f5b2e0c8",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-cld7-imca1-icld5-idcor1",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-cld7-imca1-icld5-idcor1.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "923e4caadf36685e8f5e60cd06072532",
+            "numeric_md5_reference": "923e4caadf36685e8f5e60cd06072532"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 50.963,
+            "delta_pct": 69712.32876712328,
+            "reference": 0.073
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "923e4caadf36685e8f5e60cd06072532",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 77580,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "ea4cf2fc20924fe2446cd34c56b2b70a",
+            "numeric_md5_reference": "ea4cf2fc20924fe2446cd34c56b2b70a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.026,
+            "delta_pct": 10160.0,
+            "reference": 0.01
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "ea4cf2fc20924fe2446cd34c56b2b70a",
+            "bytes": 77580
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-clr-aer12",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-clr-aer12.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 77580,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d9e4bbed76426005f9f904abe531e866",
+            "numeric_md5_reference": "d9e4bbed76426005f9f904abe531e866"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.058,
+            "delta_pct": 4500.000000000001,
+            "reference": 0.023
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "d9e4bbed76426005f9f904abe531e866",
+            "bytes": 77580
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-clr-idrv1",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-clr-idrv1.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 77580,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "16a795e6302114d0e28712a137e03a30",
+            "numeric_md5_reference": "16a795e6302114d0e28712a137e03a30"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.019,
+            "delta_pct": 10090.0,
+            "reference": 0.01
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "16a795e6302114d0e28712a137e03a30",
+            "bytes": 77580
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mls-clr-xsec",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mls-clr-xsec.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5196,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "e0fce92b12e7d56541de720de9ba5112",
+            "numeric_md5_reference": "e0fce92b12e7d56541de720de9ba5112"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.476,
+            "delta_pct": 5188.88888888889,
+            "reference": 0.009
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "e0fce92b12e7d56541de720de9ba5112",
+            "bytes": 5196
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-mlw-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-mlw-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5943,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "898578569335fd966846f6ea7c64a462",
+            "numeric_md5_reference": "898578569335fd966846f6ea7c64a462"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.516,
+            "delta_pct": 5060.0,
+            "reference": 0.01
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "898578569335fd966846f6ea7c64a462",
+            "bytes": 5943
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-saw-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-saw-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5860,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "08c284b6e84632282bed827dbd352b65",
+            "numeric_md5_reference": "08c284b6e84632282bed827dbd352b65"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.506,
+            "delta_pct": 3792.307692307693,
+            "reference": 0.013
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "08c284b6e84632282bed827dbd352b65",
+            "bytes": 5860
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "lw-trop-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/lw-trop-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 5943,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "6979b77845f261385239891488b3ca06",
+            "numeric_md5_reference": "6979b77845f261385239891488b3ca06"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.497,
+            "delta_pct": 6112.5,
+            "reference": 0.008
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "6979b77845f261385239891488b3ca06",
+            "bytes": 5943
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-cld5-imca1-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-cld5-imca1-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "6f10f48aa8ff3aaf9a3bc426f15881c9",
+            "numeric_md5_reference": "6f10f48aa8ff3aaf9a3bc426f15881c9"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 56.042,
+            "delta_pct": 41107.35294117647,
+            "reference": 0.136
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "6f10f48aa8ff3aaf9a3bc426f15881c9",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-cld6-imca0-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-cld6-imca0-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "4b49aaaa600c2724c676dd52fa7f5621",
+            "numeric_md5_reference": "4b49aaaa600c2724c676dd52fa7f5621"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.885,
+            "delta_pct": 1670.0,
+            "reference": 0.05
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "4b49aaaa600c2724c676dd52fa7f5621",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-cld7-imca1-icld2",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-cld7-imca1-icld2.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "08bb0bba624c87d914e4e30d2577eee6",
+            "numeric_md5_reference": "08bb0bba624c87d914e4e30d2577eee6"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 57.964,
+            "delta_pct": 41302.85714285714,
+            "reference": 0.14
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "08bb0bba624c87d914e4e30d2577eee6",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-cld7-imca1-icld5-idcor0",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-cld7-imca1-icld5-idcor0.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "1a23736923f255c5bf07872cc34a8d55",
+            "numeric_md5_reference": "1a23736923f255c5bf07872cc34a8d55"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 72.062,
+            "delta_pct": 45508.86075949367,
+            "reference": 0.158
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "1a23736923f255c5bf07872cc34a8d55",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-cld7-imca1-icld5-idcor1",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-cld7-imca1-icld5-idcor1.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "eb1b824e49eb8e840c28281f2f6cf976",
+            "numeric_md5_reference": "eb1b824e49eb8e840c28281f2f6cf976"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 71.473,
+            "delta_pct": 45424.20382165605,
+            "reference": 0.157
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "eb1b824e49eb8e840c28281f2f6cf976",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 82473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "47161e7c72ab43bab12d65c60699e6bd",
+            "numeric_md5_reference": "47161e7c72ab43bab12d65c60699e6bd"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.015,
+            "delta_pct": 7707.692307692308,
+            "reference": 0.013
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "47161e7c72ab43bab12d65c60699e6bd",
+            "bytes": 82473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-aer12",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-aer12.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6173,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "e1e417d7ef089eefc34dccbf70f54720",
+            "numeric_md5_reference": "e1e417d7ef089eefc34dccbf70f54720"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.596,
+            "delta_pct": 6522.222222222223,
+            "reference": 0.009
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "e1e417d7ef089eefc34dccbf70f54720",
+            "bytes": 6173
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza45-isolvar0-tsi-avg",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza45-isolvar0-tsi-avg.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 76473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "6d3244e52a8a09711d78aa1dd8a63dbe",
+            "numeric_md5_reference": "6d3244e52a8a09711d78aa1dd8a63dbe"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.956,
+            "delta_pct": 5874.999999999999,
+            "reference": 0.016
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "6d3244e52a8a09711d78aa1dd8a63dbe",
+            "bytes": 76473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza45-isolvar1-tsi-max",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza45-isolvar1-tsi-max.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 76473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "c5843afbed0fdd18695d11414ad78b85",
+            "numeric_md5_reference": "c5843afbed0fdd18695d11414ad78b85"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.978,
+            "delta_pct": 6012.5,
+            "reference": 0.016
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "c5843afbed0fdd18695d11414ad78b85",
+            "bytes": 76473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza45-isolvar1-tsi-min",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza45-isolvar1-tsi-min.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 76473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "fca85ce98470bd3f1a83e77410318e65",
+            "numeric_md5_reference": "fca85ce98470bd3f1a83e77410318e65"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.963,
+            "delta_pct": 5918.749999999999,
+            "reference": 0.016
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "fca85ce98470bd3f1a83e77410318e65",
+            "bytes": 76473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza45-isolvar2-01jan1950",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza45-isolvar2-01jan1950.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 76473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "3d517da840c7a58a1be49f68d98a187a",
+            "numeric_md5_reference": "3d517da840c7a58a1be49f68d98a187a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.026,
+            "delta_pct": 5935.2941176470595,
+            "reference": 0.017
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "3d517da840c7a58a1be49f68d98a187a",
+            "bytes": 76473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza45-isolvar3-bndscl-tsi-max",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza45-isolvar3-bndscl-tsi-max.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 76473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "a1f3d44836226f35bdec3b5b435ed091",
+            "numeric_md5_reference": "a1f3d44836226f35bdec3b5b435ed091"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.965,
+            "delta_pct": 4978.9473684210525,
+            "reference": 0.019
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "a1f3d44836226f35bdec3b5b435ed091",
+            "bytes": 76473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mls-clr-sza65",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mls-clr-sza65.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 82473,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "b86b0700ef7211ccdc0c2647cfb52e3b",
+            "numeric_md5_reference": "b86b0700ef7211ccdc0c2647cfb52e3b"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.034,
+            "delta_pct": 5982.352941176471,
+            "reference": 0.017
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "b86b0700ef7211ccdc0c2647cfb52e3b",
+            "bytes": 82473
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-mlw-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-mlw-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 7073,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "94335e804eab94712dfb1c73497943fe",
+            "numeric_md5_reference": "94335e804eab94712dfb1c73497943fe"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.621,
+            "delta_pct": 4676.923076923077,
+            "reference": 0.013
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "94335e804eab94712dfb1c73497943fe",
+            "bytes": 7073
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-saw-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-saw-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 6973,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "86949359a8ad82b46f0b7443ce82225a",
+            "numeric_md5_reference": "86949359a8ad82b46f0b7443ce82225a"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.646,
+            "delta_pct": 6360.0,
+            "reference": 0.01
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "86949359a8ad82b46f0b7443ce82225a",
+            "bytes": 6973
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sw-trop-clr",
+      "benchmark": "rrtmg-numpy/benchmarks/sw-trop-clr.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "{OUTPUT_RRTM,run.log}",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
+          }
+        ]
+      },
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (2 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "OUTPUT_RRTM",
+            "numeric_count": 7073,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "0eb942af2e7db74cf7545225e73fb4fb",
+            "numeric_md5_reference": "0eb942af2e7db74cf7545225e73fb4fb"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 0,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "d41d8cd98f00b204e9800998ecf8427e",
+            "numeric_md5_reference": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.631,
+            "delta_pct": 5636.363636363637,
+            "reference": 0.011
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "OUTPUT_RRTM",
+            "md5": "0eb942af2e7db74cf7545225e73fb4fb",
+            "bytes": 7073
+          },
+          {
+            "name": "run.log",
+            "md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "bytes": 0
           }
         ]
       }
@@ -142,6 +2947,6 @@
     "status": "NOT_RUN"
   },
   "result": "FAIL",
-  "timestamp": "2026-10-05T05:25:48Z",
-  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: verifier job cand-o5w/o5w-alpine-a; the time is when the job finished. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files). Filed in PR #12 and assembled again at Val-Track 01b0f3a, where it replaces the reconstructed record the wave24 backfill filed here (invariant 8's upgrade). lw-mls-cld5-imca0-icld2 is gated on the default-allocator pair of job 33432017, not the zero-heap pair #12 gated; see its benchmark."
 }

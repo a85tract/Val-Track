@@ -3,41 +3,62 @@
 | | |
 |---|---|
 | Artifact | `https://github.com/a85tract/RecastEngine-Pro` @ `783ef4bb` |
-| Reference | CAM-SIMA (Kessler), 47e1e6303951d999f6939bdffff829f682a2e081 |
-| Val-Track | unreleased-53515314 (`53515314`) |
-| Machine | Derecho (NCAR) |
-| Compiler | _not captured_ |
-| Cases | 3 |
+| Reference | CAM-SIMA (ESCOMP/CAM-SIMA, CIME FPHYStest) with ESCOMP/atmospheric_physics and NCAR/ccpp-framework, CAM-SIMA 47e1e6303951d999f6939bdffff829f682a2e081 (development, + bin/git-fleximod update); atmospheric_physics 3fd57dde51ea63f35f3e3655012ad074a06ad051; ccpp-framework 766261cf0433692037eec258ba87dcdbea552692 |
+| Val-Track | unreleased-01b0f3a7 (`01b0f3a7`) |
+| Machine | NCAR Derecho CPU nodes, PBS, CIME machine derecho |
+| Compiler | GNU Fortran 14.3.0 (CIME derecho_gnu, module gcc/14.3.0), the case's flags plus -ffp-contract=off |
+| Cases | 4 |
 | Result | **PASS** |
 | Security gate | NOT_RUN |
-| Evidence class | reconstructed |
-| Validated | 2026-10-05T05:05:05Z |
+| Evidence class | complete |
+| Validated | 2026-10-05T06:48:14Z |
 
 ## Cases
 
-### kessler — PASS
-
-Criteria: `camsima-numpy/benchmarks/kessler.yaml` (output-verdict)
-
-| Check | Gating | Passed | Detail |
-|---|---|---|---|
-| `run_set_equal` | yes | yes | 1 runs, as the benchmark names them |
-| `runs_identical` | yes | yes | 1 of 1 runs identical (3 output files compared) |
-
 ### held-suarez — PASS
 
-Criteria: `camsima-numpy/benchmarks/held-suarez.yaml` (output-verdict)
+Criteria: `camsima-numpy/benchmarks/held-suarez.yaml` (bitwise)
 
 | Check | Gating | Passed | Detail |
 |---|---|---|---|
-| `run_set_equal` | yes | yes | 1 runs, as the benchmark names them |
-| `runs_identical` | yes | yes | 1 of 1 runs identical (3 output files compared) |
+| `file_set_equal` | yes | yes | file sets match |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (2 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `timing_delta_pct` | no | — | reported without a bound |
 
-### tj2016 — PASS
+### kessler — PASS
 
-Criteria: `camsima-numpy/benchmarks/tj2016.yaml` (output-verdict)
+Criteria: `camsima-numpy/benchmarks/kessler.yaml` (bitwise)
 
 | Check | Gating | Passed | Detail |
 |---|---|---|---|
-| `run_set_equal` | yes | yes | 2 runs, as the benchmark names them |
-| `runs_identical` | yes | yes | 2 of 2 runs identical (6 output files compared) |
+| `file_set_equal` | yes | yes | file sets match |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (2 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `timing_delta_pct` | no | — | reported without a bound |
+
+### tj2016-after-coupler — PASS
+
+Criteria: `camsima-numpy/benchmarks/tj2016-after-coupler.yaml` (bitwise)
+
+| Check | Gating | Passed | Detail |
+|---|---|---|---|
+| `file_set_equal` | yes | yes | file sets match |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (2 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `timing_delta_pct` | no | — | reported without a bound |
+
+### tj2016-before-coupler — PASS
+
+Criteria: `camsima-numpy/benchmarks/tj2016-before-coupler.yaml` (bitwise)
+
+| Check | Gating | Passed | Detail |
+|---|---|---|---|
+| `file_set_equal` | yes | yes | file sets match |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (2 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `numeric_md5_equal` | yes | yes | overall_numeric_equal=True (1 files) |
+| `timing_delta_pct` | no | — | reported without a bound |
