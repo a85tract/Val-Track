@@ -489,9 +489,12 @@ def evaluate_case(acceptance: dict, comparison: dict) -> dict:
         try:
             passed, detail = evaluator(rule, comparison)
         except Unevaluable as exc:
-            reasons.append("%s: %s" % (rule.get("check"), exc))
             # A gating check may not carry a null verdict, and it did not pass;
             # the case status carries the truth that it was never evaluated.
+            # A non-gating one reaches no verdict, which is what null says; it
+            # decides nothing, so it does not make the case an ERROR either.
+            if gating:
+                reasons.append("%s: %s" % (rule.get("check"), exc))
             passed = False if gating else None
             detail = "could not be evaluated: %s" % exc
         checks.append({
