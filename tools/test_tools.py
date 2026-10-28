@@ -252,6 +252,30 @@ def test_gating_rule_with_no_measurement_is_error(workspace, tmp_path):
     assert case["result"]["checks"][2]["passed"] is False
 
 
+def test_non_gating_rule_with_no_measurement_is_null_not_error(workspace, tmp_path, capsys):
+    rules = list(BITWISE_RULES[:2]) + [
+        {"check": "timing_delta_pct", "timers": ["physpkg_st1"], "max_abs_pct": 5.0,
+         "gating": False}]
+    make_benchmark(workspace, "pi-6month", rules)
+    case_json = comparator("pass-no-timers")
+
+    assert make_manifest.main(manifest_argv(workspace, case_json)) == 0
+
+    path = (workspace["cc_test"] / "pycam5" / "evidence" / workspace["version"]
+            / "manifest.json")
+    manifest = json.loads(path.read_text())
+    assert manifest["result"] == "PASS"
+    case, = manifest["cases"]
+    assert case["result"]["status"] == "PASS"
+    assert "error" not in case["result"]
+    assert case["result"]["checks"][2]["passed"] is None
+    assert "timers not measured" in case["result"]["checks"][2]["detail"]
+
+    capsys.readouterr()
+    assert verify_evidence.main([str(path)]) == 0
+    assert "ERROR" not in capsys.readouterr().out
+
+
 def test_scope_matching_no_files_is_error(workspace, tmp_path):
     rules = [
         {"check": "file_set_equal", "scope": "*.cam.h0.*", "gating": True},
