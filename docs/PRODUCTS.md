@@ -114,6 +114,9 @@ an existing record fails. `INDEX.md`, `index.json` and the READMEs are not recor
 The one move allowed is a record from the old `evidence/<product>/<version>/` layout to
 `<product>/evidence/<version>/`, byte for byte; such a record still names its
 benchmarks as `benchmarks/<product>/<case>`, which the tools read as the same files here.
+The one in-place edit allowed is an upgrade: a `reconstructed` record may be replaced by a
+`complete` one for the same `artifact.commit`, when the digests turn up after a record was
+rebuilt without them (invariant 8 in `schemas/README.md`); never the other way round.
 Without `--base-ref` there is no base branch to diff against, so the check is reported as
 skipped rather than silently passed.
 

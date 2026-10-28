@@ -104,7 +104,12 @@ branch (8). Each is then reported as `SKIP` with the reason rather than counted 
    (`<product>/evidence/<version>/*`) may be modified, deleted or renamed by a pull
    request. `INDEX.md`, `index.json` and READMEs are not records and are exempt. The one move
    allowed is a record from the old `evidence/<product>/<version>/` layout to
-   `<product>/evidence/<version>/`, byte for byte.
+   `<product>/evidence/<version>/`, byte for byte. The one in-place edit allowed is an
+   upgrade: a record whose manifest on the base branch is `evidence_class: reconstructed`
+   may be replaced, files deleted or rewritten, by a record whose manifest is `complete`
+   for the same `artifact.commit`. It is reported as a warning so the review sees it. A
+   reconstructed record is not compliance evidence (warning 12), and the old record stays
+   in the history; never the other way round.
 9. `acceptance.kind: statistical` is rejected while its `status` is `provisional`.
 10. `security.scanned_commit` equals `artifact.commit` — otherwise the Cyber verdict
     describes different code than the correctness verdict.
