@@ -1,31 +1,82 @@
-# held-suarez: CAM-SIMA with Held-Suarez forcing, outfrq test.
-# Criterion for the verdict table backfilled from OOPSLA2027_evidence; written by tools/backfill_wave24.py.
-
+# camsima-numpy / held-suarez: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
 id: held-suarez
 product: camsima-numpy
-description: CAM-SIMA with Held-Suarez forcing, outfrq test
+description: 'CAM-SIMA Held-Suarez (SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho):
+  original vs translated program, 4 output files compared'
 case:
-  engine: 783ef4b (wave24-accepted)
-  campaign: verifier job cand-o5w/o5w-derecho; the time is when the job finished
-  runs: 1 (primary 1)
-  notes: backfilled from a85tract/OOPSLA2027_evidence auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv
+  benchmark: 'CAM-SIMA''s CIME regression test SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho:
+    compset FPHYStest, grid ne3pg3_ne3pg3_mg37, SMS (smoke) for 2 time steps (Ln2), testmod cam/outfrq_held_suarez_derecho
+    (the Held-Suarez (1994) forcing suite; the test''s own snapshot check in atm.log). Inputs: the testmod''s namelist
+    and the CESM inputdata files it names, on Derecho. Output files compared: TestStatus, run/atm.log.<LID>.gz,
+    run/<case>.cam.h2i.0001-01-01-00000.nc and run/<case>.cam.h2i.0001-01-01-03600.nc'
+  build: 'CIME: create_test --no-build (--test-id pic | w5h), ./xmlchange NTASKS=1,ROOTPE=0, ./case.setup --reset,
+    -fPIC appended to FFLAGS/CFLAGS/CXXFLAGS (cmake_macros/gnu_derecho.cmake), ./case.build: gnu 14.3.0, the ccs_config
+    gnu flags (cmake_macros/gnu.cmake, DEBUG FALSE: -O2 -ffp-contract=off) + -fPIC (kit remote/build_pic.sh). Translated
+    program: the same case build with SourceMods/src.cam = the in-situ wrapper files + recast_insitu_bridge.f90
+    (from `python -m recast.insitu <config> --prepare-only`), the f2py extension linked from the driver''s objects
+    with cesm.exe''s link line, and bld/cesm.exe replaced by the launcher (venv-o5f Python on ext/recast_launch.py)
+    (kit remote/build_insitu.sh)'
+  run: ./case.submit (PBS queue develop, the case's mpibind, NTASKS=1, OMP_NUM_THREADS=1), then compare_case.py
+    <pic case> <translated case> (kit remote/run_case.sh, chain o5f_chains.sh = ID_PREFIX=w5 o3_chains.sh outermost)
+  environment: 'NCAR Derecho CPU node (PBS develop), CIME machine derecho, compiler gnu, mpilib mpich: modules (the
+    case''s .env_mach_specific.sh) module load ncarenv/25.10 cesmdev/1.0; module purge; module load conda/latest
+    nco craype cmake gcc/14.3.0 cray-libsci/25.03.0 ncarcompilers/1.2.0 cray-mpich/8.1.32 netcdf-mpi/4.9.3 parallel-netcdf/1.14.1
+    parallelio/2.6.8 esmf-mpi/8.9.1; env OMP_STACKSIZE=64M FI_CXI_RX_MATCH_MODE=hybrid FI_MR_CACHE_MONITOR=memhooks
+    ESMF_RUNTIME_PROFILE=ON ESMF_RUNTIME_PROFILE_OUTPUT=SUMMARY; the translated case''s env_mach_specific.xml also
+    sets RECAST_INSITU_FORTRAN= (empty: no subprogram sent back to Fortran) and its launcher runs Python 3.11.14
+    (spack) in the venv venv-o5f with numpy 2.4.6, OMP_NUM_THREADS=1; no LD_PRELOAD, no heap protocol'
+  engine: 783ef4bbb334d8fa39572a13a6f04a9042ab43d2
+  translation: 'in situ, the engine''s own outermost plan (the kit''s keep list is empty): delegated 13 (initialize_errvars,
+    append_errvars, ccp_is_instantiated, ccp_is_thermo_active, ccp_is_water_species, ccpt_is_thermo_active, ccpt_is_water_species,
+    geopotential_temp_run, held_suarez_1994_init, held_suarez_1994_run, apply_tendency_of_eastward_wind_run, apply_tendency_of_northward_wind_run,
+    apply_heating_rate_run); inside NumPy 0; kept Fortran 0. The NuOPC/ESMF driver, CAM-SIMA host, CCPP caps and
+    I/O stay Fortran (the benchmark''s own main). 233 NumPy calls from Fortran in the run'
+  accepted_run: 'reference SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho.pic:
+    PBS 7689847, 2026-10-02, $DERECHO_SCRATCH/recast-cand/cases/SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho.pic;
+    candidate SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho.w5h: PBS 7715044,
+    2026-10-04, $DERECHO_SCRATCH/recast-cand/cases/SMS_Ln2.ne3pg3_ne3pg3_mg37.FPHYStest.derecho_gnu.cam-outfrq_held_suarez_derecho.w5h;
+    verdict IDENTICAL in the wave24 acceptance log (wave24 acceptance)'
+  notes: 'Kit engine-o5f/REPAIR_NOTES/cand-o3-camsima_t1 (RecastEngine-Pro 783ef4bb), config: make_config.py with
+    an empty keep list (work dir $DERECHO_WORK/recast-cand/o5f-t1/work_outfrq_held_suarez_derecho_outermost).
+    Test-ids are 3 characters like pic so the history headers keep their size. Digests: kit/digest_camsima.py
+    (PBS 7835618, 2026-10-16); RUNS.md says how to re-run'
 reference:
-  model: CAM-SIMA (Held-Suarez)
-  commit_or_tag: 47e1e6303951d999f6939bdffff829f682a2e081
-  provenance: 'the case kit''s native build of the same staged source tree; the candidate is that driver
-    with the translated procedures delegated to the generated NumPy; components: CAM-SIMA 47e1e6303951,
-    atmospheric_physics 3fd57dde51ea, ccpp-framework 766261cf0433'
+  model: CAM-SIMA (ESCOMP/CAM-SIMA, CIME FPHYStest) with ESCOMP/atmospheric_physics and NCAR/ccpp-framework
+  commit_or_tag: CAM-SIMA 47e1e6303951d999f6939bdffff829f682a2e081 (development, + bin/git-fleximod update); atmospheric_physics
+    3fd57dde51ea63f35f3e3655012ad074a06ad051; ccpp-framework 766261cf0433692037eec258ba87dcdbea552692
+  provenance: 'the original Fortran program: same staged source, same build flags, same benchmark inputs and node
+    class; run by the same kit as the candidate'
 acceptance:
-  kind: output-verdict
-  verdict_schema: 1
+  kind: bitwise
   rules:
-  - check: run_set_equal
-    runs:
-    - outfrq_held_suarez_derecho
+  - check: file_set_equal
+    scope: '{TestStatus,run/atm.log.*.gz,run/*.cam.h*.nc}'
     gating: true
-  - check: runs_identical
-    verifier: candidates in-situ verifier with cprnc (Derecho)
-    roles:
-    - primary
-    normalization: cprnc compares the history files' numeric fields; the atmosphere log is normalized
+  - check: numeric_md5_equal
+    scope: run/*.cam.h*.nc
+    dump_tool: numpy (digest_camsima.py's reader of the netCDF 64-bit offset format, checked value by value against
+      ncdump -p 9,17 by check_reader.py; NCO is not on Derecho's default module path)
+    dump_format: '%+.17g: every numeric variable (byte/short/int/float/double) in sorted name order, a line with
+      the name, then one line per value ''%+.17g'' (C order, all records); md5 of the text. The char variables date_written/time_written
+      (wall-clock stamps) and all attributes are not dumped'
     gating: true
+  - check: numeric_md5_equal
+    scope: TestStatus
+    dump_tool: md5 of the text after the kit's TestStatus masks (compare_case.py at 783ef4bb)
+    dump_format: 'compare_case.py TestStatus rules, in order, per line: re.sub(r'' time=\S+'', ''''); re.sub(r''\S+\.(pic|insitu\S*)\b'',
+      ''<case>''); the test name (the reference case dir name without its test-id) -> ''<test>''; then md5 of the
+      lines joined by ''\n'''
+    gating: true
+  - check: numeric_md5_equal
+    scope: run/atm.log.*.gz
+    dump_tool: md5 of the text after the kit's atm.log masks (compare_case.py at 783ef4bb)
+    dump_format: 'compare_case.py atm.log rules: gunzip; splitlines; drop every line where re.search(r''(\d{4}-\d{2}-\d{2}|\d{2}:\d{2}:\d{2}|memory|Memory|highwater|seconds|sec/|wall|Wall|time|Time|pid|PID|hostname)'')
+      matches (dates, clock times, timers, memory, pids, host names); the run''s CASE (test name + test-id) -> ''<case>'';
+      then md5 of the lines joined by ''\n'''
+    gating: true
+  - check: timing_delta_pct
+    timers:
+    - wall_seconds
+    gating: false
+    note: wall time of the original vs the translated run (CIME TestStatus RUN time=, whole seconds); reported,
+      never gates

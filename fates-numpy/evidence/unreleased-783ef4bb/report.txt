@@ -1,2 +1,12 @@
-target	layer	role	case	engine_commit	benchmark_runs	output_files	delegated_calls	compared_values	raw_bytes_known	files_with_sizes	raw_bytes_total	exact_compared_bytes	verdict	source	notes	f64_points	int32_points
-fates	in_situ	primary	smoke	783ef4bbb334d8fa39572a13a6f04a9042ab43d2	1	3	344700	未查到	1981	2	未查到	未查到	identical	/home/secondst/Code/recast/candidates/results/round3/verify_o5w/alpine-b_kit/fates/results/smoke/outermost/result_outermost.json	Leaf-biophysics smoke; not the earlier failed import run.		
+fates-numpy -- wave24 in-situ acceptance: the original program vs the translated program (RecastEngine-Pro 783ef4bb) on the project's own benchmark, file by file.
+
+== smoke: PASS
+benchmark: FATES functional_unit_testing/leaf_biophys smoke test: `python DriveSmokeTestLeafBiophys.py --fin leaf_biophys_controls.xml --smoketest` in fut/leaf_biophys, the driver unchanged, calling the FATES shared objects through ctypes (CtypesLeafBiophys.py); input leaf_biophys_controls.xml; grid SMOKE_LEAF_TEMPC_N=5 SMOKE_RH_N=5 SMOKE_PAR_ABS_N=5 SMOKE_GB_N=3 SMOKE_BTRAN_N=5 SMOKE_VCMAX25T_N=3 (the log: 2 conductance models, 2 pathways, stomatal/agross btran options, 5 leaf temperatures, 5 RH, 5 PAR, 3 gb, 5 BTRAN, 3 Vcmax25top; 'Running a total of 337500 tests', '0 Failures out of 337500'). Outputs compared: the driver's stdout leaf_smoke.log, and plotdata/DriveSmokeTestLeafBiophys.py.{plotdata.json,values.txt} written by the kit's matplotlib stand-in (pyshim: digest and values of every array the driver plots; the smoke driver plots none). The benchmark tree is cand-o1b's copy (drivers patched L1-L3 by its build.sh), copied into $ALPINE_SCRATCH/recast-cand/o5w/fates/proj by the job's STEPS=proj
+accepted runs: Slurm job 33422762 (o5w-fates, cand-o5w-alpine-b), 2026-10-05 05:05:45-05:08:45 UTC, both runs: $ALPINE_SCRATCH/recast-cand/o5w/fates/work_smoke_outermost/runs/pure (original, 2.894 s) and .../runs/outermost (translated, 92.721 s); verdict IDENTICAL (the wave24 acceptance log). Not the first job 33422617 (work_smoke_outermost_noshim): its kit lacked pyshim/, both drivers stopped at `import matplotlib`
+wall seconds: original 2.894, translated 92.721
+
+file	bytes_original	md5_original	bytes_translated	md5_translated	compared_as	compared_digest_original	compared_digest_translated	equal
+leaf_smoke.log	1877	c47a405ec51c2ca70acd90496514b2d8	1878	319210230d2d8fd13d3aeeedc5b8bb41	masked:drop lines matching /^Elapsed Time \[s\]: /	a1eb68ec1312a56d681297df57c99416	a1eb68ec1312a56d681297df57c99416	yes
+plotdata/DriveSmokeTestLeafBiophys.py.plotdata.json	104	e757bad248702c5fe090c409d635ca02	104	e757bad248702c5fe090c409d635ca02	raw	e757bad248702c5fe090c409d635ca02	e757bad248702c5fe090c409d635ca02	yes
+plotdata/DriveSmokeTestLeafBiophys.py.values.txt	1	68b329da9893e34099c7d8ad5cb9c940	1	68b329da9893e34099c7d8ad5cb9c940	raw	68b329da9893e34099c7d8ad5cb9c940	68b329da9893e34099c7d8ad5cb9c940	yes
+

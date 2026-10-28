@@ -21,7 +21,8 @@ schemas/benchmark.TEMPLATE.yaml   an annotated benchmark to start from
 | `clm-ml-jax/` | 2, schema-valid but not yet evaluable: the case commits a merged verdict-string file, not the engine's schema-1 summary | none |
 | `pycam5/` | 0 — bitwise whole-model cases, not written yet | none |
 | `freecam/` | 0 — not written yet | none |
-| `<system>-numpy/`, fifteen of them (qe, mfc, njoy, ramses, duo, cvmix, marbl, rrtmg, cosp2, carma, fates, ww3, cism, camsima, clubb) | 18 output-verdict benchmarks backfilled by `tools/backfill_wave24.py`: one per system, three for CAM-SIMA, two for CLUBB | `unreleased-783ef4bb` each (RecastEngine-Pro `783ef4b`), `reconstructed`; rrtmg-numpy FAIL, the rest PASS |
+| `<system>-numpy/`, nine of them (camsima, cvmix, marbl, rrtmg, cosp2, carma, fates, cism, ww3) | 72 bitwise benchmarks, one per case of the wave24 in-situ acceptance | `unreleased-783ef4bb` each (RecastEngine-Pro `783ef4b`), `complete`, replacing the backfilled records; rrtmg-numpy FAIL (one LW case), the rest PASS |
+| `<system>-numpy/`, six of them (qe, mfc, njoy, ramses, duo, clubb) | 7 output-verdict benchmarks backfilled by `tools/backfill_wave24.py`: one per system, two for CLUBB | `unreleased-783ef4bb` each (RecastEngine-Pro `783ef4b`), `reconstructed`; all PASS |
 
 `elm-jax/` is added when that case repository exists (`CORRECTNESS-ORGANIZATION.md`
 step 7).
@@ -41,9 +42,10 @@ benchmark, never editing an acceptance record.
 `unit-differential` for a RecastEngine case, whose measurements are the verdicts in the case
 repository's summaries, and `output-verdict` for a run judged by a case kit's own verifier,
 whose measurements are that verifier's per-run verdicts. The last is how the wave24
-application validations were backfilled (`tools/backfill_wave24.py`, the `<system>-numpy`
-products): their outputs and logs are gone, the verdicts are what survived, and every
-record built that way is `reconstructed`.
+application validations were backfilled (`tools/backfill_wave24.py`, six of the
+`<system>-numpy` products): their outputs and logs are gone, the verdicts are what survived,
+and every record built that way is `reconstructed`. For the other nine the per-file digests
+survived, and their `bitwise` records replaced the backfilled ones.
 
 ### Benchmark format
 
@@ -114,6 +116,9 @@ an existing record fails. `INDEX.md`, `index.json` and the READMEs are not recor
 The one move allowed is a record from the old `evidence/<product>/<version>/` layout to
 `<product>/evidence/<version>/`, byte for byte; such a record still names its
 benchmarks as `benchmarks/<product>/<case>`, which the tools read as the same files here.
+The one in-place edit allowed is an upgrade: a `reconstructed` record may be replaced by a
+`complete` one for the same `artifact.commit`, when the digests turn up after a record was
+rebuilt without them (invariant 8 in `schemas/README.md`); never the other way round.
 Without `--base-ref` there is no base branch to diff against, so the check is reported as
 skipped rather than silently passed.
 

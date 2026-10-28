@@ -10,6 +10,11 @@ what survives is the verdict table in a85tract/OOPSLA2027_evidence
 replay and feedback aggregates. This turns that into one product per system,
 `<system>-numpy`, with output-verdict benchmarks and `reconstructed` records.
 
+It covers six of them now: qe, mfc, njoy, ramses, duo and clubb. For the other
+nine (camsima, cvmix, marbl, rrtmg, cosp2, carma, fates, cism, ww3) the per-file
+digests of the same runs turned up, and their `complete` bitwise records
+replaced the backfilled ones; this tool as it filed all fifteen is at 5351531.
+
 Two steps, so that the records name the commit that holds their criteria
 (docs/PRODUCTS.md, "file a record the way clubb-jax's was"):
 
@@ -50,7 +55,6 @@ CLUBB_AGGREGATE = "wave24/scope/clubb_wave24/aggregate.json"
 CLUBB_REPLAY = "wave24/scope/clubb_wave24_replay150_stdout.txt"
 
 INSITU = "candidates in-situ verifier (alpine/verify_insitu.sh)"
-CPRNC = "candidates in-situ verifier with cprnc (Derecho)"
 CLUBB_HARNESS = ("clubb boundary harness, sha256 "
                  "edeb666b4e8cc5004b3b1c95a59dcbfa08e6e3bd7cdd8ac5179c4baed152fc41")
 
@@ -69,14 +73,6 @@ GFORTRAN = "gfortran 14.2.0 (/curc/sw/install/gcc/14.2.0)"
 CAMPAIGNS = {
     "guard": ("2026-10-05T05:01:39Z", "the guard_o5f run on Alpine; the time is when its "
               "prep (job 33422506) finished, as the job header records"),
-    "alpine-a": ("2026-10-05T05:25:48Z", "verifier job cand-o5w/o5w-alpine-a; the time is "
-                 "when the job finished"),
-    "alpine-b": ("2026-10-05T06:26:32Z", "verifier job cand-o5w/o5w-alpine-b; the time is "
-                 "when the job finished"),
-    "derecho": ("2026-10-05T05:05:05Z", "verifier job cand-o5w/o5w-derecho; the time is "
-                "when the job finished"),
-    "cism": ("2026-10-05T05:50:48Z", "verifier job cand-o5v-cism-783ef4bb; the time is "
-             "when the job finished"),
     "clubb": ("2026-10-07T23:55:48Z", "no run time was recorded; the time is when the "
               "bitexact_scale inventory read the aggregate, so the runs are no later"),
 }
@@ -95,31 +91,6 @@ CASES = [
      "three RAMSES test problems"),
     ("duo", "duo-numpy", "duo", "Duo", ["main"], "guard", INSITU, GFORTRAN,
      "two Duo inputs"),
-    ("cvmix", "cvmix-numpy", "cvmix", "CVMix", ["main"], "alpine-a", INSITU, GFORTRAN,
-     "four CVMix drivers, outermost plan"),
-    ("marbl", "marbl-numpy", "marbl", "MARBL", ["main"], "alpine-a", INSITU, None,
-     "two MARBL drivers, outermost plan"),
-    ("rrtmg", "rrtmg-numpy", "rrtmg", "RRTMG (LW, SW)", ["LW", "SW"], "alpine-a", INSITU,
-     None, "the RRTMG LW and SW benchmark configurations, outermost plan"),
-    ("cosp2", "cosp2-numpy", "cosp2", "COSP2", ["main"], "alpine-a", INSITU, None,
-     "the COSP2 UKMO driver, outermost plan"),
-    ("carma", "carma-numpy", "carma", "CARMA", ["wrapper", "base"], "alpine-b", INSITU, None,
-     "the CARMA test programs"),
-    ("fates", "fates-numpy", "fates", "FATES", ["main"], "alpine-b", INSITU, None,
-     "the FATES leaf-biophysics smoke test"),
-    ("ww3", "ww3-numpy", "ww3", "WAVEWATCH III", ["main"], "alpine-b", INSITU, None,
-     "two WW3 test cases and the tp1.1 postprocessing"),
-    ("cism", "cism-numpy", "cism", "CISM", ["main"], "cism", INSITU, None,
-     "halfar-HO t5 with the merged plan, its restart, and the t0/t1 short runs"),
-    ("cam_kessler", "camsima-numpy", "kessler", "CAM-SIMA (Kessler)",
-     ["CAM-SIMA", "atmospheric_physics", "ccpp-framework"], "derecho", CPRNC, None,
-     "CAM-SIMA with Kessler physics, outfrq test"),
-    ("cam_held_suarez", "camsima-numpy", "held-suarez", "CAM-SIMA (Held-Suarez)",
-     ["CAM-SIMA", "atmospheric_physics", "ccpp-framework"], "derecho", CPRNC, None,
-     "CAM-SIMA with Held-Suarez forcing, outfrq test"),
-    ("cam_tj2016", "camsima-numpy", "tj2016", "CAM-SIMA (TJ2016)",
-     ["CAM-SIMA", "atmospheric_physics", "ccpp-framework"], "derecho", CPRNC, None,
-     "CAM-SIMA with TJ2016 physics, before and after the coupler"),
     ("clubb:replay", "clubb-numpy", "replay", "CLUBB_core, larson-group/clubb_release",
      ["fortran"], "clubb", CLUBB_HARNESS, None,
      "independent replay of 150 recorded calls over eight trajectories"),
@@ -131,21 +102,6 @@ CASES = [
 # Roles that gate: the benchmark's tests, and outputs of those same runs the
 # verifier reported separately. Diagnostic roles are control runs beside them.
 GATING_ROLES = ("primary", "tape_outputs", "restart_output", "postprocess")
-
-RRTMG_NOTE = (
-    "LW MLS-cld5-imca0-icld2 differs by one value (max abs 1.0e-07) under the default "
-    "allocator: the native program reads undefined heap storage. Under zero-filled malloc "
-    "all 14 LW configurations are byte-identical (the zero_heap_diagnostic runs; "
-    "OOPSLA2027_evidence wave24/rrtmg_initialization). The run stays gated: ungating it is "
-    "a maintainer's decision, not something a backfill does.")
-
-CARMA_NOTE = (
-    "For GROWCLRTEST, GROWINTEST, GROWSUBTEST, GROWTEST, NUCTEST and PHEATTEST the gated "
-    "run is the zero-heap one (malloc zero-filled in both processes), as the table selects "
-    "it. The default-allocator runs of those tests are the ordinary_overlap_diagnostic "
-    "rows, and GROWTEST and PHEATTEST differ there - the same undefined-storage reading "
-    "that keeps RRTMG's MLS-cld5-imca0-icld2 failing, where the table selected the "
-    "default-allocator run instead.")
 
 CLUBB_NORMALIZATION = ("none: binary64 bit patterns and exact int32 values of every "
                        "argument at the routine boundary")
@@ -241,8 +197,7 @@ def runs_for(evidence: Path, rows: List[dict], target: str) -> List[dict]:
 
 
 def revisions(evidence: Path, target: str, components: List[str]) -> List[dict]:
-    key = "clubb" if target.startswith("clubb:") else (
-        "camsima_t1" if target.startswith("cam_") else target)
+    key = "clubb" if target.startswith("clubb:") else target
     sources = json.loads((evidence / REVISIONS).read_text())["sources"]
     found = [s for s in sources if s["target"] == key and s["component"] in components]
     if len(found) != len(components):
@@ -258,16 +213,12 @@ def benchmark_document(evidence: Path, rows: List[dict], spec) -> dict:
     gating = [r for r in roles if r in GATING_ROLES]
     diagnostic = [r for r in roles if r not in GATING_ROLES]
     clubb = target.startswith("clubb:")
-    normalization = CLUBB_NORMALIZATION if clubb else (
-        "cprnc compares the history files' numeric fields; the atmosphere log is normalized"
-        if verifier == CPRNC else KIT_NORMALIZATION)
+    normalization = CLUBB_NORMALIZATION if clubb else KIT_NORMALIZATION
 
     rules: List[dict] = [{"check": "run_set_equal", "runs": [r["run"] for r in runs],
                           "gating": True}]
     rule = {"check": "runs_identical", "verifier": verifier, "roles": gating,
             "normalization": normalization, "gating": True}
-    if target in ("rrtmg", "carma"):
-        rule["note"] = RRTMG_NOTE if target == "rrtmg" else CARMA_NOTE
     rules.append(rule)
     if diagnostic:
         rules.append({"check": "runs_identical", "verifier": verifier, "roles": diagnostic,
@@ -336,10 +287,6 @@ def write_benchmarks(evidence: Path) -> None:
             lines.append("| `%s` | %s | %s | %s `%s` |" % (
                 document["id"], document["description"], document["case"]["runs"],
                 document["reference"]["model"], document["reference"]["commit_or_tag"][:7]))
-            if spec[0] == "rrtmg":
-                lines += ["", "**One gated run differs.** " + RRTMG_NOTE]
-            if spec[0] == "carma":
-                lines += ["", "**Which run gates.** " + CARMA_NOTE]
         (REPO_ROOT / product / "README.md").write_text("\n".join(lines) + "\n")
         print("wrote %s/benchmarks (%d)" % (product, len(specs)))
 
@@ -374,9 +321,8 @@ def write_records(evidence: Path) -> int:
 
         campaign = specs[0][5]
         timestamp, how = CAMPAIGNS[campaign]
-        environment = dict(ALPINE) if campaign in ("guard", "alpine-a", "alpine-b", "cism") else {
-            "machine": "Derecho (NCAR)" if campaign == "derecho"
-            else "Linux workstation (host not recorded)"}
+        environment = dict(ALPINE) if campaign == "guard" else {
+            "machine": "Linux workstation (host not recorded)"}
         argv += ["--benchmark-dir", str(REPO_ROOT / product / "benchmarks"),
                  "--artifact-name", product, "--artifact-repo-url", ENGINE_REPO,
                  "--artifact-commit", ENGINE_COMMIT, "--artifact-version", VERSION,

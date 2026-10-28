@@ -1,0 +1,32 @@
+# marbl-numpy / init: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: "init"
+product: "marbl-numpy"
+description: "MARBL regression test init: original vs translated program, 1 output file compared (run.log)"
+case:
+  benchmark: "MARBL tests/regression_tests/init: the stand-alone driver marbl.exe with test.nml (testname=init) and no settings file (-s not given: the library defaults), num_inst 1; writes its log on stdout"
+  build: "both programs from the same sources in the same order (40 files: the 31 staged library files (`gfortran -E -P -cpp` with the library build's defines) in USE order, then the 9 tests/driver_src files with main marbl.F90): /curc/sw/install/gcc/14.2.0/bin/gfortran -O2 -ffree-form -cpp -ffp-contract=off -D_NETCDF -I<netcdf 4.9.2 include> -fPIC -ffp-contract=off, linked -O2 with -lnetcdff -lnetcdf -ldl -lm. Original: o5w/marbl/pure/marbl.exe (kit build_pure.sh, job 33422492, md5 6abf37cda6774fcc8a62e541fcdd44df). Translated: python -m recast.insitu config_outermost.json (engine 783ef4bb, venv-o5f): the same Fortran objects with the delegated subprograms routed through an f2py extension (recast_marbl) to their NumPy translations; build 35.3 s"
+  run: "recast.insitu run_case: a fresh copy of the case directory per side (*.py removed), `marbl.exe -n test.nml` with stdout > run.log, stderr > run.err, OMP_NUM_THREADS=1; the original program as that executable in runs/pure, the translated program as python recast_launch.py (the extension's recast_run is the benchmark's main, argv0 marbl.exe) in runs/outermost; then compare_outputs(runs/pure, runs/outermost, case.compare, case.mask)"
+  environment: "CU Boulder Alpine, Slurm acpu / cpu-normal / milan (AMD EPYC), 1 task 4 CPUs 24 GB, node c3cpu-c15-u5-3; module purge; module load gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; FC=gfortran 14.2.0, OMP_NUM_THREADS=1, TMPDIR=$SLURM_TMPDIR, XDG_CACHE_HOME=$ALPINE_SCRATCH/.cache, MARBL_O2=$ALPINE_SCRATCH/recast-cand/o5w/marbl; Python 3.12 venv-o5f (Python 3.12.14, numpy 2.5.3 when digested on 2026-10-16); no heap protocol"
+  engine: "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+  translation: "init calls no computational subprogram. The in-situ config is the call_compute_subroutines one (delegate: outermost, keep: {}): 79 reached subprograms, delegated (5): marbl_interior_tendency_compute, marbl_interior_tendency_adjust_bury_coeff, marbl_surface_flux_compute, marbl_settings_set_all_derived, marbl_diagnostics_share_compute_vertical_integrals; inside NumPy (74); kept Fortran (0). Of these, this benchmark reaches only marbl_settings_set_all_derived (1 call from Fortran into NumPy, a settings routine that derives the dependent parameters); none of the interior-tendency or surface-flux computations runs"
+  accepted_run: "Alpine job 33422496 (2026-10-05 05:01-05:03 UTC; original program built by job 33422492, 04:59-05:00 UTC), work directory $ALPINE_SCRATCH/recast-cand/o5w/marbl/init/work_final: original runs/pure, translated runs/outermost; kit verdict IDENTICAL 1/1 (the wave24 acceptance log, cand-o5w alpine-a). Digested read only by job 34238999 (2026-10-16)"
+  notes: "the compare is byte for byte after the mask: run.log is compared with its timer lines removed (mask run\\.log$::^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)). run.err (empty on both sides) is not in case.compare. The translated run directory also holds the harness's recast_launch.py and recast_calls.json, which are not benchmark outputs. A re-run needs the set-up in o5w/marbl (staged/, driver/, replay.json, kit/) (RUNS.md)"
+reference:
+  model: "MARBL (Marine Biogeochemistry Library), stand-alone test driver tests/driver_src"
+  commit_or_tag: "6b2a5e41dc5b0faaf9b600c96432e2487515e878"
+  provenance: "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
+acceptance:
+  kind: bitwise
+  rules:
+    - check: file_set_equal
+      scope: "run.log"
+      gating: true
+    - check: numeric_md5_equal
+      scope: "run.log"
+      dump_tool: "md5 of the text after the kit's mask (recast.insitu compare._masked: the file split on \\n, the lines the mask matches dropped, the rest joined by \\n)"
+      dump_format: "drop lines matching ^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)"
+      gating: true
+    - check: timing_delta_pct
+      timers: ["wall_seconds"]
+      gating: false
+      note: "wall time of the original vs the translated run; reported, never gates"

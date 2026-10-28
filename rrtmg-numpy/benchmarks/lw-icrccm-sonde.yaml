@@ -1,0 +1,72 @@
+# rrtmg-numpy / lw-icrccm-sonde: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: lw-icrccm-sonde
+product: rrtmg-numpy
+description: 'RRTMG_LW column model, run_examples_std_atm case ICRCCM_sonde: original vs translated program, 2 output files
+  compared'
+case:
+  benchmark: 'AER RRTMG_LW column model rrtmg_lw.1col (https://github.com/AER-RC/RRTMG_LW 958edb1ad1), its own benchmark run_examples_std_atm/script.run_std_atm,
+    case ICRCCM_sonde (the script''s output_rrtm_ICRCCM_sonde): inputs INPUT_RRTM, IN_CLD_RRTM, IN_AER_RRTM exactly as the
+    tcsh script leaves them when it reaches the case (kit prep_cases.py -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/ICRCCM_sonde);
+    outputs OUTPUT_RRTM and the printed stdout (run.log).'
+  build: 'Original: kit build_rrtmg.sh lw ''FC=gfortran -fPIC -ffp-contract=off'' link (make_rrtmg_lw_linux_pgi''s object
+    order; gfortran 14.2.0 -O2 -fdefault-real-8 -fdefault-double-8 -fdefault-integer-8 -ffp-contract=off -fPIC; rrtmg_lw_k_g.f90
+    at -O0; rrtatm.f, extra.f with -std=legacy -fallow-argument-mismatch) -> $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/pure/rrtmg_lw
+    (md5 83563d0d62b9eafe54a909b89af9cfd0), setup job 33422490. Translated: recast.insitu (engine 783ef4bb, venv-o5f) builds
+    the f2py extension recast_rrtmg_lw from the same source with the same build_rrtmg.sh and flags (bridge module -O2 -fdefault-real-8
+    -fdefault-double-8 -fdefault-integer-8), the main program linked to the NumPy translation of the delegated subprograms;
+    built once on ICRCCM_sonde in job 33422491, md5 9716ab0483f1c6fa826ac51c23c792e9.'
+  run: 'In the case directory (a copy of $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/cases/lw/ICRCCM_sonde): the original
+    program `$ALPINE_SCRATCH/recast-cand/o5w/rrtmg/pure/rrtmg_lw > run.log 2> run.err` (runs/pure), then the translated
+    program, the same main program rrtmg_lw.1col.f90 with the delegated subprograms in NumPy (runs/outermost); both launched
+    by kit run_case.sh lw ICRCCM_sonde outermost = `python -m recast.insitu config.json work --label outermost`; recast.insitu
+    then compares OUTPUT_RRTM and run.log byte for byte.'
+  environment: 'Alpine (CU Boulder Research Computing), Slurm partition acpu, qos cpu-normal, constraint milan (AMD EPYC Milan);
+    modules gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; GNU Fortran 14.2.0; glibc 2.28; Python 3.12.14
+    and NumPy 2.5.3 (as job 33432017''s protocol.json records them) from $ALPINE_PROJECTS/recast-cand/venv-o5f (recast imported
+    from engine-o5f/src, COMMIT.txt 783ef4bb); OMP_NUM_THREADS=1. Both runs on the same node in the same job, one after the
+    other (pure, then hybrid). Node c3cpu-c9-u12. Default heap: no MALLOC_PERTURB_ / GLIBC_TUNABLES; after the build case,
+    the component''s cases ran up to 16 at a time (xargs -P 16) in the 16-cpu job.'
+  engine: 783ef4bbb334d8fa39572a13a6f04a9042ab43d2
+  translation: 'recast.insitu `delegate: outermost`, the plan 783ef4bb makes under the kit''s unchanged config (insitu.json
+    md5 7148040a56347fb2f13f4bd094bd3a2d). Delegated (11, the outermost rows: each is replaced at its Fortran call sites by
+    the f2py bridge to its NumPy translation): twist, temper, get_alpha, mcica_subcol_lw, cldprmc, cldprop, rrtmg_lw_ini,
+    rtrnmc, rtrnmr, setcoef, taumol. Inside NumPy (24, callees of delegated subprograms): cmbgb1, cmbgb2, cmbgb3, cmbgb4,
+    cmbgb5, cmbgb6, cmbgb7, cmbgb8, cmbgb9, cmbgb10, cmbgb11, cmbgb12, cmbgb13, cmbgb14, cmbgb15, cmbgb16, generate_stochastic_clouds,
+    lwatmref, lwavplank, lwavplankderiv, lwcldpr, lwcmbdat, lwdatinit, mixbits. Rows the engine marks kept (16): taugb1, taugb2,
+    taugb3, taugb4, taugb5, taugb6, taugb7, taugb8, taugb9, taugb10, taugb11, taugb12, taugb13, taugb14, taugb15, taugb16,
+    reason ''internal procedure writing host variables fracs, taug'': they are taumol''s internal procedures, not bridged
+    on their own, and run inside taumol''s NumPy translation. The Mersenne Twister functions nextstate, getrandomint, getrandomreal,
+    initialize_scalar have no recorder plan (TYPE(randomNumberSequence) interface; kit make_config.py NOPLAN) and run in NumPy
+    as callees of mcica_subcol_lw. Kept Fortran among the 55 reached subprograms: none. Fortran outside the reach: the main
+    program rrtmg_lw.1col.f90 (input reading, the column loop, the OUTPUT_RRTM writer), the input utilities rrtatm.f / extra.f
+    / util_gfortran.f90, and the k-table loaders lw_kgb01..lw_kgb16 (rrtmg_lw_k_g.f90, outside the staged tree), which rrtmg_lw_ini''s
+    translation calls as compiled externals through the extension''s symbols. NumPy calls in this case: cldprop 1, rrtmg_lw_ini
+    1, rtrnmr 1, setcoef 1, taumol 1.'
+  accepted_run: 'Alpine job 33422491 (o5w-a-rrtmg-outer, 2026-10-05 05:01:13-05:05:17Z, node c3cpu-c9-u12); setup job 33422490
+    (o5w-a-rrtmg-setup, 2026-10-05 04:59:42-05:01:08Z, node c3cpu-c15-u5-3). Original: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/ICRCCM_sonde/work/runs/pure;
+    translated: $ALPINE_SCRATCH/recast-cand/o5w/rrtmg/lw/outermost/ICRCCM_sonde/work/runs/outermost. Record: the wave24 acceptance log (cand-o5w alpine-a, IDENTICAL 2/2).'
+  notes: 'Digests: Alpine job 34239083 (kit/digest_rrtmg.py, read-only). Compared files [''OUTPUT_RRTM'', ''run.log''], mask
+    []. Re-run: RUNS.md. Written by the program but not in the kit''s comparison (not part of this verdict): TAPE6 (raw md5
+    differs, only line 1 = the LBLATM banner''s run date/time; kit/server/lblatm_print_files.txt); run.err (equal).'
+reference:
+  model: AER RRTMG_LW column model (rrtmg_lw.1col), https://github.com/AER-RC/RRTMG_LW (revision committed 2025-04-07T12:52:41-04:00;
+    the wave24 source-revision manifest)
+  commit_or_tag: 958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd
+  provenance: 'the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run
+    by the same kit as the candidate'
+acceptance:
+  kind: bitwise
+  rules:
+  - check: file_set_equal
+    scope: '{OUTPUT_RRTM,run.log}'
+    gating: true
+  - check: numeric_md5_equal
+    scope: '{OUTPUT_RRTM,run.log}'
+    dump_tool: md5 of the file's bytes
+    dump_format: raw bytes
+    gating: true
+  - check: timing_delta_pct
+    timers:
+    - wall_seconds
+    gating: false
+    note: wall time of the original vs the translated run; reported, never gates

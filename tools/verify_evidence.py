@@ -48,7 +48,10 @@ As of schema v1:
        base branch (<product>/evidence/<version>/*) may be modified, deleted
        or renamed by a pull request. The one move allowed is a record from the
        old evidence/<product>/<version>/ layout to <product>/evidence/<version>/,
-       byte for byte. INDEX.md, index.json and READMEs are not records.
+       byte for byte. The one in-place edit allowed is an upgrade: a record whose
+       base manifest is evidence_class reconstructed may be replaced by one that
+       is complete for the same artifact.commit (reported as a warning).
+       INDEX.md, index.json and READMEs are not records.
     9. acceptance.kind: statistical is rejected while its status is provisional
        (decision D4 — the vocabulary is a placeholder, not something evidence
        may be filed against yet).
@@ -286,6 +289,7 @@ def check_append_only(paths: List[Path], base_ref: Optional[str], findings: Find
             findings.add(str(path), SKIP, "append-only not checked: %s" % exc)
         return
     verbs = {"M": "modified", "D": "deleted", "R": "renamed", "T": "retyped"}
+    upgrades: Dict[Tuple[str, str], Optional[str]] = {}
     for line in sorted(out.splitlines()):
         parts = line.split("\t")
         if len(parts) < 2:
@@ -301,9 +305,43 @@ def check_append_only(paths: List[Path], base_ref: Optional[str], findings: Find
             moved = "/".join((product, "evidence", version, name))
             if status == "R100" and parts[2] == moved:
                 continue
+        if status[0] in "MD":
+            # <product>/evidence/<version>/ or, in the old layout, evidence/<product>/<version>/
+            directory = "/".join(Path(old).parts[:3])
+            if directory not in upgrades:
+                upgrades[directory] = upgraded_record(directory, base_ref)
+            if upgrades[directory] is not None:
+                continue
         findings.add(str(REPO_ROOT / old), ERROR,
                      "records are append-only: %s was %s relative to %s"
                      % (old, verbs[status[0]], base_ref))
+    for directory, manifest in sorted(upgrades.items()):
+        if manifest is not None:
+            findings.add(manifest, WARNING,
+                         "replaces the reconstructed record %s/ on %s with a complete one "
+                         "for the same artifact.commit" % (directory, base_ref))
+
+
+def upgraded_record(directory: str, base_ref: str) -> Optional[str]:
+    """The one in-place edit invariant 8 allows: a `reconstructed` record replaced by a
+    `complete` one for the same artifact.commit. The new manifest's path when the record
+    at `directory` is such an upgrade, None otherwise. A reconstructed record is not
+    compliance evidence (warning 12), so no verdict loses what it rested on, and the
+    old record stays in the history."""
+    after_path = REPO_ROOT / directory / "manifest.json"
+    try:
+        before = json.loads(subprocess.check_output(
+            ["git", "-C", str(REPO_ROOT), "show", "%s:%s/manifest.json" % (base_ref, directory)],
+            text=True, stderr=subprocess.DEVNULL))
+        after = json.loads(after_path.read_text())
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return None
+    if (before.get("evidence_class") == "reconstructed"
+            and after.get("evidence_class") == "complete"
+            and (before.get("artifact") or {}).get("commit")
+            == (after.get("artifact") or {}).get("commit")):
+        return str(after_path)
+    return None
 
 
 def check_provisional_statistical(manifest: dict, report) -> None:

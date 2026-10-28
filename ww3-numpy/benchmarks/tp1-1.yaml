@@ -1,0 +1,38 @@
+# ww3-numpy / tp1-1: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: tp1-1
+product: ww3-numpy
+description: 'WAVEWATCH III regtest ww3_tp1.1 (switch_PR3_UQ): original vs translated ww3_shel, 9 output files compared (7 ww3_shel outputs + 2 ww3_outp outputs)'
+case:
+  benchmark: 'NOAA-EMC/WW3 a0eaffeb regtests/ww3_tp1.1 (switch_PR3_UQ; 1-D propagation along the equator, PR3 propagation with the UQ scheme): input/ww3_grid.inp, ww3_strt.inp, ww3_shel.inp, ww3_outp.inp; chain ww3_grid -> ww3_strt -> ww3_shel -> ww3_outp, the program under test is ww3_shel'
+  build: 'ww3_shel, both programs from the same sources ($ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/src: cand-o1b''s staged ww3_lib tree for switch_PR3_UQ, cpp-expanded with the cmake build''s Fortran_DEFINES, + ww3_shel.F90 expanded the same way) with gfortran 14.2.0 -O3 -fallow-argument-mismatch -g -fno-second-underscore -ffree-line-length-none -pthread -fPIC -ffp-contract=off -I$(nf-config --includedir), linked -O3 -pthread with netcdff/netcdf. Original: $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/pure/ww3_shel (built 2026-10-03 UTC by cand-o4-ww3''s insitu_ww3.sbatch, seeded into o5w by setup.sh, rsync from $S/o4/ww3). Translated: python -m recast.insitu config_outermost.json (engine 783ef4bb: the Fortran objects, the f2py extension recast_ww3_tp, the main ww3_shel.f90). ww3_grid, ww3_strt, ww3_outp: cand-o1b''s cmake build (-DSWITCH=switch_PR3_UQ -DCMAKE_BUILD_TYPE=Release -DNETCDF=OFF -DCMAKE_Fortran_FLAGS=-ffp-contract=off), original Fortran on both sides'
+  run: 'the case directory ($ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/case: mod_def.ww3 and restart.ww3 written by ww3_grid and ww3_strt, ww3_shel.inp) copied to runs/pure and runs/outermost; there `ww3_shel > ww3_shel.out 2> ww3_shel.err`, the original then the translated program, both by recast.insitu in one job, which compares case.compare under case.mask; then ww3_outp per input/ww3_outp*.inp in both run directories and its outputs compared with cmp'
+  environment: Alpine (CU Boulder), partition acpu, AMD Milan node c3cpu-a9-u9-2, 1 node, 4 CPUs, 24 GB; module purge; module load gcc/14.2.0 openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; FC=gfortran (GCC 14.2.0); ulimit -s unlimited; OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONWARNINGS=ignore::RuntimeWarning TMPDIR=${SLURM_TMPDIR:-/tmp} XDG_CACHE_HOME=$S/.cache; Python 3.12 venv $ALPINE_PROJECTS/recast-cand/venv-o5f (editable install of engine-o5f, COMMIT.txt 783ef4bb); no heap protocol (no MALLOC_PERTURB_, default glibc tunables)
+  engine: 783ef4bbb334d8fa39572a13a6f04a9042ab43d2
+  translation: 'recast.insitu, delegate: outermost, buffer_out_arrays: all; 35 reached subprograms (gcov) all in NumPy: delegated 28 (distab, dsec21, get_fdw3, getpqr, gsu_create, init_get_isea, tabu_fw, tdiff, tick21, w3cgdm_r4, w3ckcl_r8, w3dist_r4, w3dist_r8, w3fdwt_r8, w3fldtoij, w3gath, w3gfcl_r8, w3grmp_r4, w3grmp_r8, w3gsuc_ptr_r8, w3iope, w3map3, w3mapt, w3outg, w3scat, w3utrn, w3xyp3, wavnu1); inside NumPy 7 as callees of delegated ones (iymd21, kerkei, kzeone, mymd21, w3nnsc, w3qck3, wavnu2); kept Fortran 0'
+  accepted_run: 'Alpine job 33422610 (2026-10-05 05:01:47-05:10:27 UTC, cand-o5w-alpine-b (verifier); log $ALPINE_SCRATCH/recast-cand/runs/o5w-ww3-tpo_33422610.out); run directories $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/work_outermost/runs/pure (original) and $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/work_outermost/runs/outermost (translated); record: the wave24 acceptance log (IDENTICAL 7/7 + 2/2)'
+  notes: 'config $ALPINE_SCRATCH/recast-cand/o5w/ww3/tp/config_outermost.json (md5 d3794549d08fba6f0feeb8d64c9190c8); kit the wave24 acceptance log (insitu_ww3.sbatch, make_config.py, reached.json); re-run: bash the wave24 acceptance log tpo TAGS=tp MODES=outermost RUN_TIMEOUT=3000 TIME=01:00:00. Digests: Alpine job 34239111 (kit/).'
+reference:
+  model: WAVEWATCH III (NOAA-EMC/WW3), ww3_shel built with switch_PR3_UQ
+  commit_or_tag: a0eaffebde6246e096f240509c9acf159fe09003
+  provenance: 'the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate'
+acceptance:
+  kind: bitwise
+  rules:
+  - check: file_set_equal
+    scope: '{*.ww3,ww3_shel.out,ww3_shel.err,ww3_outp*.out}'
+    gating: true
+  - check: numeric_md5_equal
+    scope: '{mod_def.ww3,out_grd.ww3,out_pnt.ww3,restart.ww3,ww3_outp*}'
+    dump_tool: md5 of the file's bytes
+    dump_format: raw bytes
+    gating: true
+  - check: numeric_md5_equal
+    scope: '{log.ww3,ww3_shel.out,ww3_shel.err}'
+    dump_tool: 'md5 of the file''s bytes after the kit''s masks, applied as recast.insitu.compare._masked (engine 783ef4bb) does: the bytes split on newline, a line dropped when a line mask (rule without ''~'') matches it, the text a value mask (rule with ''~'') matches replaced by ''<masked>'', the lines rejoined with newline; each rule ''<file-name regex>::<line regex>'' applies to the files whose name its first part matches'
+    dump_format: 'masked:log\.ww3$::~(date|time) :\s+(\d{4}/\d\d/\d\d|\d\d:\d\d:\d\d)\s*$ ;; (log\.ww3|ww3_shel\.out)$::~(Elapsed|Initialization) time\s+:\s+[0-9.]+ s ;; ww3_shel\.out$::~(UTC|computation loop) at \d\d:\d\d:\d\d ;; ww3_shel\.err$::^Note: The following floating-point exceptions are signalling'
+    gating: true
+  - check: timing_delta_pct
+    timers:
+    - wall_seconds
+    gating: false
+    note: wall time of the original vs the translated run; reported, never gates

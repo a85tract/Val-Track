@@ -1,0 +1,70 @@
+# carma-numpy / growtest: wave24 in-situ acceptance, original vs translated program (Val-Track `bitwise` run pair).
+id: growtest
+product: carma-numpy
+description: 'CARMA GROWTEST: original vs translated program, 2 output files compared'
+case:
+  benchmark: 'CARMA wrapper regression test GROWTEST: main program tests/carma_growtest.F90 (the test''s
+    own driver; no input files), run in an empty directory; it writes carma_growtest.txt and its standard
+    output is captured as GROWTEST.exe.log'
+  build: 'the wrapper''s Makefile, gfortran block (-ffree-line-length-none -g -fbounds-check -ffpe-trap=zero,invalid,overflow
+    -fbacktrace -fopenmp), FORTRAN=''gfortran -fPIC -ffp-contract=off'', make -j1 carma_lib atmosphere_mod.o
+    carma_testutils.o GROWTEST.exe, linked with OpenBLAS 0.3.28 (-lopenblas); original: make_project.sh
+    -> $ALPINE_SCRATCH/recast-cand/o5w/carma/pure/GROWTEST.exe; translated: recast.insitu builds
+    the same Makefile in a copy with the staged (cpp-expanded) CARMA_base sources spliced over source/base,
+    the bridge object and the f2py extension recast_carma (make_config.py: fc_vars FORTRAN, ldflags -fopenmp)'
+  run: '$ALPINE_PROJECTS/recast-cand/jobs/o5w/carma/run_case.sh GROWTEST outermost o5w: python -m recast.insitu
+    <w>/config.json <w>/work --label o5w runs the original executable in work/runs/pure and the translated
+    program in work/runs/o5w (stdout -> GROWTEST.exe.log), then compares the files; then (zero-heap step
+    `rerunz`) python -m recast.insitu <w>/config.json <w>/work --run-only --label o5wz, with MALLOC_PERTURB_=255
+    GLIBC_TUNABLES=glibc.malloc.tcache_count=0: original in work/runs/pure (rewritten), translated in
+    work/runs/o5wz'
+  environment: 'Alpine (CU Boulder) acpu partition, milan node c3cpu-a9-u9-2, Slurm; modules gcc/14.2.0
+    openmpi/5.0.6 netcdf/4.9.2 cmake/4.2.3 openblas/0.3.28; OMP_NUM_THREADS=1 OMP_STACKSIZE=128M PYTHONWARNINGS=ignore;
+    Python 3.12.14, numpy 2.5.3 ($ALPINE_PROJECTS/recast-cand/venv-o5f); zero-heap protocol on both
+    sides: MALLOC_PERTURB_=255 GLIBC_TUNABLES=glibc.malloc.tcache_count=0 (every malloc returns zero bytes;
+    the driver ALLOCATEs mmr, sets a few bins and prints and uses the rest; the uninitialised-read investigation)'
+  engine: 783ef4bbb334d8fa39572a13a6f04a9042ab43d2
+  translation: 'delegate: outermost (make_config.py, buffer_out_arrays: all); delegated (23): carma_addgrowth,
+    carma_initialize, carmaelement_get, carmagroup_get, carmastate_allocate, carmastate_create, carmastate_getbin,
+    carmastate_getgas, carmastate_getstate, carmastate_setbin, carmastate_setgas, carmastate_step, fixcorecol,
+    rhopart, setupatm, setupgkern, setupgrow, setupnuc, setupvf, smallconc, supersat, vaporp_h2o_murphy2005,
+    vaporp; inside NumPy (34): actdropl, carma_initializegrowth, carma_initializethermo, coremasscheck,
+    downgevapply, downgxfer, evapp, freezaerl_koop2000, freezaerl_mohler2010, freezaerl_tabazadeh2000,
+    freezdropl, freezglaerl_murray2010, getwetr, growevapl, growp, gsolve, hetnucl, hygroscopicity, maxconc,
+    melticel, microfast, newstate, newstate_calc, nsubsteps, pheat, prestep, psolve, setupbins, setupvf_std,
+    step, totalcondensate, tsolve, upgxfer, zeromicro; kept Fortran (4): carma_create (flat plan: it ALLOCATEs
+    the derived-type arrays f_element, f_gas, f_group, f_solute of its dummy carma, which have no flat
+    spelling); carmaelement_create (derived-type dummy carma: the call (de)allocates its components);
+    carmagas_create (derived-type dummy carma: the call (de)allocates its components); carmagroup_create
+    (derived-type dummy carma: the call (de)allocates its components)'
+  accepted_run: Slurm job 33422615 (o5w-carma-out), 2026-10-05 05:01:46-05:18:21 UTC, node c3cpu-a9-u9-2;
+    reference $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/runs/pure, candidate
+    $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/runs/o5wz; record $ALPINE_SCRATCH/recast-cand/o5w/carma/w/GROWTEST/o5w/work/result_o5wz.json
+  notes: 'the record (the wave24 acceptance log)
+    judged the pair IDENTICAL; server digests job 34238978 (kit/digest_carma.py, 2026-10-16) found the
+    same bytes. Re-run: RUNS.md. Default heap (runs/o5w, same job): FAILED (hybrid exit 97); metric rule
+    IDENTICAL; see README.md.'
+reference:
+  model: 'CARMA (Community Aerosol and Radiation Model for Atmospheres): the CARMA wrapper''s regression
+    test programs'
+  commit_or_tag: CARMA wrapper (ESCOMP/CARMA) 26b30b2738566de5d3979c1b2ccf191dd78c1207 with CARMA_base
+    7b12e0cce0f83de0c55682d20c64222cc339dfce in source/base
+  provenance: 'the original Fortran program: same staged source, same build flags, same benchmark inputs
+    and node class; run by the same kit as the candidate'
+acceptance:
+  kind: bitwise
+  rules:
+  - check: file_set_equal
+    scope: '{*.txt,*.log}'
+    gating: true
+  - check: numeric_md5_equal
+    scope: '{*.txt,*.log}'
+    dump_tool: md5 of the file's bytes
+    dump_format: raw bytes (the kit's case.mask is [], so the files are compared byte for byte, nothing
+      masked)
+    gating: true
+  - check: timing_delta_pct
+    timers:
+    - wall_seconds
+    gating: false
+    note: wall time of the original vs the translated run; reported, never gates

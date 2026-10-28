@@ -607,6 +607,47 @@ def test_append_only_covers_records_not_the_index_or_readme(workspace, tmp_path,
     assert "summary.md was deleted" in capsys.readouterr().out
 
 
+def test_a_reconstructed_record_may_be_replaced_by_a_complete_one_and_nothing_else(
+        workspace, tmp_path, capsys):
+    """The one in-place edit invariant 8 allows: reconstructed -> complete, same
+    artifact.commit. Reported as a warning. Any other edit of the record still fails."""
+    make_benchmark(workspace, "pi-6month")
+    make_manifest.main(manifest_argv(workspace, comparator("pass"),
+                                     ["--summary", str(workspace["cc_test"] / "pycam5" / "evidence"
+                                                       / workspace["version"] / "summary.md")]))
+    root = workspace["cc_test"]
+    record = root / "pycam5" / "evidence" / workspace["version"]
+    path = record / "manifest.json"
+    manifest = json.loads(path.read_text())
+    complete = dict(manifest, evidence_class="complete",
+                    environment=dict(manifest["environment"], compiler="ifx 2024.2"),
+                    reference=dict(manifest["reference"], commit_or_tag="cesm2_3_beta17"))
+    reconstructed = dict(manifest, evidence_class="reconstructed")
+    path.write_text(json.dumps(reconstructed, indent=2))
+    git(root, "add", ".")
+    git(root, "commit", "-qm", "a reconstructed record")
+    base = git(root, "rev-parse", "HEAD")
+
+    path.write_text(json.dumps(dict(complete, notes="the digests turned up"), indent=2))
+    (record / "summary.md").unlink()
+    capsys.readouterr()
+    assert verify_evidence.main([str(path), "--base-ref", base]) == 0
+    out = capsys.readouterr().out
+    assert "append-only" not in out
+    assert "replaces the reconstructed record pycam5/evidence/%s/" % workspace["version"] in out
+
+    other = dict(complete["artifact"], commit="0" * 40)
+    path.write_text(json.dumps(dict(complete, artifact=other), indent=2))
+    capsys.readouterr()
+    verify_evidence.main([str(path), "--base-ref", base])
+    assert "records are append-only" in capsys.readouterr().out
+
+    path.write_text(json.dumps(dict(reconstructed, notes="still reconstructed"), indent=2))
+    capsys.readouterr()
+    assert verify_evidence.main([str(path), "--base-ref", base]) == 1
+    assert "records are append-only" in capsys.readouterr().out
+
+
 def test_a_record_may_move_to_its_product_unchanged_and_keeps_its_old_benchmark_paths(
         workspace, tmp_path, capsys):
     """A record filed under evidence/<product>/<version>/, naming benchmarks/<product>/,

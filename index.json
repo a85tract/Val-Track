@@ -30,58 +30,6 @@
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
     },
     {
-      "product": "carma-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "carma-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "carma-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "CARMA",
-        "commit_or_tag": "26b30b2738566de5d3979c1b2ccf191dd78c1207"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "carma"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T06:26:32Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "fates-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "fates-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "fates-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "FATES",
-        "commit_or_tag": "5a3c441ceeb141c35e87a33eeb2c168cc367b6f1"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "fates"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T06:26:32Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
       "product": "ww3-numpy",
       "version": "unreleased-783ef4bb",
       "path": "ww3-numpy/evidence/unreleased-783ef4bb/",
@@ -91,151 +39,22 @@
         "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
       },
       "reference": {
-        "model": "WAVEWATCH III",
+        "model": "WAVEWATCH III (NOAA-EMC/WW3), ww3_shel built with switch_PR3_UQ",
         "commit_or_tag": "a0eaffebde6246e096f240509c9acf159fe09003"
       },
       "cases": {
-        "total": 1,
-        "passed": 1,
+        "total": 2,
+        "passed": 2,
         "ids": [
-          "ww3"
+          "tp1-1",
+          "ts1"
         ]
       },
       "result": "PASS",
       "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T06:26:32Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "cism-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "cism-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "cism-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "CISM",
-        "commit_or_tag": "46e27de479f061ce7c0e96a148d3e7af7f65e461"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "cism"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:50:48Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "cosp2-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "cosp2-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "cosp2-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "COSP2",
-        "commit_or_tag": "5eb05e51187dd2d0e448b78c4e6b28e1d6f65493"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "cosp2"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:25:48Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "cvmix-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "cvmix-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "cvmix-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "CVMix",
-        "commit_or_tag": "fce422195a0c58f15a55946b5ed517ba4365e232"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "cvmix"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:25:48Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "marbl-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "marbl-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "marbl-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "MARBL",
-        "commit_or_tag": "6b2a5e41dc5b0faaf9b600c96432e2487515e878"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 1,
-        "ids": [
-          "marbl"
-        ]
-      },
-      "result": "PASS",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:25:48Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
-    },
-    {
-      "product": "rrtmg-numpy",
-      "version": "unreleased-783ef4bb",
-      "path": "rrtmg-numpy/evidence/unreleased-783ef4bb/",
-      "artifact": {
-        "name": "rrtmg-numpy",
-        "repo": "https://github.com/a85tract/RecastEngine-Pro",
-        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
-      },
-      "reference": {
-        "model": "RRTMG (LW, SW)",
-        "commit_or_tag": "958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd"
-      },
-      "cases": {
-        "total": 1,
-        "passed": 0,
-        "ids": [
-          "rrtmg"
-        ]
-      },
-      "result": "FAIL",
-      "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:25:48Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+      "evidence_class": "complete",
+      "validated": "2026-10-05T08:31:00Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
     },
     {
       "product": "camsima-numpy",
@@ -247,23 +66,265 @@
         "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
       },
       "reference": {
-        "model": "CAM-SIMA (Kessler)",
-        "commit_or_tag": "47e1e6303951d999f6939bdffff829f682a2e081"
+        "model": "CAM-SIMA (ESCOMP/CAM-SIMA, CIME FPHYStest) with ESCOMP/atmospheric_physics and NCAR/ccpp-framework",
+        "commit_or_tag": "CAM-SIMA 47e1e6303951d999f6939bdffff829f682a2e081 (development, + bin/git-fleximod update); atmospheric_physics 3fd57dde51ea63f35f3e3655012ad074a06ad051; ccpp-framework 766261cf0433692037eec258ba87dcdbea552692"
       },
       "cases": {
-        "total": 3,
-        "passed": 3,
+        "total": 4,
+        "passed": 4,
         "ids": [
-          "kessler",
           "held-suarez",
-          "tj2016"
+          "kessler",
+          "tj2016-after-coupler",
+          "tj2016-before-coupler"
         ]
       },
       "result": "PASS",
       "security": "NOT_RUN",
-      "evidence_class": "reconstructed",
-      "validated": "2026-10-05T05:05:05Z",
-      "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "carma-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "carma-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "carma-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CARMA (Community Aerosol and Radiation Model for Atmospheres): the CARMA wrapper's regression test programs",
+        "commit_or_tag": "CARMA wrapper (ESCOMP/CARMA) 26b30b2738566de5d3979c1b2ccf191dd78c1207 with CARMA_base 7b12e0cce0f83de0c55682d20c64222cc339dfce in source/base"
+      },
+      "cases": {
+        "total": 27,
+        "passed": 27,
+        "ids": [
+          "bc2gtest",
+          "bcoctest",
+          "cetest",
+          "coagtest",
+          "drydeptest",
+          "falltest",
+          "fractalmicrotest",
+          "fractalopticstest",
+          "growclrtest",
+          "growintest",
+          "growsubtest",
+          "growtest",
+          "kappawetrtest",
+          "mietest",
+          "nuc2test",
+          "nuctest",
+          "pheattest",
+          "scfalltest",
+          "sigmadrydeptest",
+          "sigmafalltest",
+          "sulfate-ccdon-test",
+          "sulfate-vehkamaki-test",
+          "sulfatetest",
+          "sulfhet-vehkamaki-test",
+          "sulfhettest",
+          "swelltest",
+          "vdiftest"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "cism-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cism-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cism-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CISM (Community Ice Sheet Model), cism_driver with the Glissade dycore (libglide, libglissade, libglimmer)",
+        "commit_or_tag": "46e27de479f061ce7c0e96a148d3e7af7f65e461"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "halfar-ho-t5"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "cosp2-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cosp2-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cosp2-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "COSPv2.0 (CFMIP, https://github.com/CFMIP/COSPv2.0), the CFMIP Observation Simulator Package offline driver",
+        "commit_or_tag": "5eb05e51187dd2d0e448b78c4e6b28e1d6f65493"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "ukmo"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "cvmix-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "cvmix-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "cvmix-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "CVMix (Community ocean Vertical Mixing, CVMix-src): src/shared kernels driven by the standalone driver",
+        "commit_or_tag": "fce422195a0c58f15a55946b5ed517ba4365e232"
+      },
+      "cases": {
+        "total": 4,
+        "passed": 4,
+        "ids": [
+          "bryan-lewis",
+          "double-diff",
+          "kpp",
+          "shear"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "fates-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "fates-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "fates-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "FATES (NGEET/fates), functional_unit_testing/leaf_biophys with biogeophys/LeafBiophysicsMod.F90 and main/FatesUtilsMod.F90",
+        "commit_or_tag": "5a3c441ceeb141c35e87a33eeb2c168cc367b6f1"
+      },
+      "cases": {
+        "total": 1,
+        "passed": 1,
+        "ids": [
+          "smoke"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "marbl-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "marbl-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "marbl-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "MARBL (Marine Biogeochemistry Library), stand-alone test driver tests/driver_src",
+        "commit_or_tag": "6b2a5e41dc5b0faaf9b600c96432e2487515e878"
+      },
+      "cases": {
+        "total": 2,
+        "passed": 2,
+        "ids": [
+          "call-compute-subroutines",
+          "init"
+        ]
+      },
+      "result": "PASS",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
+    },
+    {
+      "product": "rrtmg-numpy",
+      "version": "unreleased-783ef4bb",
+      "path": "rrtmg-numpy/evidence/unreleased-783ef4bb/",
+      "artifact": {
+        "name": "rrtmg-numpy",
+        "repo": "https://github.com/a85tract/RecastEngine-Pro",
+        "commit": "783ef4bbb334d8fa39572a13a6f04a9042ab43d2"
+      },
+      "reference": {
+        "model": "AER RRTMG_LW column model (rrtmg_lw.1col), https://github.com/AER-RC/RRTMG_LW (revision committed 2025-04-07T12:52:41-04:00; the wave24 source-revision manifest)",
+        "commit_or_tag": "958edb1ad1618d76d0fcc5a9dc2e3c2f791a54dd"
+      },
+      "cases": {
+        "total": 30,
+        "passed": 29,
+        "ids": [
+          "lw-icrccm-sonde",
+          "lw-mls-cld5-imca0-icld2",
+          "lw-mls-cld5-imca1-icld2",
+          "lw-mls-cld7-imca1-icld2",
+          "lw-mls-cld7-imca1-icld4-idcor0",
+          "lw-mls-cld7-imca1-icld5-idcor0",
+          "lw-mls-cld7-imca1-icld5-idcor1",
+          "lw-mls-clr",
+          "lw-mls-clr-aer12",
+          "lw-mls-clr-idrv1",
+          "lw-mls-clr-xsec",
+          "lw-mlw-clr",
+          "lw-saw-clr",
+          "lw-trop-clr",
+          "sw-mls-cld5-imca1-icld2",
+          "sw-mls-cld6-imca0-icld2",
+          "sw-mls-cld7-imca1-icld2",
+          "sw-mls-cld7-imca1-icld5-idcor0",
+          "sw-mls-cld7-imca1-icld5-idcor1",
+          "sw-mls-clr",
+          "sw-mls-clr-aer12",
+          "sw-mls-clr-sza45-isolvar0-tsi-avg",
+          "sw-mls-clr-sza45-isolvar1-tsi-max",
+          "sw-mls-clr-sza45-isolvar1-tsi-min",
+          "sw-mls-clr-sza45-isolvar2-01jan1950",
+          "sw-mls-clr-sza45-isolvar3-bndscl-tsi-max",
+          "sw-mls-clr-sza65",
+          "sw-mlw-clr",
+          "sw-saw-clr",
+          "sw-trop-clr"
+        ]
+      },
+      "result": "FAIL",
+      "security": "NOT_RUN",
+      "evidence_class": "complete",
+      "validated": "2026-10-05T06:48:14Z",
+      "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
     },
     {
       "product": "duo-numpy",

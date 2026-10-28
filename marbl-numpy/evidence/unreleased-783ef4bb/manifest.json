@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "evidence_class": "reconstructed",
+  "evidence_class": "complete",
   "artifact": {
     "name": "marbl-numpy",
     "repo": "https://github.com/a85tract/RecastEngine-Pro",
@@ -8,43 +8,61 @@
     "version": "unreleased-783ef4bb"
   },
   "reference": {
-    "model": "MARBL",
+    "model": "MARBL (Marine Biogeochemistry Library), stand-alone test driver tests/driver_src",
     "commit_or_tag": "6b2a5e41dc5b0faaf9b600c96432e2487515e878",
-    "provenance": "the case kit's native build of the same staged source tree; the candidate is that driver with the translated procedures delegated to the generated NumPy"
+    "provenance": "the original Fortran program: same staged source, same build flags, same benchmark inputs and node class; run by the same kit as the candidate"
   },
   "cc_test": {
-    "version": "unreleased-53515314",
-    "commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
+    "version": "unreleased-01b0f3a7",
+    "commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
   },
   "environment": {
-    "machine": "Alpine (CU Boulder Research Computing), Linux el8_10 x86_64",
+    "machine": "CURC Alpine, acpu partition, milan nodes (AMD EPYC 7713), Slurm",
+    "compiler": "GNU Fortran 14.2.0 (module gcc/14.2.0), each project's own flags plus -ffp-contract=off",
     "python": "CPython 3.12.14",
-    "numpy": "2.5.3"
+    "numpy": "2.5.3",
+    "engine": "RecastEngine-Pro 783ef4bbb334d8fa39572a13a6f04a9042ab43d2 (tag wave24-accepted, branch oopsla2027-wave24)",
+    "modules": [
+      "gcc/14.2.0",
+      "openmpi/5.0.6",
+      "netcdf/4.9.2",
+      "cmake/4.2.3",
+      "openblas/0.3.28"
+    ]
   },
   "cases": [
     {
-      "id": "marbl",
-      "benchmark": "marbl-numpy/benchmarks/marbl.yaml",
+      "id": "call-compute-subroutines",
+      "benchmark": "marbl-numpy/benchmarks/call-compute-subroutines.yaml",
       "acceptance": {
-        "kind": "output-verdict",
-        "verdict_schema": 1,
+        "kind": "bitwise",
         "rules": [
           {
-            "check": "run_set_equal",
-            "runs": [
-              "ccs outermost",
-              "init outermost"
-            ],
+            "check": "file_set_equal",
+            "scope": "{history_1inst.nc,run.log}",
             "gating": true
           },
           {
-            "check": "runs_identical",
-            "verifier": "candidates in-situ verifier (alpine/verify_insitu.sh)",
-            "roles": [
-              "primary"
-            ],
-            "normalization": "output files compared after the time fields and undefined padding each kit records are normalized; not a claim that the raw files are byte-identical",
+            "check": "numeric_md5_equal",
+            "scope": "history_1inst.nc",
+            "dump_tool": "md5 of the file's bytes",
+            "dump_format": "raw bytes",
             "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run.log",
+            "dump_tool": "md5 of the text after the kit's mask (recast.insitu compare._masked: the file split on \\n, the lines the mask matches dropped, the rest joined by \\n)",
+            "dump_format": "drop lines matching ^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
           }
         ]
       },
@@ -52,27 +70,155 @@
         "status": "PASS",
         "checks": [
           {
-            "check": "run_set_equal",
+            "check": "file_set_equal",
             "gating": true,
             "passed": true,
-            "detail": "2 runs, as the benchmark names them"
+            "detail": "file sets match"
           },
           {
-            "check": "runs_identical",
+            "check": "numeric_md5_equal",
             "gating": true,
             "passed": true,
-            "detail": "2 of 2 runs identical (3 output files compared)"
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
+        "files": [
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "history_1inst.nc",
+            "numeric_count": 628392,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "714acde6b5e2e2e9ccd8f27bdb0ec5f5",
+            "numeric_md5_reference": "714acde6b5e2e2e9ccd8f27bdb0ec5f5"
+          },
+          {
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 10,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "22d04525588b1c4bfc95ac1c8602c556",
+            "numeric_md5_reference": "22d04525588b1c4bfc95ac1c8602c556"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 1.634,
+            "delta_pct": 1186.6141732283463,
+            "reference": 0.127
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "history_1inst.nc",
+            "md5": "714acde6b5e2e2e9ccd8f27bdb0ec5f5",
+            "bytes": 628392
+          },
+          {
+            "name": "run.log",
+            "md5": "ada0d35e3e11f94a82ebd95b9b333810",
+            "bytes": 400
+          }
+        ]
+      }
+    },
+    {
+      "id": "init",
+      "benchmark": "marbl-numpy/benchmarks/init.yaml",
+      "acceptance": {
+        "kind": "bitwise",
+        "rules": [
+          {
+            "check": "file_set_equal",
+            "scope": "run.log",
+            "gating": true
+          },
+          {
+            "check": "numeric_md5_equal",
+            "scope": "run.log",
+            "dump_tool": "md5 of the text after the kit's mask (recast.insitu compare._masked: the file split on \\n, the lines the mask matches dropped, the rest joined by \\n)",
+            "dump_format": "drop lines matching ^\\s*(Timer|timer|.*[Tt]ime \\(s\\)|.*seconds)",
+            "gating": true
+          },
+          {
+            "check": "timing_delta_pct",
+            "timers": [
+              "wall_seconds"
+            ],
+            "gating": false,
+            "note": "wall time of the original vs the translated run; reported, never gates"
           }
         ]
       },
-      "outputs": {
-        "location": "a85tract/OOPSLA2027_evidence@77a7a8d26: auditing/paper_evidence/bitexact_scale/rule_run_detail.tsv",
-        "retention": "not retained: the runs' outputs and verifier logs were not archived; the verdict table is what survives",
+      "result": {
+        "status": "PASS",
+        "checks": [
+          {
+            "check": "file_set_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "file sets match"
+          },
+          {
+            "check": "numeric_md5_equal",
+            "gating": true,
+            "passed": true,
+            "detail": "overall_numeric_equal=True (1 files)"
+          },
+          {
+            "check": "timing_delta_pct",
+            "gating": false,
+            "passed": null,
+            "detail": "reported without a bound"
+          }
+        ],
         "files": [
           {
-            "name": "marbl.verdicts.json",
-            "md5": "173013b1663c3c9d6513c76a3e755e6d",
-            "bytes": 921
+            "char_count": 0,
+            "char_diff_count": 0,
+            "char_diff_vars": [],
+            "key": "run.log",
+            "numeric_count": 366,
+            "numeric_equal": true,
+            "numeric_md5_candidate": "f2a22941fe5c7baea24286fa85e43631",
+            "numeric_md5_reference": "f2a22941fe5c7baea24286fa85e43631"
+          }
+        ],
+        "timing": {
+          "wall_seconds": {
+            "candidate": 0.53,
+            "delta_pct": 373.2142857142857,
+            "reference": 0.112
+          }
+        }
+      },
+      "outputs": {
+        "location": "alpine:$ALPINE_SCRATCH/recast-cand/... (the translated program's run directory of the accepted run; per case in report.txt)",
+        "retention": "cluster scratch, rolling purge (runs of 2026-10-04/05); digests kept in report.txt",
+        "files": [
+          {
+            "name": "run.log",
+            "md5": "32585ac1bd62a5a24f5fa0e6cd731061",
+            "bytes": 16506
           }
         ]
       }
@@ -83,6 +229,6 @@
     "status": "NOT_RUN"
   },
   "result": "PASS",
-  "timestamp": "2026-10-05T05:25:48Z",
-  "notes": "Backfilled by tools/backfill_wave24.py from a85tract/OOPSLA2027_evidence@77a7a8d26. Timestamp: verifier job cand-o5w/o5w-alpine-a; the time is when the job finished. The generated NumPy is not committed anywhere; artifact.commit is the engine that generated it."
+  "timestamp": "2026-10-05T06:48:14Z",
+  "notes": "wave24 in-situ acceptance: the project's own benchmark run by the original Fortran program and by the translated program (the benchmark's Fortran main with the benchmark-reached subprograms in NumPy through f2py, RecastEngine-Pro 783ef4bb, tag wave24-accepted), in the same environment; every compared output file digested on the cluster from the accepted runs (no re-run). Security gate not run (NOT_RUN). outputs.location and outputs.files are filled from the per-case digests (make_manifest fingerprints only local CAM-named files). Filed in PR #12 and assembled again at Val-Track 01b0f3a, where it replaces the reconstructed record the wave24 backfill filed here (invariant 8's upgrade)."
 }

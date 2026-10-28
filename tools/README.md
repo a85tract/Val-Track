@@ -33,7 +33,7 @@ outputs to fingerprint, and `rule_key`, which must match what recast-cesm's
 | `make_manifest.py` | 3 | **implemented** |
 | `verify_evidence.py` | 3 | **implemented** — all 11 error invariants and 6 warnings from `../schemas/README.md` |
 | `index_evidence.py` | 4 | **implemented** — regenerates `../INDEX.md` and `index.json` from the manifests; `--check` exits 1 if it is stale |
-| `backfill_wave24.py` | — | **one-off** — turns the wave24 application validations of RecastEngine-Pro `783ef4b` (the verdict table in a85tract/OOPSLA2027_evidence) into the `<system>-numpy` products' output-verdict benchmarks (`benchmarks`) and `reconstructed` records (`records`), in two commits so the records name the commit holding their criteria |
+| `backfill_wave24.py` | — | **one-off** — turns the wave24 application validations of RecastEngine-Pro `783ef4b` (the verdict table in a85tract/OOPSLA2027_evidence) into six `<system>-numpy` products' output-verdict benchmarks (`benchmarks`) and `reconstructed` records (`records`), in two commits so the records name the commit holding their criteria. It filed fifteen at `5351531`; nine were since replaced by `complete` bitwise records |
 | `check_validation.py` | 8 | **implemented** — `render` prints a product's `VALIDATION.md` from a record; `check` (run in the product repository, by `../.github/workflows/validation-callable.yml`) verifies the file names a record that exists and says the same, and reports how far HEAD has moved on; `--strict` makes a stale drift line a finding, `--refresh` rewrites it |
 
 The comparators (`compare_runpair.py`, `compare_stats.py`, and the CAM readers in their
