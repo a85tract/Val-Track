@@ -43,8 +43,8 @@ The comparators (`compare_runpair.py`, `compare_stats.py`, and the CAM readers i
 Benchmarks exist under `../clubb-jax/benchmarks/` (15, all evaluating PASS) and
 `../clm-ml-jax/benchmarks/` (2, not evaluable until the case commits the engine's schema-1
 summary). The first acceptance record, step 4 of `../docs/CORRECTNESS-ORGANIZATION.md`, is
-filed as `../clubb-jax/evidence/unreleased-99c8b22f/` (15 cases, PASS, security `NOT_RUN`;
-`verify_evidence.py` reports 0 errors and 1 warning). Its `cc_test.commit` (`86a46e8c`) is the
+filed as `../clubb-jax/evidence/unreleased-99c8b22f/` (15 cases, PASS;
+`verify_evidence.py` reports 0 errors and 0 warnings). Its `cc_test.commit` (`86a46e8c`) is the
 commit that holds the tooling and benchmarks that produced it; see `../README.md`.
 `.github/workflows/verify-evidence.yml` checks it: on every pull request and push to `main` it runs
 `../schemas/test_schemas.py`, `pytest tools/test_tools.py`, `verify_evidence.py` (with
@@ -73,7 +73,6 @@ tools/make_manifest.py \
     --outputs-location /glade/derecho/scratch/$USER/pi-codon/run \
     --outputs-retention "scratch, purged ~2026-12-01" \
     --case-outputs pi-6month-allcodon=/glade/derecho/scratch/$USER/pi-codon/run \
-    --security-summary ~/audits/recast/PyCAM5/<ts>/summary.json \
     --summary  pycam5/evidence/unreleased-e8d68996/summary.md \
     --out      pycam5/evidence/unreleased-e8d68996/manifest.json
 
@@ -86,11 +85,6 @@ tools/check_validation.py render --manifest clubb-jax/evidence/unreleased-99c8b2
 tools/check_validation.py check --validation VALIDATION.md --product-repo . \
     --val-track <val-track> [--strict] [--refresh]     # from the product checkout
 ```
-
-`--security-summary` takes the Cyber gate's summary, written by `recast run audit <root>
---gate-summary PATH` (or `audit-cesm` for the LLM audit plane); a file without `"schema": 1`
-is refused. The gate says `PASS` when nothing blocking was found among the planes that ran; the schema's `PASS` means every plane ran, so a `PASS` with a plane in
-`not_configured`, `skipped` or `unavailable` is recorded as `INCOMPLETE` and a warning says so.
 
 For a `unit-differential` case the comparator is RecastEngine, and the "comparator JSON" is the
 summary the case repository commits. `make_manifest.py` reads its verdicts, decides which gate

@@ -173,7 +173,7 @@ def test_round_trip_pass(workspace, tmp_path, capsys):
     assert manifest["artifact"]["version"] == workspace["version"]
     assert manifest["cc_test"]["commit"] == workspace["cc_commit"]
     assert manifest["evidence_class"] == "reconstructed"  # no compiler was captured
-    assert manifest["security"] == {"gate": "recast audit", "status": "NOT_RUN"}
+    assert "security" not in manifest
 
     case, = manifest["cases"]
     assert case["benchmark"] == "pycam5/benchmarks/pi-6month.json"
@@ -188,7 +188,7 @@ def test_round_trip_pass(workspace, tmp_path, capsys):
     assert verify_evidence.main([str(path)]) == 0
     out = capsys.readouterr().out
     assert "ERROR" not in out
-    assert "WARNING" in out  # reconstructed, empty outputs, unknown retention, NOT_RUN
+    assert "WARNING" in out  # reconstructed, empty outputs, unknown retention
 
 
 def test_round_trip_fail(workspace, tmp_path, capsys):
@@ -341,117 +341,6 @@ def test_purged_outputs_warn_rather_than_fail(workspace, tmp_path, capsys):
     assert make_manifest.main(manifest_argv(workspace, case_json, [
         "--case-outputs", "pi-6month=%s" % (tmp_path / "gone")])) == 0
     assert "no fingerprint retained" in capsys.readouterr().err
-
-
-def test_security_summary_is_translated_and_a_commit_mismatch_is_caught(
-        workspace, tmp_path, capsys):
-    make_benchmark(workspace, "pi-6month")
-    case_json = comparator("pass")
-    summary = tmp_path / "summary.json"
-    summary.write_text(json.dumps({
-        "schema": 1, "tool": "recast audit", "status": "INCOMPLETE",
-        "commit": "0" * 40, "timestamp": "2026-09-03T00:00:00+00:00",
-        "scans": {
-            "secrets": {"state": "passed", "findings": 0},
-            "cve": {"state": "unavailable", "critical": 0, "high": 0},
-            "ai_audit": {"state": "not_configured", "high": 0},
-        }}))
-
-    assert make_manifest.main(manifest_argv(workspace, case_json, [
-        "--security-summary", str(summary),
-        "--security-timestamp", "2026-09-03T00:00:00Z"])) == 0
-    assert "scanned 00000000" in capsys.readouterr().err
-
-    path = (workspace["cc_test"] / "pycam5" / "evidence" / workspace["version"]
-            / "manifest.json")
-    security = json.loads(path.read_text())["security"]
-    assert security["status"] == "INCOMPLETE"
-    assert security["scans"]["secrets"]["state"] == "scanned"
-    assert security["scans"]["vulnerabilities"]["state"] == "not_installed"
-    assert security["scans"]["ai_audit"]["state"] == "unreviewed"
-    assert security["scans"]["secrets"]["target_config"] is False
-
-    capsys.readouterr()
-    assert verify_evidence.main([str(path)]) == 1
-    assert "is not artifact.commit" in capsys.readouterr().out
-
-
-def test_the_engine_gate_summary_is_read(workspace, tmp_path):
-    """make_manifest reads `recast run audit --gate-summary` unchanged. A tool that was
-    not on PATH is `unavailable` there and `not_installed` here; the gate's name is
-    whatever the producer wrote."""
-    make_benchmark(workspace, "pi-6month")
-    case_json = comparator("pass")
-    summary = tmp_path / "summary.json"
-    summary.write_text(json.dumps({
-        "schema": 1, "tool": "recast audit", "status": "INCOMPLETE",
-        "repo": "PyCAM5", "commit": workspace["artifact_commit"],
-        "mode": "repository", "base": None, "range": None, "diff_lines": None,
-        "timestamp": "2026-09-25T00:00:00+00:00",
-        "scans": {
-            "secrets": {"state": "unavailable", "findings": 0},
-            "cve": {"state": "passed", "critical": 0, "high": 3, "scope": "full-repository"},
-            "ai_audit": {"state": "not_configured", "high": 0},
-        }}))
-
-    assert make_manifest.main(manifest_argv(workspace, case_json, [
-        "--security-summary", str(summary)])) == 0
-    path = (workspace["cc_test"] / "pycam5" / "evidence" / workspace["version"]
-            / "manifest.json")
-    security = json.loads(path.read_text())["security"]
-    assert security["gate"] == "recast audit"
-    assert security["status"] == "INCOMPLETE"
-    assert security["scanned_commit"] == workspace["artifact_commit"]
-    assert security["scans"]["secrets"]["state"] == "not_installed"
-    assert security["scans"]["vulnerabilities"] == {
-        "tool": "syft -> grype", "state": "scanned", "critical": 0, "high": 3,
-        "vex_applied": False}
-    assert security["scans"]["ai_audit"]["state"] == "unreviewed"
-    assert verify_evidence.main([str(path)]) == 0  # INCOMPLETE is a warning, not an error
-
-def test_a_gate_pass_with_an_unconfigured_plane_is_recorded_as_incomplete(workspace, tmp_path, capsys):
-    """The engine's gate says PASS when the AI audit is simply not
-    configured. The schema's PASS means every plane ran. make_manifest translates, and
-    says so, rather than filing a PASS the verifier would reject."""
-    make_benchmark(workspace, "pi-6month")
-    case_json = comparator("pass")
-    summary = tmp_path / "summary.json"
-    summary.write_text(json.dumps({
-        "schema": 1, "tool": "recast audit", "status": "PASS",
-        "commit": workspace["artifact_commit"], "timestamp": "2026-09-25T00:00:00+00:00",
-        "scans": {
-            "secrets": {"state": "passed", "findings": 0},
-            "cve": {"state": "passed", "critical": 0, "high": 0, "scope": "full-repository"},
-            "ai_audit": {"state": "not_configured", "high": 0},
-        }}))
-
-    assert make_manifest.main(manifest_argv(workspace, case_json, [
-        "--security-summary", str(summary)])) == 0
-    assert "recorded as INCOMPLETE" in capsys.readouterr().err
-    path = (workspace["cc_test"] / "pycam5" / "evidence" / workspace["version"]
-            / "manifest.json")
-    security = json.loads(path.read_text())["security"]
-    assert security["status"] == "INCOMPLETE"
-    assert security["scans"]["ai_audit"]["state"] == "unreviewed"
-    capsys.readouterr()
-    assert verify_evidence.main([str(path)]) == 0
-    assert "INCOMPLETE" in capsys.readouterr().out  # a warning, not an error
-
-def test_a_gate_summary_without_schema_1_is_refused(workspace, tmp_path, capsys):
-    """hpc-devsecops's own summary.json carried no `schema`; its reader went with the
-    wrappers (step 9e), so such a file is refused rather than read by guesswork."""
-    make_benchmark(workspace, "pi-6month")
-    case_json = comparator("pass")
-    summary = tmp_path / "summary.json"
-    summary.write_text(json.dumps({
-        "tool": "hpc-devsecops", "status": "PASS", "commit": workspace["artifact_commit"],
-        "scans": {"secrets": {"state": "passed"}, "cve": {"state": "passed"},
-                  "ai_audit": {"state": "reviewed"}}}))
-
-    assert make_manifest.main(manifest_argv(workspace, case_json, [
-        "--security-summary", str(summary)])) == 2
-    assert "gate-summary schema None" in capsys.readouterr().err
-    assert not (workspace["cc_test"] / "pycam5" / "evidence").exists()
 
 
 def test_missing_benchmark_writes_nothing(workspace, tmp_path, capsys):
@@ -1157,7 +1046,7 @@ def test_index_is_generated_from_the_manifests_and_check_detects_staleness(works
 
     assert index_evidence.main([]) == 0
     index = (workspace["cc_test"] / "INDEX.md").read_text()
-    assert "| [pycam5](pycam5/evidence/%s/) | `%s` | 1 (1 passed) | **PASS** | NOT_RUN |" % (
+    assert "| [pycam5](pycam5/evidence/%s/) | `%s` | 1 (1 passed) | **PASS** |" % (
         workspace["version"], workspace["version"]) in index
     assert index_evidence.main(["--check"]) == 0
 
@@ -1171,7 +1060,7 @@ def test_index_is_generated_from_the_manifests_and_check_detects_staleness(works
     assert record["artifact"]["commit"] == workspace["artifact_commit"]
     assert record["artifact"]["repo"] == "https://github.com/a85tract/PyCAM5"
     assert record["cases"] == {"total": 1, "passed": 1, "ids": ["pi-6month"]}
-    assert record["result"] == "PASS" and record["security"] == "NOT_RUN"
+    assert record["result"] == "PASS" and "security" not in record
     assert record["cc_test_commit"] == workspace["cc_commit"]
 
     (workspace["cc_test"] / "INDEX.md").write_text(index + "| edited by hand |\n")

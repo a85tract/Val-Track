@@ -17,8 +17,6 @@ Inputs
   --reference-model     baseline identity; --reference-commit, --reference-provenance
   --outputs-location    absolute path on HPC storage
   --outputs-retention   retention class and expected purge date
-  --security-summary    the Cyber gate's summary: `recast run audit ... --gate-summary PATH`
-                        (`schema: 1`)
   --out PATH            where to write manifest.json
 
 Every value comes from the benchmark, the comparator, a probe, or an explicit
@@ -41,10 +39,6 @@ What it fills in and how
 `outputs`       location, retention, and per-file md5 + byte counts of the
                 candidate output. May be empty if the data was already purged —
                 the verifier warns, it is not an error.
-`security`      from the Cyber gate's summary, with its per-scan states
-                mapped onto the schema's vocabulary. With no summary the block
-                is `{"gate": ..., "status": "NOT_RUN"}` — absence is not an
-                available answer, so the manifest says the gate did not run.
 `result`        rolled up: ERROR if any case errored, else FAIL if any failed,
                 else PASS.
 
@@ -141,24 +135,6 @@ SCHEMA_DIR = REPO_ROOT / "schemas"
 EXIT_PASS, EXIT_FAIL, EXIT_ERROR = 0, 1, 2
 
 TAG_RE = re.compile(r"^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.]+)?$")
-
-# The engine's gate-summary plane states (`RecipeRun.gate_summary()`, schema 1) ->
-# the manifest's vocabulary. The gate reports what happened; the schema names the
-# states, and a state it does not name must not be squeezed into "scanned".
-GATE_SUMMARY_SCHEMA = 1
-SCAN_STATE = {
-    "passed": "scanned", "findings": "scanned",
-    "unavailable": "not_installed", "error": "failed",
-    "skipped": "skipped", "not_configured": "skipped",
-}
-AI_STATE = {
-    "reviewed": "reviewed", "findings": "reviewed",
-    "unavailable": "unreviewed", "not_configured": "unreviewed",
-    "error": "error", "skipped": "skipped",
-}
-GATE_STATUS = {"PASS": "PASS", "FINDINGS": "FAIL", "INCOMPLETE": "INCOMPLETE",
-               "NOT_RUN": "NOT_RUN"}
-
 
 class BuildError(Exception):
     """The manifest could not be assembled. Nothing is written; exit 2."""
@@ -587,92 +563,6 @@ def probe_environment(args) -> Dict[str, object]:
     return environment
 
 
-def security_block(args, artifact_commit: str, cc_test_commit: str,
-                   artifact_repo: Optional[Path]) -> Tuple[dict, List[str]]:
-    """Translate the Cyber gate's summary into the manifest's security block."""
-    warnings: List[str] = []
-    if not args.security_summary:
-        return {"gate": args.security_gate, "status": "NOT_RUN"}, [
-            "no --security-summary: the manifest records the Cyber gate as NOT_RUN"]
-    try:
-        summary = json.loads(Path(args.security_summary).read_text())
-    except (OSError, ValueError) as exc:
-        raise BuildError("cannot read %s: %s" % (args.security_summary, exc)) from exc
-    if summary.get("schema") != GATE_SUMMARY_SCHEMA:
-        raise BuildError(
-            "%s is gate-summary schema %r, not %d: write it with `recast run audit "
-            "--gate-summary`" % (args.security_summary, summary.get("schema"),
-                                 GATE_SUMMARY_SCHEMA))
-    scans = summary.get("scans", {})
-    secrets = scans.get("secrets", {})
-    cve = scans.get("cve", {})
-    audit = scans.get("ai_audit", {})
-
-    scanned_commit = summary.get("commit")
-    if not scanned_commit or not re.match(r"^[0-9a-f]{7,40}$", scanned_commit):
-        raise BuildError(
-            "%s records no usable scanned commit (%r); the security block would "
-            "have to name code nobody can identify"
-            % (args.security_summary, scanned_commit))
-    if scanned_commit != artifact_commit:
-        warnings.append(
-            "the Cyber gate scanned %s but the artifact is %s; recorded as measured, "
-            "and verify_evidence.py will flag it" % (scanned_commit[:8], artifact_commit[:8]))
-
-    def has_config(relative: str) -> bool:
-        return bool(artifact_repo and (artifact_repo / relative).exists())
-
-    block = {
-        "gate": summary.get("tool") or args.security_gate,
-        "cc_test_commit": cc_test_commit,
-        "scanned_commit": scanned_commit,
-        "timestamp": args.security_timestamp or iso_now(),
-        "status": GATE_STATUS.get(summary.get("status"), "INCOMPLETE"),
-        "scans": {
-            "secrets": {
-                "tool": "gitleaks",
-                "state": SCAN_STATE.get(secrets.get("state"), "failed"),
-                "findings": int(secrets.get("findings") or 0),
-                "target_config": has_config(".gitleaks.toml"),
-            },
-            "vulnerabilities": {
-                "tool": "syft -> grype",
-                "state": SCAN_STATE.get(cve.get("state"), "failed"),
-                "critical": int(cve.get("critical") or 0),
-                "high": int(cve.get("high") or 0),
-                "vex_applied": has_config(".vex/openvex.json"),
-            },
-            "ai_audit": {
-                "tool": "llm-audit",
-                "state": AI_STATE.get(audit.get("state"), "unreviewed"),
-                "high_findings": int(audit.get("high") or 0),
-            },
-        },
-    }
-    # The gate's own PASS means "nothing blocking among the checks that ran";
-    # `recast run audit --gate-summary` does not count a plane that is not
-    # configured against it.
-    # The schema's PASS is stricter: every plane ran and nothing blocking was
-    # found. The translation happens here, so the manifest says what the
-    # schema means and the gate keeps saying what it means.
-    planes = block["scans"]
-    all_ran = (planes["secrets"]["state"] == "scanned"
-               and planes["vulnerabilities"]["state"] == "scanned"
-               and planes["ai_audit"]["state"] == "reviewed")
-    if block["status"] == "PASS" and not all_ran:
-        block["status"] = "INCOMPLETE"
-        warnings.append(
-            "the Cyber gate reported PASS with a plane that did not run (states %s/%s/%s); "
-            "recorded as INCOMPLETE, which is what the schema calls that"
-            % (planes["secrets"]["state"], planes["vulnerabilities"]["state"],
-               planes["ai_audit"]["state"]))
-    if artifact_repo is None:
-        warnings.append(
-            "no --artifact-repo: target_config and vex_applied recorded as false "
-            "because the product checkout was not available to look at")
-    return block, warnings
-
-
 def iso_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -866,8 +756,6 @@ def build_manifest(args) -> Tuple[dict, List[str]]:
 
     reference = reference_block(args, benchmarks)
     environment = probe_environment(args)
-    security, security_warnings = security_block(args, commit, cc_commit, artifact_repo)
-    warnings.extend(security_warnings)
 
     statuses = [case["result"]["status"] for case in cases]
     if "ERROR" in statuses:
@@ -899,7 +787,6 @@ def build_manifest(args) -> Tuple[dict, List[str]]:
         "cc_test": cc_test,
         "environment": environment,
         "cases": cases,
-        "security": security,
         "result": result,
         "timestamp": args.timestamp or iso_now(),
     }
@@ -953,7 +840,6 @@ def write_summary(manifest: dict, path: Path) -> None:
         "| Compiler | %s |" % manifest["environment"].get("compiler", "_not captured_"),
         "| Cases | %d |" % len(manifest["cases"]),
         "| Result | **%s** |" % manifest["result"],
-        "| Security gate | %s |" % manifest["security"]["status"],
         "| Evidence class | %s |" % manifest["evidence_class"],
         "| Validated | %s |" % manifest["timestamp"],
         "",
@@ -1004,11 +890,6 @@ def parse_args(argv: Optional[List[str]] = None):
     parser.add_argument("--case-outputs", action="append", metavar="ID=DIR", default=None,
                         help="candidate output directory to fingerprint; repeatable")
     parser.add_argument("--assets-release")
-    parser.add_argument("--security-summary", type=Path,
-                        help="the Cyber gate's summary, from `recast run audit ... --gate-summary` "
-                             "(schema 1)")
-    parser.add_argument("--security-gate", default="recast audit")
-    parser.add_argument("--security-timestamp")
     parser.add_argument("--evidence-class", default="auto",
                         choices=("auto", "complete", "reconstructed"))
     parser.add_argument("--operator")
@@ -1064,9 +945,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     for warning in warnings:
         print("make_manifest: WARNING: %s" % warning, file=sys.stderr)
-    print("make_manifest: wrote %s (%d cases, result %s, security %s)"
-          % (args.out, len(manifest["cases"]), manifest["result"],
-             manifest["security"]["status"]), file=sys.stderr)
+    print("make_manifest: wrote %s (%d cases, result %s)"
+          % (args.out, len(manifest["cases"]), manifest["result"]), file=sys.stderr)
     return {"PASS": EXIT_PASS, "FAIL": EXIT_FAIL, "ERROR": EXIT_ERROR}[manifest["result"]]
 
 

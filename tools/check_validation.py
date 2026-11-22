@@ -91,7 +91,6 @@ def render(manifest: dict, record_path: str) -> str:
             ", ".join(kinds), len(cases), "" if len(cases) == 1 else "s",
             ", ".join("`%s/`" % d for d in sorted({benchmark_dir(c["benchmark"]) for c in cases})))),
         ("Result", manifest["result"]),
-        ("Security gate", manifest["security"]["status"]),
         ("Evidence class", manifest["evidence_class"]),
         ("Record", "`%s`" % record_path),
         ("Evidence", "%s/tree/main/%s" % (CC_TEST_URL, record_path)),

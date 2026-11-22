@@ -24,7 +24,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-07T23:55:48Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -51,7 +50,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T08:31:00Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -80,7 +78,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -132,7 +129,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -158,7 +154,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -184,7 +179,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -213,7 +207,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -239,7 +232,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -266,7 +258,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -321,7 +312,6 @@
         ]
       },
       "result": "FAIL",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-10-05T06:48:14Z",
       "cc_test_commit": "01b0f3a74f75975332eb5d4a15feb54a6aab7c97"
@@ -347,7 +337,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-05T05:01:39Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -373,7 +362,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-05T05:01:39Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -399,7 +387,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-05T05:01:39Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -425,7 +412,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-05T05:01:39Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -451,7 +437,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "reconstructed",
       "validated": "2026-10-05T05:01:39Z",
       "cc_test_commit": "5351531494a52de09b3de0a7aac14d694ea914cd"
@@ -491,7 +476,6 @@
         ]
       },
       "result": "PASS",
-      "security": "NOT_RUN",
       "evidence_class": "complete",
       "validated": "2026-09-21T19:44:00Z",
       "cc_test_commit": "86a46e8c712a59bc2d3c9a4be5f77adb4e139224"

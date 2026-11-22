@@ -89,7 +89,7 @@ gate. They claim different things and are not interchangeable.
 An **acceptance record** (验收记录) is one directory, `<product>/evidence/<version>/`:
 the statement that one version of a product was checked against its benchmarks, and what
 came of it. It holds the verdict and where it came from — commit, reference, environment,
-the criteria copied from `benchmarks/`, each rule's outcome, the Cyber gate's state — and it
+the criteria copied from `benchmarks/`, each rule's outcome — and it
 fingerprints the results it was judged from rather than containing them; those stay in the
 product's repository. "Manifest" in these docs always means a record's `manifest.json`;
 RecastEngine's one-file-per-verdict output (`recast.evidence.v1`) is a different document
@@ -98,7 +98,7 @@ and Val-Track never files or reads it.
 `INDEX.md` and `index.json` are generated from every record by `tools/index_evidence.py`.
 `index.json` (`{"schema": 1, "source": ..., "records": [...]}`, newest validation first) holds,
 per record, `product`, `version`, `path` (`<product>/evidence/<version>/`), `artifact`,
-`reference`, `cases` (total, passed, ids), `result`, `security`, `evidence_class`, `validated`
+`reference`, `cases` (total, passed, ids), `result`, `evidence_class`, `validated`
 and `cc_test_commit`, for the SciRecast site (decision D9). A pull request that files a record
 runs `index_evidence.py` and commits both files; CI (`.github/workflows/verify-evidence.yml`)
 runs `index_evidence.py --check` and `verify_evidence.py --base-ref origin/<base>`.

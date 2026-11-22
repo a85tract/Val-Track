@@ -3,14 +3,11 @@
 Acceptance records for modernized scientific code. When a component is ported to a
 new language or framework — a CAM physics package to Python, a CLUBB or CLM kernel to
 JAX — this repository records what one version was checked against and what the check
-found, so anyone can verify the claim instead of taking it on trust. Each record
-answers two questions about the same commit:
+found, so anyone can verify the claim instead of taking it on trust: does the port
+compute the same answer as the code it replaces?
 
-- **Correctness** — does the port compute the same answer as the code it replaces?
-- **Cyber** — was that commit scanned for secrets, known vulnerabilities, and defects?
-
-Val-Track is a results repository. It runs no comparison and no scanner: comparisons
-run in RecastEngine and recast-cesm, scans in the engine's Cyber gate. What lands here
+Val-Track is a results repository. It runs no comparison: comparisons run in
+RecastEngine and recast-cesm. What lands here
 is the verdict, the criteria it was judged by, and the tools that assemble, verify and
 index records. `index.json` lists every record for the SciRecast site.
 
@@ -31,11 +28,11 @@ docs/                         products, architecture, ownership, migration histo
 
 | Product | Benchmarks | Records |
 |---|---|---|
-| clubb-jax | 15 | `unreleased-99c8b22f`: 15 cases, PASS, security `NOT_RUN` |
+| clubb-jax | 15 | `unreleased-99c8b22f`: 15 cases, PASS |
 | clm-ml-jax | 2 | none yet: the case does not commit the engine's schema-1 summary (`clm-ml-jax/README.md`) |
 | pycam5, freecam | 0 | none yet |
-| 9 `<system>-numpy` products: camsima, cvmix, marbl, rrtmg, cosp2, carma, fates, cism, ww3 | 72 (bitwise, one per case) | `unreleased-783ef4bb` each, the wave24 in-situ runs digested file by file, `complete`: 71 cases PASS, rrtmg-numpy `lw-mls-cld5-imca0-icld2` FAIL (`rrtmg-numpy/README.md`), security `NOT_RUN` |
-| 6 `<system>-numpy` products: qe, mfc, njoy, ramses, duo, clubb | 7 (output-verdict) | `unreleased-783ef4bb` each, backfilled from the wave24 verdict table, `reconstructed`: all PASS, security `NOT_RUN` |
+| 9 `<system>-numpy` products: camsima, cvmix, marbl, rrtmg, cosp2, carma, fates, cism, ww3 | 72 (bitwise, one per case) | `unreleased-783ef4bb` each, the wave24 in-situ runs digested file by file, `complete`: 71 cases PASS, rrtmg-numpy `lw-mls-cld5-imca0-icld2` FAIL (`rrtmg-numpy/README.md`) |
+| 6 `<system>-numpy` products: qe, mfc, njoy, ramses, duo, clubb | 7 (output-verdict) | `unreleased-783ef4bb` each, backfilled from the wave24 verdict table, `reconstructed`: all PASS |
 
 ## How a record is made and checked
 
@@ -47,8 +44,7 @@ Layer 1 — produce (HPC or the case repository)
   run reference + candidate
     → a comparator: recast-cesm scripts/compare/compare_runpair.py --json (whole model),
       or the summary a RecastEngine case commits (unit-differential)
-    → recast run audit <product> --gate-summary summary.json      (the Cyber verdict)
-    → tools/make_manifest.py --case ID=RESULT ... --security-summary summary.json
+    → tools/make_manifest.py --case ID=RESULT ...
     → <product>/evidence/<version>/ + index_evidence.py, in a pull request here
 
 Layer 2 — verify (GitHub Actions, every pull request, seconds)
@@ -82,9 +78,6 @@ python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
   comparable with one taken the same way.
 - **Provenance is not invented.** A record missing any provenance field is
   `reconstructed`, not `complete`.
-- **The Cyber verdict is always stated.** With no gate summary the record says
-  `NOT_RUN`; a gate `PASS` with a plane that did not run is recorded as `INCOMPLETE`.
-  Findings never enter this repository (`SECURITY.md`).
 - **Records are immutable.** A re-run files a new version; CI rejects a pull request
   that edits or deletes an existing record.
 
@@ -94,15 +87,12 @@ python3 -m venv .venv && .venv/bin/pip install jsonschema pyyaml pytest
 |---|---|
 | Schemas, structure, contracts | lewisychen |
 | Manifest builder, verifier, benchmarks; the comparators in recast-cesm | Qinrun |
-| Cyber gate — RecastEngine `audit`, recast-cesm `audit-cesm`, product-repo config | Chien-Wei |
 
 One decision is open: **D4**, the statistical (ensemble-spread) criteria for Pipeline 2.
 Until it is settled the schema marks that family `provisional` and the verifier rejects
 evidence filed against it; bitwise and unit-differential records are unaffected. The
 decisions, the migration that made Val-Track results-only, and what moved where are in
-`docs/VALIDATION-ARCHITECTURE.md` and `docs/CORRECTNESS-ORGANIZATION.md`. Former
-`hpc-devsecops` users: the engine's `docs/cyber-gate.md` maps every old command to its
-replacement.
+`docs/VALIDATION-ARCHITECTURE.md` and `docs/CORRECTNESS-ORGANIZATION.md`.
 
 Licensed under the [Apache License, Version 2.0](LICENSE). Copyright 2026 Yueqi Chen
 <yueqi.chen@colorado.edu>; see `NOTICE`.

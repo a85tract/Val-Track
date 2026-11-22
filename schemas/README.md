@@ -108,23 +108,13 @@ branch (8). Each is then reported as `SKIP` with the reason rather than counted 
    upgrade: a record whose manifest on the base branch is `evidence_class: reconstructed`
    may be replaced, files deleted or rewritten, by a record whose manifest is `complete`
    for the same `artifact.commit`. It is reported as a warning so the review sees it. A
-   reconstructed record is not compliance evidence (warning 12), and the old record stays
+   reconstructed record is not compliance evidence (warning 10), and the old record stays
    in the history; never the other way round.
 9. `acceptance.kind: statistical` is rejected while its `status` is `provisional`.
-10. `security.scanned_commit` equals `artifact.commit` — otherwise the Cyber verdict
-    describes different code than the correctness verdict.
-11. `security.status` is `PASS` only when all three scans ran (`scanned` / `scanned` /
-    `reviewed`) and every count is zero.
 
 **Warnings**
 
-12. `evidence_class: reconstructed` — usable as a format example only.
-13. `outputs.files` is empty — no fingerprint was retained, so the run cannot be checked
+10. `evidence_class: reconstructed` — usable as a format example only.
+11. `outputs.files` is empty — no fingerprint was retained, so the run cannot be checked
     against a future re-run.
-14. `outputs.retention` is `unknown` — the purge date was never recorded.
-15. `security.status` is `NOT_RUN` or `INCOMPLETE` — the validated code was not fully
-    scanned.
-16. `security.scans.secrets.target_config` is false — the secret scan used default rules
-    with no project allowlist.
-17. `security.scans.vulnerabilities.vex_applied` is false — the CVE counts include
-    findings nobody has assessed as not-affected.
+12. `outputs.retention` is `unknown` — the purge date was never recorded.

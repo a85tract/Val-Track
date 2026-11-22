@@ -55,17 +55,11 @@ As of schema v1:
     9. acceptance.kind: statistical is rejected while its status is provisional
        (decision D4 — the vocabulary is a placeholder, not something evidence
        may be filed against yet).
-   10. security.scanned_commit equals artifact.commit.
-   11. security.status is PASS only when all three scans ran and every count
-       is zero.
 
   Warnings
-   12. evidence_class: reconstructed — a format example, not compliance evidence.
-   13. outputs.files is empty — no fingerprint retained.
-   14. outputs.retention is unknown — no purge date recorded.
-   15. security.status is NOT_RUN or INCOMPLETE.
-   16. security.scans.secrets.target_config is false.
-   17. security.scans.vulnerabilities.vex_applied is false.
+   10. evidence_class: reconstructed — a format example, not compliance evidence.
+   11. outputs.files is empty — no fingerprint retained.
+   12. outputs.retention is unknown — no purge date recorded.
 
 Invariants 4, 5 and 8 need something this tool is not always given — the product
 checkout, a manifest that actually lives at <product>/evidence/<version>/, the base branch. Each
@@ -326,7 +320,7 @@ def upgraded_record(directory: str, base_ref: str) -> Optional[str]:
     """The one in-place edit invariant 8 allows: a `reconstructed` record replaced by a
     `complete` one for the same artifact.commit. The new manifest's path when the record
     at `directory` is such an upgrade, None otherwise. A reconstructed record is not
-    compliance evidence (warning 12), so no verdict loses what it rested on, and the
+    compliance evidence (warning 10), so no verdict loses what it rested on, and the
     old record stays in the history."""
     after_path = REPO_ROOT / directory / "manifest.json"
     try:
@@ -357,49 +351,8 @@ def check_provisional_statistical(manifest: dict, report) -> None:
                    % (index, case.get("id")))
 
 
-def check_security(manifest: dict, report) -> None:
-    """Invariants 10, 11, 15, 16, 17."""
-    security = manifest.get("security") or {}
-    status = security.get("status")
-    if status == "NOT_RUN":
-        report(WARNING, "security.status is NOT_RUN: the validated code was not scanned")
-        return
-    artifact_commit = (manifest.get("artifact") or {}).get("commit")
-    scanned = security.get("scanned_commit")
-    if scanned != artifact_commit:
-        report(ERROR, "security.scanned_commit %s is not artifact.commit %s: the Cyber "
-                      "verdict describes different code than the correctness verdict"
-                      % (scanned, artifact_commit))
-    scans = security.get("scans") or {}
-    secrets = scans.get("secrets") or {}
-    vulnerabilities = scans.get("vulnerabilities") or {}
-    audit = scans.get("ai_audit") or {}
-    all_ran = (secrets.get("state") == "scanned"
-               and vulnerabilities.get("state") == "scanned"
-               and audit.get("state") == "reviewed")
-    all_zero = (not secrets.get("findings")
-                and not vulnerabilities.get("critical")
-                and not vulnerabilities.get("high")
-                and not audit.get("high_findings"))
-    if status == "PASS" and not (all_ran and all_zero):
-        report(ERROR, "security.status is PASS but the scans do not support it "
-                      "(states %s/%s/%s, counts %s/%s/%s/%s)"
-                      % (secrets.get("state"), vulnerabilities.get("state"),
-                         audit.get("state"), secrets.get("findings"),
-                         vulnerabilities.get("critical"), vulnerabilities.get("high"),
-                         audit.get("high_findings")))
-    if status == "INCOMPLETE":
-        report(WARNING, "security.status is INCOMPLETE: the validated code was not "
-                        "fully scanned")
-    if secrets.get("target_config") is False:
-        report(WARNING, "the secret scan used default rules with no project allowlist")
-    if vulnerabilities.get("vex_applied") is False:
-        report(WARNING, "the CVE counts include findings nobody has assessed as "
-                        "not-affected")
-
-
 def check_soft(manifest: dict, report) -> None:
-    """Warnings 12, 13, 14."""
+    """Warnings 10, 11, 12."""
     if manifest.get("evidence_class") == "reconstructed":
         report(WARNING, "evidence_class is reconstructed: a format example, not "
                         "compliance evidence")
@@ -459,7 +412,6 @@ def verify(path: Path, validator, findings: Findings, checkouts: Dict[str, Path]
     check_benchmarks(manifest, report)
     check_cc_test_commit(manifest, report)
     check_provisional_statistical(manifest, report)
-    check_security(manifest, report)
     check_soft(manifest, report)
 
 

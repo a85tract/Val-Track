@@ -164,7 +164,7 @@ Val-Track/
 │   └── test_correctness.py         # Correctness half, synthetic inputs, no NetCDF needed
 │
 │   (tools/ hpc/ hooks/ templates/ and tests/run.sh, the Cyber half, were deleted in
-│    step 9e of CORRECTNESS-ORGANIZATION.md; the gate is RecastEngine's — see §11)
+│    step 9e of CORRECTNESS-ORGANIZATION.md)
 │
 ├── benchmarks/                     # case definitions and acceptance baselines
 │   ├── pycam5/
@@ -378,70 +378,4 @@ information is still obtainable.**
 - No NetCDF output committed into Git, and no assumption that raw model output fits in
   Release assets.
 - No attempt to make GitHub Actions execute a CESM validation run.
-- No rewrite of the Cyber half. It was originally listed here as untouched; closing D5
-  changed that, and the edits are named so the claim stays honest. `tools/asan.sh`,
-  `hpc/asan-cam.pbs`, and `hooks/pre-push` are unchanged. `tools/devsecops-local.sh`
-  gained per-scan state tracking, a `summary.json`, and a `--require-complete` flag — see
-  §11 — because the manifest's `security` block cannot be filled honestly from a runner
-  that reports a zero count identically whether or not the scan ran.
 - `sec-track` is out of scope (restricted access, handled separately).
-
----
-
-## 11. The Cyber half
-
-Closing D5 turned up more than missing configuration.
-
-**`ai_audit.py` never existed.** The runner reads it from
-`<target>/.github/scripts/ai_audit.py` and the README calls it "your `ai_audit.py`", but
-no copy was present in any repository in the tree. The AI audit had therefore never run
-against any product. `templates/.github/scripts/ai_audit.py` is a written implementation:
-it reviews a unified diff with Claude under a structured-output schema, splits large
-diffs by file so nothing is silently truncated, and writes `ai-audit.sarif` plus a
-Markdown report.
-
-**The false-clean bug was wider than the one already fixed.** Commit `f964acd` stopped the
-AI audit reporting `reviewed` when it had failed. The same defect remained in the other
-two planes: with gitleaks or grype absent, their counters stayed at zero and the gate
-printed `✅ clean`. "Not scanned" and "scanned, found nothing" were indistinguishable in
-the output — and would have been indistinguishable in any evidence built from it.
-
-`tools/devsecops-local.sh` now tracks a state per scan (`scanned` / `not_installed` /
-`failed` / `skipped`), reports `INCOMPLETE` rather than `clean` when any plane did not
-run, and writes a machine-readable `summary.json` beside `summary.txt` for
-`make_manifest.py` to read. `--require-complete` exits non-zero on an incomplete gate;
-`--block` keeps its original meaning, so the pre-push hook's behaviour is unchanged unless
-a repository opts in.
-
-**The manifest records the Cyber verdict.** `security` is a required block in every
-manifest, with a required state beside every count and an explicit `NOT_RUN`
-status. An acceptance record therefore always states whether the validated code was
-scanned; silence is not an available answer. This is what makes Val-Track one assurance
-system rather than two tools sharing a repository — a reviewer reads a single manifest and
-sees both that the code computes the right answer and that it was scanned for
-vulnerabilities, at the same commit.
-
-**Known gap.** Producing a `security` block on the HPC side needs the gate to run where
-there is outbound network: grype's vulnerability database and the AI audit's API both need
-egress, which Derecho compute nodes do not have. Run the gate on a login node or locally
-and feed its `summary.json` into `make_manifest.py`; the schema's `INCOMPLETE` status
-exists so a partial run is still recordable rather than silently omitted.
-
-**Moving (2026-09-25).** The tooling this section describes is moving to the engine and
-recast-cesm in steps 9a-9e of `CORRECTNESS-ORGANIZATION.md`. Step 9a landed 2026-09-25 (engine
-branch `audit-gate-summary`): `recast run <recipe> <root> --gate-summary PATH` writes the same
-`summary.json` shape `devsecops-local.sh` writes, plus `"schema": 1`, and `make_manifest.py
---security-summary` reads either producer's file unchanged. The manifest's `security` block
-therefore keeps its source through the move (the LLM audit itself went to recast-cesm, not the
-engine: step 9b, the `llm-audit` scanner in its `audit-cesm` recipe, landed 2026-09-25; so did the
-sanitizer plane, `tools/asan.sh` + `hpc/asan-cam.pbs`, as recast-cesm's `dynamic.asan` scanner and
-`scripts/pbs/asan_cam.sh`, step 9c, the same day). One translation happens in `make_manifest.py`: the gate's `PASS` does not
-count a `not_configured` plane against it, the schema's `PASS` means every plane ran, so a
-gate `PASS` with an unrun plane is recorded as `INCOMPLETE` with a warning. Findings never
-enter Val-Track.
-
-**Moved (2026-10-15, step 9e).** The wrappers, `hooks/`, `hpc/`, `templates/`,
-`tools/test-ai-audit.py`, `tests/run.sh` and the shell-only `ci.yml` are deleted, and
-`make_manifest.py` reads only the engine's schema-1 gate summary. Everything this section
-describes as Val-Track's tooling now lives in RecastEngine (`docs/cyber-gate.md` there) and
-recast-cesm; what stays here is the manifest's `security` block.
